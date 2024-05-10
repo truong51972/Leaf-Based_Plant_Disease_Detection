@@ -1,8 +1,10 @@
-from typing import Optional
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-request= {
+# run: uvicorn main:app --host 0.0.0.0 --port 8000
+app = FastAPI()
+
+request = {
     'user_info': {
         'info': {
             'user_name' : 'admin',
@@ -13,20 +15,18 @@ request= {
     'date' : 'DD-MM-YYYY'
 }
 
-
 class User_Info(BaseModel):
     user_name: str
-    password: bytes
+    password: str
 
 class Request_API(BaseModel):
-    user_info: dict['info', User_Info]
+    user_info: dict[str, User_Info]
     image: str
     date: str
 
-
-app = FastAPI()
-
-
-@app.post("/api")
-async def create_item(item: Request_API):
-    return {'Chao': 'em'}
+@app.post("/check-login")
+async def check_login(item: User_Info):
+    response = {
+        'status': 'oki',
+    }
+    return response
