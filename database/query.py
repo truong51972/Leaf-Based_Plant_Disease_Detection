@@ -36,7 +36,7 @@ def check_password(userName:str, userPassword:str) -> bool:
 
 # Add user to database
 # return 'status'
-def add_user(self, userName:str, userPassword:str) -> dict:
+def add_user(userName:str, userPassword:str) -> dict:
     '''
         PERFORMANCE CODE:
             '000': Action proceeded successfully 
