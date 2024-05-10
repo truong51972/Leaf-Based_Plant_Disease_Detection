@@ -1,72 +1,91 @@
 import sqlite3
 
-class UserLogin:
-    def __init__(self) -> None:
-        pass
-
-    def __get_user_login(self, userName:str, userPassword:str):
-        pass
-
-    def __generate_key(self):
-        pass
-
-    def __get_key(self):
-        pass
-
-    def __encode(self) -> bytes:
-        pass
-
-    def __decode(self):
-        pass
-
-    def __check_user_availability(self, userName:str):
-        con = sqlite3.connect('data.db')
-        cur = con.cursor()
-        cur.execute(f"""
+# Check if userName exists in database
+# return True/False
+def check_user(userName:str) -> bool:
+    con = sqlite3.connect('data.db')
+    cur = con.cursor()
+    cur.execute(f"""
     SELECT userName from USER  
     """)    
-        user = cur.fetchone()
-        print(type(user))
-        print(user)
-        con.commit()
-        con.close()
+    user = cur.fetchone()
+    con.commit()
+    con.close()
 
-        if userName in user:
-            return True
-        else:
-            return False
+    if userName in user:
+        return True
+    else:
+        return False
 
-    def __check_password(self, encodedPassword:bytes):
-        pass
+# Check if password is correct
+# return True/False
+def check_password(userName:str, userPassword:str) -> bool:
+    con = sqlite3.connect('data.db')
+    cur = con.cursor()
+    cur.execute(f"""
+    SELECT userPassword from USER WHERE userName = '{userName}'
+    """)    
+    password = cur.fetchone()
+    con.commit()
+    con.close()
 
-    def __add_user(self, userName:str, userPassword:str):
+    if userPassword == password[0]:
+        return True
+    else:
+        return False
+
+# Add user to database
+# return 'status'
+def add_user(self, userName:str, userPassword:str) -> dict:
+    '''
+        PERFORMANCE CODE:
+            '000': Action proceeded successfully 
+            '001': userName has already existed in the database (UserExisted)
+    '''
+    # Inner function to add user to database
+    def __add_user(userName:str, userPassword:str):
         con = sqlite3.connect('data.db')
         cur = con.cursor()
         cur.execute(f"""
-    INSERT INTO USER VALUES ({userName}, {self.__encode(userPassword)})  
+    INSERT INTO USER VALUES ({userName}, {userPassword})  
     """)
         con.commit()
         con.close()
 
-    def add_user(self, userName:str, userPassword:str):
-        if self.__check_user_availability(userName):
-            raise Exception('Username has already been used. Please use another username.')
+    if check_user(userName):
+        return {'message':'userName already existed!',
+                'code':'001'}
+    else:
+        __add_user(userName, userPassword)
+        return {'message':'Success!',
+                'code':'000'}
+
+# Login function
+# return 'status'
+def user_login(userName:str, userPassword:str) -> dict:
+    '''
+        PERFORMANCE CODE:
+            '000': Action proceeded successfully 
+            '002': userPassword doesn't match with the userName in the database (WrongPassword)
+            '003': userName doesn't exist in the database (UserNotFound)
+    '''
+    if check_user(userName):
+        if check_password(userPassword):
+            return {'message':'Success!',
+                    'code':'000'}
         else:
-            self.__add_user(userName, userPassword)
+            return {'message':'Wrong password!',
+                    'code':'002'}
+    else:
+        return {'message':'userName not exist!',
+                'code':'003'}
+    
+'''
+    PERFORMANCE CODE:
+        '000': Action proceeded successfully 
 
-    def user_login(self, userName:str, userPassword:str):
-        if self.__check_user_availability(userName):
-            encodedPassword = self.__encode(userPassword)
-            if self.__check_password(encodedPassword):
-                return True
-            else:
-                return False
-        else:
-            raise Exception('User not available. Registeration is recommended.')
-        
-    def check(self, userName:str):
-        return self.__check_user_availability(userName)
-
-
-print(UserLogin().check('34234234'))
-
+        Login code:
+            '001': userName has already existed in the database (UserExisted)
+            '002': userPassword doesn't match with the userName in the database (WrongPassword)
+            '003': userName doesn't exist in the database (UserNotFound)
+'''
