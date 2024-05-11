@@ -1,8 +1,9 @@
 import sqlite3
+from datetime import datetime
 
 # Check if userName exists in database
 # return True/False
-def check_user(userName:str, database='data.db') -> bool:
+def __check_user(userName:str, database='data.db') -> bool:
     con = sqlite3.connect(database)
     cur = con.cursor()
     cur.execute(f"""
@@ -19,7 +20,7 @@ def check_user(userName:str, database='data.db') -> bool:
 
 # Check if password is correct
 # return True/False
-def check_password(userName:str, userPassword:str, database='data.db') -> bool:
+def __check_password(userName:str, userPassword:str, database='data.db') -> bool:
     con = sqlite3.connect(database)
     cur = con.cursor()
     cur.execute(f"""
@@ -36,14 +37,17 @@ def check_password(userName:str, userPassword:str, database='data.db') -> bool:
 
 # Add user to database
 # return 'status'
-def add_user(userName:str, userPassword:str) -> dict:
+def add_user(userData, database='data.db') -> dict:
     '''
         PERFORMANCE CODE:
             '000': Action proceeded successfully 
             '001': userName has already existed in the database (UserExisted)
     '''
+    userName = userData.user_name
+    userPassword = userData.password
+
     # Inner function to add user to database
-    def __add_user(userName:str, userPassword:str, database='data.db'):
+    def __add_user(userName:str, userPassword:str, database):
         con = sqlite3.connect(database)
         cur = con.cursor()
         cur.execute(f"""
@@ -52,7 +56,7 @@ def add_user(userName:str, userPassword:str) -> dict:
         con.commit()
         con.close()
 
-    if check_user(userName):
+    if __check_user(userName):
         return {'message':'userName already existed!',
                 'code':'001'}
     else:
@@ -73,8 +77,8 @@ def user_login(userData, database='data.db') -> dict:
     userName = userData.user_name
     userPassword = userData.password
 
-    if check_user(userName, database):
-        if check_password(userName, userPassword, database):
+    if __check_user(userName, database):
+        if __check_password(userName, userPassword, database):
             return {'message':'Success!',
                     'code':'000'}
         else:
@@ -85,7 +89,22 @@ def user_login(userData, database='data.db') -> dict:
                 'code':'003'}
 
 def main():
-   print() 
+    current_time = datetime.now()
+
+    # Định dạng thời gian theo YYYY-MM-DD HH:MI:SS
+    formatted_time = current_time.strftime('%Y-%m-%d %H:%M:%S')
+
+    print(formatted_time)
+   
+    con = sqlite3.connect('data.db')
+    cur = con.cursor()
+
+    cur.execute(f"""
+    INSERT INTO PIC VALUES (0, 0, {formatted_time}, 'abc') 
+    """)
+
+    con.commit()
+    con.close()
 
 if __name__ == '__main__':
     main()
