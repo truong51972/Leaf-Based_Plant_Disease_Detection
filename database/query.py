@@ -26,6 +26,7 @@ def check_password(userName:str, userPassword:str) -> bool:
     SELECT userPassword from USER WHERE userName = '{userName}'
     """)    
     password = cur.fetchone()
+    print(password[0])
     con.commit()
     con.close()
 
@@ -89,3 +90,9 @@ def user_login(userName:str, userPassword:str) -> dict:
             '002': userPassword doesn't match with the userName in the database (WrongPassword)
             '003': userName doesn't exist in the database (UserNotFound)
 '''
+
+def main():
+   print(check_password('abc', 'zxy')) 
+
+if __name__ == '__main__':
+    main()
