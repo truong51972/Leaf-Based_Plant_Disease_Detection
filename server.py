@@ -39,9 +39,18 @@ async def create_new_user(item: User_Info):
     print(response)
     return response
 
-@app.on_event("shutdown")
-async def shutdown_event():
-    print("Server is shutting down...")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Load the ML model
+    print('starting..................')
+    yield
+    # Clean up the ML models and release the resources
+    print('shuting down..................')
+
+
+# @app.on_event("shutdown")
+# async def shutdown_event():
+#     print("Server is shutting down...")
 
 # @app.post("/analyze")
 # async def check_login(item: User_Info):
