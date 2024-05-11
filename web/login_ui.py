@@ -9,13 +9,13 @@ state = {"logged_in": False}
 def login_ui():
     global state
     st.text_input("Tên đăng nhập", key= 'username')
-    st.session_state['username'] = st.session_state['username'].strip()
     password = st.text_input("Mật khẩu", type="password")
     st.session_state['encrypted_password'] = encrypt_password(password).decode()
     
     if st.button("Đăng nhập", use_container_width=True):
+        user_name = st.session_state.get('username').strip()
         user_info = {
-            'user_name': st.session_state.get('username'),
+            'user_name': user_name,
             'password': st.session_state.get('encrypted_password')
         }    
         response = check_login(user_info).json()
