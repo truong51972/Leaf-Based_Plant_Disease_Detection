@@ -1,122 +1,129 @@
 import sqlite3
+import asyncio
 from datetime import datetime
 
-# Check if userName exists in database
-# return True/False
-def __check_user(userName:str, database='data.db') -> bool:
-    con = sqlite3.connect(database)
-    cur = con.cursor()
-    cur.execute(f"""
-    SELECT userName from USER  
-    """)    
-    user = cur.fetchone()
-    con.commit()
-    con.close()
+class Query:
 
-    if userName in user:
-        return True
-    else:
-        return False
+    def __init__(self, database='data.db'):
+        self.con = sqlite3.connect(database)
+        self.cur = self.con.cursor()
 
-# Check if password is correct
-# return True/False
-def __check_password(userName:str, userPassword:str, database='data.db') -> bool:
-    con = sqlite3.connect(database)
-    cur = con.cursor()
-    cur.execute(f"""
-    SELECT userPassword from USER WHERE userName = '{userName}'
-    """)    
-    password = cur.fetchone()
-    con.commit()
-    con.close()
+    async def __check_user(self, userName:str) -> bool:
+        self.cur.execute(f"""
+        SELECT userName from USER  
+        """)    
+        user = self.cur.fetchone()
 
-    if userPassword == password[0]:
-        return True
-    else:
-        return False
+        if userName in user:
+            return True
+        else:
+            return False
+                     
+    async def __check_password(self, userName:str, userPassword:str) -> bool:
+                 
+        self.cur.execute(f"""
+            SELECT userPassword from USER WHERE userName = '{userName}'
+        """)    
+        password = self.cur.fetchone()
+                 
 
-# Add user to database
-# return 'status'
-def add_user(userData, database='data.db') -> dict:
-    '''
+        if userPassword == password[0]:
+            return True
+        else:
+            return False
+        
+    async def __add_user(self, userName:str, userPassword:str):
+        self.cur.execute(f"""
+            INSERT INTO USER VALUES ('{userName}', '{userPassword}')  
+        """)
+                 
+    async def add_user(self, userData) -> dict:
+        '''
         PERFORMANCE CODE:
             '000': Action proceeded successfully 
             '001': userName has already existed in the database (UserExisted)
-    '''
+        '''
 
     
-    userName = userData.user_name
-    userPassword = userData.password
+        userName = userData.user_name
+        userPassword = userData.password
 
     # Inner function to add user to database
-    def __add_user(userName:str, userPassword:str, database):
-        con = sqlite3.connect(database)
-        cur = con.cursor()
-        cur.execute(f"""
-            INSERT INTO USER VALUES ('{userName}', '{userPassword}')  
-        """)
-        con.commit()
-        con.close()
-
-    if __check_user(userName, database):
-        return {'message':'userName already existed!',
-                'code':'001'}
-    else:
-        __add_user(userName, userPassword, database)
-        return {'message':'Success!',
-                'code':'000'}
-
-# Login function
-# return 'status'
-def user_login(userData, database='data.db') -> dict:
-    '''
-        PERFORMANCE CODE:
-            '000': Action proceeded successfully 
-            '002': userPassword doesn't match with the userName in the database (WrongPassword)
-            '003': userName doesn't exist in the database (UserNotFound)
-    '''
-
-    userName = userData.user_name
-    userPassword = userData.password
-
-    if __check_user(userName, database):
-        if __check_password(userName, userPassword, database):
+        if self.__check_user(userName, self.database):
+            return {'message':'userName already existed!',
+                    'code':'001'}
+        else:
+            self.__add_user(userName, userPassword)
             return {'message':'Success!',
                     'code':'000'}
+
+    async def user_login(self, userData) -> dict:
+        '''
+            PERFORMANCE CODE:
+                '000': Action proceeded successfully 
+                '002': userPassword doesn't match with the userName in the database (WrongPassword)
+                '003': userName doesn't exist in the database (UserNotFound)
+        '''
+
+        userName = userData.user_name
+        userPassword = userData.password
+
+        if self.__check_user(userName):
+            if self.__check_password(userName, userPassword):
+                return {'message':'Success!',
+                        'code':'000'}
+            else:
+                return {'message':'Wrong password!',
+                        'code':'002'}
         else:
-            return {'message':'Wrong password!',
-                    'code':'002'}
-    else:
-        return {'message':'userName not exist!',
-                'code':'003'}
-    
-def add_picture(picData, database='data.db'):
-    
-    picID = picData.id
-    diseaseID = picData.diseaseID
-    picDate = picData.date
-    pic = picData.pic
-    
-    current_time = datetime.now()
+            return {'message':'userName not exist!',
+                    'code':'003'}  
 
-    # Định dạng thời gian theo YYYY-MM-DD HH:MI:SS
-    formatted_time = current_time.strftime('%Y-%m-%d %H:%M:%S')
+    async def add_picture(self, picData):
+    
+        picID = picData.id
+        diseaseID = picData.diseaseID
+        picDate = picData.date
+        pic = picData.pic
+    
+        current_time = datetime.now()
 
-    print(formatted_time)
-   
-    con = sqlite3.connect(database)
-    cur = con.cursor()
+        # Định dạng thời gian theo YYYY-MM-DD HH:MI:SS
+        formatted_time = current_time.strftime('%Y-%m-%d %H:%M:%S')
 
-    cur.execute(f"""
+        print(formatted_time)
+
+        self.cur.execute(f"""
         INSERT INTO PIC VALUES (1, 1, '{formatted_time}', 'abc') 
-    """)
+        """)
 
-    con.commit()
-    con.close()
+    async def close(self):
+        self.con.commit()
+        self.con.close() 
 
-def main():
-    print(add_user({'user_name': 'abd',
-                    'password':'xyz'}))
+
+async def main():
+    class User:
+        def __init__(self) -> None:
+            self.user_name = 'admin'
+            self.password = 'xW2PqVk-e29mqX3T2aZAYPuBl5e4SKVeKDXfvU9XC9g='
+    user = User()
+
+    query = Query()
+    await query.check_user(user)
+
+    '''
+    import asyncio
+
+    async def __main():
+        await asyncio.sleep(10, result='hello')
+
+    asyncio.run(__main())
+    '''
 
 if __name__ == '__main__':
+    # async def read_results():
+    #     loop = asyncio.get_event_loop()
+    #     results = await loop.run_in_executor(None, some_library) # type: ignore
+    #     return results
     main()
