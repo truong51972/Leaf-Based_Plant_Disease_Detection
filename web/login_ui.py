@@ -3,12 +3,13 @@ import time
 from packages.request_api import check_login
 from packages.request_api import create_new_user
 from packages.encode_decode import encrypt_password
-
+from packages.preprocess_text import is_valid
 state = {"logged_in": False}
 
 def login_ui():
     global state
-    username = st.text_input("Tên đăng nhập", key= 'username')
+    st.text_input("Tên đăng nhập", key= 'username')
+    st.session_state['username'] = st.session_state['username'].strip()
     password = st.text_input("Mật khẩu", type="password")
     st.session_state['encrypted_password'] = encrypt_password(password).decode()
     
