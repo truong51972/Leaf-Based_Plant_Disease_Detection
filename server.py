@@ -39,6 +39,10 @@ async def create_new_user(item: User_Info):
     print(response)
     return response
 
+@app.on_event("shutdown")
+async def shutdown_event():
+    print("Server is shutting down...")
+
 # @app.post("/analyze")
 # async def check_login(item: User_Info):
 #     print(dict(item))
