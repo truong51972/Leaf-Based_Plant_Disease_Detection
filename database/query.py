@@ -7,7 +7,7 @@ def __check_user(userName:str, database='data.db') -> bool:
     con = sqlite3.connect(database)
     cur = con.cursor()
     cur.execute(f"""
-    SELECT {userName} from USER  
+    SELECT userName from USER  
     """)    
     user = cur.fetchone()
     con.commit()
