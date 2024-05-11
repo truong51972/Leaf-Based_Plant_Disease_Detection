@@ -2,8 +2,8 @@ import sqlite3
 
 # Check if userName exists in database
 # return True/False
-def check_user(userName:str) -> bool:
-    con = sqlite3.connect('data.db')
+def check_user(userName:str, database='data.db') -> bool:
+    con = sqlite3.connect(database)
     cur = con.cursor()
     cur.execute(f"""
     SELECT userName from USER  
@@ -19,14 +19,13 @@ def check_user(userName:str) -> bool:
 
 # Check if password is correct
 # return True/False
-def check_password(userName:str, userPassword:str) -> bool:
-    con = sqlite3.connect('data.db')
+def check_password(userName:str, userPassword:str, database='data.db') -> bool:
+    con = sqlite3.connect(database)
     cur = con.cursor()
     cur.execute(f"""
     SELECT userPassword from USER WHERE userName = '{userName}'
     """)    
     password = cur.fetchone()
-    print(password[0])
     con.commit()
     con.close()
 
@@ -44,8 +43,8 @@ def add_user(userName:str, userPassword:str) -> dict:
             '001': userName has already existed in the database (UserExisted)
     '''
     # Inner function to add user to database
-    def __add_user(userName:str, userPassword:str):
-        con = sqlite3.connect('data.db')
+    def __add_user(userName:str, userPassword:str, database='data.db'):
+        con = sqlite3.connect(database)
         cur = con.cursor()
         cur.execute(f"""
     INSERT INTO USER VALUES ({userName}, {userPassword})  
