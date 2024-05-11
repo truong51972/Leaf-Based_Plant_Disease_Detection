@@ -2,8 +2,7 @@ import streamlit as st
 import time
 from packages.request_api import check_login
 from packages.request_api import create_new_user
-from packages.encode_deconde import encrypt_password
-import requests
+from packages.encode_decode import encrypt_password
 
 state = {"logged_in": False}
 
