@@ -1,9 +1,9 @@
 import streamlit as st
-from login import login_ui, state, register_ui, logout
-from app import app as main_app
-from user import user_profile
+from web.login_ui import login_ui, state, register_ui, logout
+from web.app import app as main_app
+from web.user import user_profile
 
-def main():
+def run():
     if state["logged_in"]:
         st.sidebar.title("Menu")
         menu_choice = st.sidebar.selectbox(" ", ["Trang chủ", "Thông tin cá nhân", "Cài đặt", "Đăng xuất"])
@@ -30,4 +30,4 @@ def main():
                     register_ui()
 
 if __name__ == "__main__":
-    main()
+    run()
