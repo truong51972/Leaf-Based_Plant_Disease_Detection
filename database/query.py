@@ -13,6 +13,7 @@ class Query:
         SELECT userName from USER  
         """)    
         user = self.cur.fetchone()
+        self.con.commit()
 
         if userName in user:
             return True
@@ -25,7 +26,8 @@ class Query:
             SELECT userPassword from USER WHERE userName = '{userName}'
         """)    
         password = self.cur.fetchone()
-                 
+
+        self.con.commit()         
 
         if userPassword == password[0]:
             return True
@@ -36,6 +38,7 @@ class Query:
         self.cur.execute(f"""
             INSERT INTO USER VALUES ('{userName}', '{userPassword}')  
         """)
+        self.con.commit()
                  
     async def add_user(self, userData) -> dict:
         '''
