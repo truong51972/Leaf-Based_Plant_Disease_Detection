@@ -6,9 +6,9 @@ class Query:
 
     def __init__(self, database='data.db'):
         self.con = sqlite3.connect(database)
-        self.cur = self.con.cursor()
 
     def __check_user(self, userName:str) -> bool:
+        self.cur = self.con.cursor()
         self.cur.execute(f"""
         SELECT userName from USER  
         """)    
@@ -21,7 +21,7 @@ class Query:
             return False
                      
     def __check_password(self, userName:str, userPassword:str) -> bool:
-                 
+        self.cur = self.con.cursor()         
         self.cur.execute(f"""
             SELECT userPassword from USER WHERE userName = '{userName}'
         """)    
@@ -35,6 +35,7 @@ class Query:
             return False
         
     def __add_user(self, userName:str, userPassword:str):
+        self.cur = self.con.cursor()
         self.cur.execute(f"""
             INSERT INTO USER VALUES ('{userName}', '{userPassword}')  
         """)
