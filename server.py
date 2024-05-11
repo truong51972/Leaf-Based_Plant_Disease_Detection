@@ -2,6 +2,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from pydantic import BaseModel
 from database.query import Query
+import asyncio
+
 
 # run: uvicorn server:app --host 0.0.0.0 --port 8000 --reload
 
@@ -40,16 +42,16 @@ class Request_API(BaseModel):
     date: str
 
 @app.post("/check-login")
-async def check_login(item: User_Info):
+def check_login(item: User_Info):
     print(dict(item))
-    response = await models['query'].user_login(item)
+    response = models['query'].user_login(item)
     print(response)
     return response
 
 @app.post("/create-new-user")
-async def create_new_user(item: User_Info):
+def create_new_user(item: User_Info):
     print(dict(item))
-    response = await models['query'].add_user(item)
+    response = models['query'].add_user(item)
     print(response)
     return response
 
