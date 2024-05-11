@@ -51,9 +51,9 @@ async def check_login(item: User_Info):
     return response
 
 @app.post("/create-new-user")
-def create_new_user(item: User_Info):
+async def create_new_user(item: User_Info):
     print(dict(item))
-    response = models['query'].add_user(item)
+    response = await models['query'].add_user(item)
     print(response)
     return response
 
