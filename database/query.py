@@ -68,16 +68,16 @@ class Query:
         userName = userData.user_name
         userPassword = userData.password
 
-        if self.__check_user(userName):
+        if not self.__check_user(userName):
+            return {'message':'userName not exist!',
+                    'code':'003'} 
+        else:
             if self.__check_password(userName, userPassword):
                 return {'message':'Success!',
                         'code':'000'}
             else:
                 return {'message':'Wrong password!',
-                        'code':'002'}
-        else:
-            return {'message':'userName not exist!',
-                    'code':'003'}  
+                        'code':'002'}  
 
     async def add_picture(self, picData):
     
@@ -102,24 +102,104 @@ class Query:
         self.con.close() 
 
 
-async def main():
+def main():
+    
+    def check_password(userName:str, userPassword:str) -> bool:
+        con = sqlite3.connect('data.db')
+        cur = con.cursor()
+        cur.execute(f"""
+            SELECT userPassword from USER WHERE userName = '{userName}'
+        """)    
+        password = cur.fetchone()
+        con.commit()
+        con.close() 
+
+        if userPassword == password[0]:
+            return True
+        else:
+            return False
+        
+    def check_user(userName:str) -> bool:
+        con = sqlite3.connect('data.db')
+        cur = con.cursor()
+        cur.execute(f"""
+        SELECT userName from USER  
+        """)    
+        user = cur.fetchone()
+        con.commit()
+        con.close() 
+        if userName in user:
+            return True
+        else:
+            return False
+        
+    def user_login(userData) -> dict:
+        '''
+            PERFORMANCE CODE:
+                '000': Action proceeded successfully 
+                '002': userPassword doesn't match with the userName in the database (WrongPassword)
+                '003': userName doesn't exist in the database (UserNotFound)
+        '''
+
+        userName = userData.user_name
+        userPassword = userData.password
+
+        print(userName, userPassword)
+
+        # if not check_user(userName):
+        #     if check_password(userName, userPassword):
+        #         return {'message':'Success!',
+        #                 'code':'000'}
+        #     else:
+        #         return {'message':'Wrong password!',
+        #                 'code':'002'}
+        # else:
+        #     return {'message':'userName not exist!',
+        #             'code':'003'} 
+        if not check_user(userName):
+            return {'message':'userName not exist!',
+                    'code':'003'} 
+        else:
+            if check_password(userName, userPassword):
+                return {'message':'Success!',
+                        'code':'000'}
+            else:
+                return {'message':'Wrong password!',
+                        'code':'002'}
     class User:
         def __init__(self) -> None:
-            self.user_name = 'admin'
+            self.user_name = 'admn'
             self.password = 'xW2PqVk-e29mqX3T2aZAYPuBl5e4SKVeKDXfvU9XC9g='
     user = User()
+    
+    print(user.user_name, user.password)
+    print(type(user.user_name), type(user.password))
 
-    query = Query()
-    await query.check_user(user)
+    print(check_user(user.user_name))  
+    #print(check_password('admi', user.password))
+    
+    if not check_user(user.user_name):
+            print( {'message':'userName not exist!',
+                    'code':'003'} )
+    else:
+        if check_password(user.user_name, user.password):
+            print({'message':'Success!',
+                    'code':'000'})
+        else:
+            print( {'message':'Wrong password!',
+                    'code':'002'})
+    print(user_login(user))
 
-    '''
-    import asyncio
+    # class User:
+    #     def __init__(self) -> None:
+    #         self.user_name = 'admin'
+    #         self.password = 'xW2PqVk-e29mqX3T2aZAYPuBl5e4SKVeKDXfvU9XC9g='
+    # user = User()
 
-    async def __main():
-        await asyncio.sleep(10, result='hello')
+    # query = Query()
+    # await query.check_user(user)
 
-    asyncio.run(__main())
-    '''
+
 
 if __name__ == '__main__':
     # async def read_results():
