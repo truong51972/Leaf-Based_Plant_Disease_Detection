@@ -6,22 +6,23 @@ class Query:
 
     def __init__(self, database='data.db'):
         self.con = sqlite3.connect(database)
-        self.cur = self.con.cursor()
+        
 
     def __check_user(self, userName:str) -> bool:
+        self.cur = self.con.cursor()
         self.cur.execute(f"""
         SELECT userName from USER  
         """)    
-        user = self.cur.fetchone()
+        user = self.cur.fetchall()
         self.con.commit()
 
-        if userName in user:
+        if (userName,) in user:
             return True
         else:
             return False
                      
     def __check_password(self, userName:str, userPassword:str) -> bool:
-                 
+        self.cur = self.con.cursor()         
         self.cur.execute(f"""
             SELECT userPassword from USER WHERE userName = '{userName}'
         """)    
@@ -35,12 +36,13 @@ class Query:
             return False
         
     def __add_user(self, userName:str, userPassword:str):
+        self.cur = self.con.cursor()
         self.cur.execute(f"""
             INSERT INTO USER VALUES ('{userName}', '{userPassword}')  
         """)
         self.con.commit()
                  
-    def add_user(self, userData) -> dict:
+    async def add_user(self, userData) -> dict:
         '''
         PERFORMANCE CODE:
             '000': Action proceeded successfully 
@@ -60,7 +62,7 @@ class Query:
             return {'message':'Success!',
                     'code':'000'}
 
-    def user_login(self, userData) -> dict:
+    async def user_login(self, userData) -> dict:
         '''
             PERFORMANCE CODE:
                 '000': Action proceeded successfully 
@@ -82,7 +84,7 @@ class Query:
                 return {'message':'Wrong password!',
                         'code':'002'}  
 
-    def add_picture(self, picData):
+    async def add_picture(self, picData):
     
         picID = picData.id
         diseaseID = picData.diseaseID
@@ -100,7 +102,7 @@ class Query:
         INSERT INTO PIC VALUES (1, 1, '{formatted_time}', 'abc') 
         """)
 
-    def close(self):
+    async def close(self):
         self.con.commit()
         self.con.close() 
 
