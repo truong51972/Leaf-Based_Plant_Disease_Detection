@@ -41,7 +41,7 @@ class Query:
         """)
         self.con.commit()
                  
-    async def add_user(self, userData) -> dict:
+    def add_user(self, userData) -> dict:
         '''
         PERFORMANCE CODE:
             '000': Action proceeded successfully 
@@ -61,7 +61,7 @@ class Query:
             return {'message':'Success!',
                     'code':'000'}
 
-    async def user_login(self, userData) -> dict:
+    def user_login(self, userData) -> dict:
         '''
             PERFORMANCE CODE:
                 '000': Action proceeded successfully 
@@ -83,7 +83,7 @@ class Query:
                 return {'message':'Wrong password!',
                         'code':'002'}  
 
-    async def add_picture(self, picData):
+    def add_picture(self, picData):
     
         picID = picData.id
         diseaseID = picData.diseaseID
@@ -101,7 +101,7 @@ class Query:
         INSERT INTO PIC VALUES (1, 1, '{formatted_time}', 'abc') 
         """)
 
-    async def close(self):
+    def close(self):
         self.con.commit()
         self.con.close() 
 
@@ -172,27 +172,30 @@ def main():
                         'code':'002'}
     class User:
         def __init__(self) -> None:
-            self.user_name = 'admn'
+            self.user_name = 'admin'
             self.password = 'xW2PqVk-e29mqX3T2aZAYPuBl5e4SKVeKDXfvU9XC9g='
     user = User()
-    
-    print(user.user_name, user.password)
-    print(type(user.user_name), type(user.password))
+    query = Query()
 
-    print(check_user(user.user_name))  
-    #print(check_password('admi', user.password))
+    print(query.user_login(user))
     
-    if not check_user(user.user_name):
-            print( {'message':'userName not exist!',
-                    'code':'003'} )
-    else:
-        if check_password(user.user_name, user.password):
-            print({'message':'Success!',
-                    'code':'000'})
-        else:
-            print( {'message':'Wrong password!',
-                    'code':'002'})
-    print(user_login(user))
+    # print(user.user_name, user.password)
+    # print(type(user.user_name), type(user.password))
+
+    # print(check_user(user.user_name))  
+    # #print(check_password('admi', user.password))
+    
+    # if not check_user(user.user_name):
+    #         print( {'message':'userName not exist!',
+    #                 'code':'003'} )
+    # else:
+    #     if check_password(user.user_name, user.password):
+    #         print({'message':'Success!',
+    #                 'code':'000'})
+    #     else:
+    #         print( {'message':'Wrong password!',
+    #                 'code':'002'})
+    # print(user_login(user))
 
     # class User:
     #     def __init__(self) -> None:
