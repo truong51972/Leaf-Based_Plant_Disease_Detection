@@ -62,7 +62,7 @@ def add_user(userName:str, userPassword:str) -> dict:
 
 # Login function
 # return 'status'
-def user_login(userData) -> dict:
+def user_login(userData, database='data.db') -> dict:
     '''
         PERFORMANCE CODE:
             '000': Action proceeded successfully 
@@ -73,8 +73,8 @@ def user_login(userData) -> dict:
     userName = userData.user_name
     userPassword = userData.password
 
-    if check_user(userName):
-        if check_password(userName, userPassword):
+    if check_user(userName, database):
+        if check_password(userName, userPassword, database):
             return {'message':'Success!',
                     'code':'000'}
         else:
