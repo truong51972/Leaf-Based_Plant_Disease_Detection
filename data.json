@@ -1,0 +1,81 @@
+[
+    {
+        "diseaseID": 1,  //Bệnh Tomato_mosaic_virus
+        "Nguyên Nhân Gây Bệnh": "Bệnh virus thường phát sinh và gây hại nặng trong mùa khô, tuy nhiên khi gặp điều kiện thuận lợi, bệnh có thể lây lan gây hại nặng ở bất cứ thời điểm nào trong năm.",
+        "Giải Pháp vườn ươm": "Vườn ươm cây giống cà chua cần bố trí càng cách xa vườn sản xuất càng tốt để hạn chế sâu bệnh không lâylan từ vườn trồng vào vườn ươm. Mùa khô lên luống cao 15-20cm, trồng hàng đôi,mật độ 27.000 - 30.000 cây/ha. Mùa mưa lên luống cao 20-25cm, trồng hàng đơn mật độ 18.000 - 20.000 cây/ha.",
+        "Phòng ngừa lây nhiễm": "Vệ sinh, thu dọn những cây cà chua nhiễm bệnh tiêu hủy cách xa nơi chồng để hạn chế lây sang vụ sau, Thường xuyên kiểm tra Vườn, dùng phần mềm để phát hiện sớm bệnh và phòng ngừa. Hạn chế làm xây xát cây khi chồng và chăm sóc, Thường xuyên dọn cỏ dại",
+        "Trồng và chăm sóc cây": "Trồng cà chua trong nhà kính, nhà lưới kín (sử dụng lưới chắn côn trùng từ 50mesh trở lên) để ngăn côn trùng di chuyển từ ngoài vào. Cày xới và bón vôi, phơi ải đất trước khi trồng từ 1-2 tuần để tiêu diệt sâu bệnh tồn tại trong đất.",
+        "Bón Phân": "Phân hữu cơ (ha): 40 tấn; Vôi: 1-1,5 tấn; Borat: 5kg; canxi bo: 50kg; hữu cơ vi sinh: 1.000kg; Chế phẩm Trichoderma: 30-35 kg/ha. Phân vô cơ nguyên chất (ha): 240kg N - 90 kg P2O5 - 275 kg K2O. Tưới nước: Khuyến khích áp dụng biện pháp tưới nhỏ giọt, hạn chế tưới phun mưa dễ làm lây lan mầm bệnh từ cây này qua cây khác.",
+        "Nguồn": "Sở Nông nghiệp & PTNT Lâm Đồng"
+    },
+    {
+        "diseaseID": 2, //Bệnh bạc lá sớm Early_Blight
+        "Nguyên Nhân Gây Bệnh": "Bệnh bạc lá sớm (còn gọi là bệnh cháy lá Alternaria) do nấm Alternaria solani gây ra. Đây là bệnh gây hại nặng nề nhất trên cà chua, gây thiệt hại 79% năng suất trên toàn cầu. Nhiều loại thuốc diệt nấm có hiệu quả chống bệnh bạc lá sớm, nhưng tình trạng ô nhiễm môi trường và kháng nấm bệnh ngày càng gia tăng",
+        "Bón Phân": "bón phân Silic thường xuyên (2 lần/tuần)",
+        "Giải pháp phòng ngừa": "Phân bón Silic có khả năng chống bệnh bạc lá sớm ở cây cà chua bằng cách làm chậm biểu hiện các triệu chứng bệnh và giảm mức độ nghiêm trọng của bệnh so với các cây không được bón phân Silic. Bên cạnh đó, Silic còn có vai trò đối với stress phi học và các loại nấm bệnh khác. Đây là giải pháp phòng trừ bệnh hại mà không gây ô nhiễm môi trường hay kháng thuốc.",
+        "Giảm tác hại của các gốc tự do nhờ bón phân Silic" : "Trong điều kiện căng thẳng (tác động môi trường và mầm bệnh), cây trồng tạo ra quá nhiều gốc tự do (chất oxy hóa) như anion superoxide, Hydrogen peroxide (H2O2) và gốc hydroxyl. Hiện tượng này gọi là stress oxy hóa, gây ức chế nghiêm trọng sự sinh trưởng, phát triển và năng suất của cây. Để giảm tác hại của stress oxy hóa, cây trồng tạo ra hệ thống bảo vệ chống oxy hóa như: superoxide dismutase (SOD), catalase (CAT), ascorbate peroxidase (APX), glutathione reductase (GR) và peroxidase (POD).",
+        "Nguồn" : "CÔNG TY TNHH FUNO (Đà lạt, Lâm Đồng)"
+    },
+    {
+        "diseaseID": 3, //Bệnh TYLCV
+        "Nguyên Nhân Gây Bệnh": "Bệnh TYLCV không lan truyền qua hạt giống hay thông qua các vết tổn thương cơ học. Bệnh lan truyền nhờ các loài bọ phẩn có tên khoa học là Bemisia tabaci. Bọ phẩn ăn mặt dưới lá của một số loài cây, rất thích các cây còn non. Toàn bộ chu trình nhiễm bệnh có thể diễn ra trong khoảng 24 giờ và diễn ra thuận lợi trong điều kiện thời tiết khô rao và nhiệt độ cao.",
+        "Giải Pháp vườn ươm": "Vệ sinh tàn dư cây trồng vụ trước, nhất là những cây trồng là ký chủ của virus như cà chua. Tránh trồng gần các ruộng đang trồng những cây trồng nêu trên. Vệ sinh các loài cỏ dại quanh bờ (kể cả trong vườn ươm). Vệ sinh dụng cụ làm vườn sau khi cắt tỉa cây bị bệnh. Sử dụng các giống kháng sâu chích hút, kháng bệnh. Sử dụng nguồn nước sạch để tưới. Nhổ và tiêu huỷ các cây bị bệnh, không vứt cây bệnh lên bờ ruộng hoặc vứt xuống sông, suối. Hạn chế làm xây xát cây khi trồng và chăm sóc. ",
+        "Bón Phân": "Tránh bón thừa phân đạm, tăng cường các loại vi lượng bằng cách sử dụng phân bón lá Poly Feed 19-19-19 để tăng khả năng chống chịu sâu, bệnh.",
+        "Giải pháp phòng ngừa": "Loại thuốc phổ biến và có hiệu lực đối với các loại sâu chích hút là dầu khoáng SK Enspray 99EC. Đây là sản phẩm hoàn toàn không độc với người và gia súc. Dầu khoáng SK diệt sâu qua cơ chế làm sâu ngạt thở mà chết. Để tăng thêm hiệu lực và tiêu diệt được một số loại sâu miệng nhai và bọ cánh cứng khác, bà con nông dân thường phối hợp dầu khoáng SK với loại thuốc sinh học như Comda Gold 5WG để phòng trừ.",
+        "Nguồn" : "HỘI NÔNG DÂN TỈNH BẮC NINH"
+    },
+    {
+        "diseaseID": 4, //Bệnh sương mai late blight
+        "Nguyên Nhân Gây Bệnh": "bệnh mốc sương (sương mai) là một trong những loại bệnh hại nguy hiểm nhất với cây cà chua. Bệnh mốc sương đã gây mất mùa, làm tăng chi phí và cản trở việc sản xuất cà chua của nhiều nhà vườn.",
+        "Triệu chứng": "Bệnh làm lá thâm tái và teo tóp lại. Trong điều kiện ẩm ướt, nơi vết bệnh mới, được phủ nhẹ một lớp nấm trắng mỏng, đặc biệt mặt dưới lá. Vết bệnh rất dễ lan rộng và làm toàn bộ lá bị khô cháy. Bệnh làm cho quả bị xanh xám, làm quả sượng không chín được, khi bệnh nặng thì quả bị thối. Bệnh cũng làm thân, cành bị thối thâm đen...",
+        "Giải Pháp vườn ươm": "Vệ sinh và tiêu hủy tàn tích bệnh hại trên ruộng, vườn trước khi trồng, nhất là vụ trước đã trồng các cây cùng ký chủ như cà chua. Trồng với mật độ thích hợp, lên luống cao, tránh trồng quá dày, dễ gây rậm rạp, ẩm thấp trong vườn.",
+        "Bón Phân": "Bón phân cân đối, bổ sung các nguyên tố trung, vi lượng để giúp tăng sức đề kháng của cây như phân bón lá POLY FEED 15-15-30 ở giai đoạn hoa quả.",
+        "Giải pháp phòng ngừa": "Trong điều kiện thời tiết âm u ít nắng, sương mù nhiều, không khí ẩm thấp và mát, thì cần phòng ngừa trước bằng các loại thuốc sau: TREPPACH BUL 607SL, hoặc DIPOMATE 80WP màu xanh. Nên phun 2 lần cách nhau 7 ngày khi bệnh chớm xuất hiện trên đồng.",
+        "Nguồn": "CÔNG TY CỔ PHẦN BẢO VỆ THỰC VẬT SÀI GÒN"
+    },
+    {
+        "diseaseID": 5, //BỆNH DO VI KHUẨN XANTHOMONAS:( v.k Xanthomonas Axonopodis pv..Vesicatoria = Vk. Xanthomonas campestris)
+        "Nguyên Nhân Gây Bệnh": "Vi khuẩn  tồn tại trong hạt giống và trong đất,trên đồng ruộng VK phát tán sau những cơn mưa lớn, xâm nhập vào cây qua khí khổng lá và các vết xây xát do gió, côn trùng. Trái thường bị đốm nhiều ở hướng gió thổi tới",
+        "Triệu chứng": "Triệu chứng rụng trên trái dễ nhận thấy nhất. Đó là những đốm nhỏ, màu nâu đen, ướt, hơi nhô lên mặt quả còn xanh.Trên quả chín, bệnh tạo thành những quầng màu xanh đậm, ướt, đường kính 3-6mm, bề mặt vết bệnh bị loét và sần sùi, chỉ ở vỏ mà không ăn sâu vào trong quả, về sau bị khô và dẽ bong tróc ra .",
+        "Giải Pháp vườn ươm": "Làm đất kỹ, xử lý đất và dọn dẹp tàn dư thực vật để hạn chế nơi trú ngụ của vi khuẩn gây bệnh.Thường xuyên Xử dụng ứng dụng để kịp thời phát hiện bệnh đốm vi khuẩn và đưa ra biện pháp xử lý nhanh chóng. Tiến hành nhổ bỏ cây bị nhiễm bệnh đốm vi khuẩn ra khỏi vườn để ngăn chặn sự lây lan.",
+        "Giải pháp phòng ngừa": "Dùng hạt giống sạch bệnh và xử lý hạt giống trước khi gieo.Không gieo giống trên đất trước đó đã có bệnh.",
+        "Bón Phân": " sử dụng các thuốc bảo vệ thực vật có hiệu quả trong điều trị bệnh đốm đen trên cà chua thường chứa các hoạt chất như Azoxystrobin, kết hợp Azoxystrobin + Difenoconazole, Mancozeb, Kibul, Nazosi,… nên phun khi thấy bệnh vừa chớm xuất hiện để có hiệu quả phòng trừ tốt nhất. Nên phun sau khi mưa, cần tuân theo hướng dẫn sử dụng trên bao bì. Có thể phun lặp lại sau 5 đến 7 ngày. Khi quan sát tình trạng bệnh đã có cải thiện, bà con nên bổ sung dinh dưỡng phân bón giúp cây phục hồi và tăng trưởng nhanh hơn như Tonik, Humate, Ado, Hero…",
+        "Nguồn": "CÔNG TY CỔ PHẦN NÔNG NGHIỆP NGHI ANH"
+    },
+    {
+        "diseaseID": 6, //Target_Spot(fungus Corynespora)
+        "Nguyên Nhân Gây Bệnh": "Bệnh này phát sinh từ loài nấm có tên khoa học là Corynespora cassiicola. Bệnh xảy ra phổ biến nhất ở vùng nhiệt đới và cận nhiệt đới. Loài nấm này là mầm bệnh chủ yếu ở cà chua. Chúng lan truyền thông qua các bào tử nấm phát triển ở mặt dưới lá.",
+        "Triệu chứng": ""
+    },
+    {
+        "diseaseID" : 7, //Septoria_leaf_spot
+        "Nguyên Nhân Gây Bệnh": "Bào tư nấm tồn tại trong đất, tàn dư thực vật từ vụ trước, cỏ dại gặp điều kiện thuận lợi ẩm ướt, nhiệt độ cao nấm Septoria phát triển mạnh.",
+        "Triệu chứng": "Chúng xuất hiện đầu tiên là các đốm nhỏ hình tròn ở mặt sau của các lá già dưới cùng của cây với đường kính từ 1,6-3,2 mm; với rìa màu nâu sẫm, tâm màu xám nhạt hoặc rám nắng. Bao quanh vết có quầng sáng màu vàng. Khi bệnh phát triển, các đốm sẽ lớn hơn và liên kết với nhau. Đây là một trong những triệu chứng để phân biệt bệnh đốm lá Septoria với các bệnh đốm lá khác.",
+        "Giải Pháp vườn ươm": "Chọn giống sạch bệnh rõ nguồn gốc. Làm đất, dọn sạch tàn dư và cỏ từ vụ trước, tránh tưới quá nhiều nước. Không nên trồng cà quá mau. Lưu thông không khí rất quan trọng đặc biệt trong thời gian ẩm ướt và mưa nhiều. Nên phủ một lớp màng phủ trên bề mặt đất khi trồng cà chua. Sử dụng chế phẩm sinh học Emina-P phun phòng bệnhh cho cây ngay từ giai đoạn làm đất ban đầu",
+        "Giải pháp phòng ngừa": "Loại bỏ các lá bị nhiễm bệnh : Cắt bỏ lá đã nhiễm bệnh đem đi tiêu hủy xa vườn tránh lây lan",
+        "Bón Phân": "Sử dụng chế phẩm sinh học Emina-P theo tỷ lệ : 500 ml chế phẩm + 1 hộp sữa chua bổ sung thêm 18 lít nước phun cho cây, định kỳ 5 ngày sau phun nhắc lại."
+    },
+    {
+        "diseaseID": 8, //Tomato___healthy
+        "Giải Pháp vườn ươm": "Tốt, cây cà chua của bạn vẫn khỏe mạnh. Hãy tiếp tục duy trì việc kiểm tra và theo dõi qua ứng dụng để phát hiện sớm các vấn đề có thể xảy ra."
+    },
+    {
+        "diseaseID" : 9, //Bệnh mốc lá leaf_Mold Cladosporium fulvum
+        "Nguyên Nhân Gây Bệnh": "Do nấm Fulvia fulva. Ẩm độ và nhiệt độ cao. Nấm tồn tại trên tàn dư thực vật. Bào tử sống trong đất, bào tử phát tán qua mưa gió và có thể sống trong vòng 1 năm. Hạt giống nhiễm bệnh là nguồn lây nhiễm ban đầu trên ruộng trồng cà chua.",
+        "Triệu chứng": "Bắt đầu từ những lá bên dưới:những đốm màu xanh nhạt trở nên vàng xuất hiện ở mặt trên lá Ở mặt dưới lá có những đốm xanh rêu phát triển, chứa đầy bào tử bệnh. Khi vết bệnh già đi, lá sẽ khô và rụng. Trái xanh đôi khi bị tấn công với triệu chứng là những đốm xám sậm màu.",
+        "Giải Pháp vườn ươm": "Thu dọn và tiêu hủy tàn dư thực vật. Dùng giống kháng. Sử dụng hệ thống tưới nhỏ giọt tránh tưới lên vòm lá. Điều chỉnh khoảng cách giữa các hàng và cây để tăng lưu thông khí và giảm độ ẩm trên tán lá. Giám sát bằng ứng dụng thường xuyên để phát hiện các dầu hiệu về bệnh và tỉa bỏ các cây bị nhiễm bệnh ngay khi phát hiện ra. Không nên bón thừa phân đạm. Tăng cường độ thoáng khí bên trong nhà kính.",
+        "Giải pháp phòng ngừa": "Nên xử lý hạt giống với nước nóng (122° hay 50°C trong vòng 25 phút) để đối phó mầm bệnh trênhạt. Các loài nấm Acremonium strictum, Dicyma pulvinata, Trichoderma harzianum hay T. viride và Trichothecium roseum là các loài đối kháng với loài nấm mốc M. fulva, và chúng có thể được sử dụng đễ giảm thiểu khả năng lây lan của loài nấm mốc ấy.",
+        "Bón Phân": "Sử dụng các loại thuốc BVTV có hoạt chất sau để phòng trị: Azoxystrobin, Difenoconazole Validacin, Hexaconazole…",
+        "Nguồn": "Thuốc sát trùng Cần Thơ"
+    },
+    {
+        "diseaseID" : 10, //spider 
+        "Nguyên Nhân Gây Bệnh": "Nhện đỏ trên cà chua là sâu hại nguy hiểm trên cây trồng. Chúng tấn công làm cây ảnh hưởng đến khả năng sinh trưởng và phát triển của cây cà chua, thậm chí là năng suất cây trồng.",
+        "Triệu chứng": "Trên lá Xuất hiện chấm trắng vàng loang lổ, về sau sẽ phồng rộp, vàng thô cứng và cuối cùng có thể rụng khỏi cành. Trên quả có những vết nứt nẻ, màu vàng loang và sạm màu.",
+        "Giải Pháp vườn ươm" : "Quản lý cỏ trong vườn. Xử lý hoặc loại bỏ các cây bị nhiễm bệnh, tránh lây lan. Vệ sinh dụng cụ làm vườn",
+        "Giải pháp phòng ngừa": "Sử dụng nước rửa chén để phun phòng trừ nhện đỏ (cách này cũng không mang lại hiệu quả lâu dài). Phun phòng trừ nhện bằng chế phẩm sinh học BT-EMI liều lượng 1 lít cho 100 lít nước phun ướt thân và lá của cây cà chua. Khuyến nghị: Nên sử dụng kết hợp cùng Abamectin 36g/ l (theo liều lượng của nhà sản xuất) để tăng hiệu quả sử dụng. ",
+        "Bón Phân": "Khi mật độ nhện cao nên tiến hành phun các loại thuốc BVTV chứa hoạt chất như Chlorantraniliprole, Abamectin",
+        "Nguồn": "ABA CHEMICAL - Nguyên cứu & phối chế, gia công sản xuất sản phẩm."
+    }
+
+]
