@@ -15,6 +15,14 @@ def check_login(item: dict):
     response = requests.post(url, json= item)
     return response
 
+def create_new_user(item: dict):
+    ip = get_ip_from_ddns.get(my_ddns)
+    url = base_url.format(ip, port) + '/create-new-user'
+    print(url)
+    
+    response = requests.post(url, json= item)
+    return response
+
 if __name__ == '__main__':
     encrypted_password = encrypt_password('chao em').decode()
     item = {
