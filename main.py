@@ -1,19 +1,32 @@
-from login_UI import login_ui, register_ui
-from process_app import app
 import streamlit as st
+from login import login_ui, state, register_ui, logout
+from app import app as main_app
 
 def main():
-    _, center, _= st.columns([.15,.7,.15])
-    with center:
-        with st.scontainer(border=True):
-            options = ["Login", "Register"]
-            col1, _= st.columns([.3,.7])
-            with col1: 
-                choice = st.selectbox("Choose an option", options)
-            if choice == "Login":
-                login_ui()
-            elif choice == "Register":
-                register_ui()
+    if state["logged_in"]:
+        st.sidebar.title("Menu")
+        menu_choice = st.sidebar.selectbox(" ", ["Trang chủ", "Thông tin cá nhân", "Cài đặt", "Đăng xuất"])
+        if menu_choice == "Trang chủ":
+            st.write("Đây là trang chủ")
+        elif menu_choice == "Thông tin cá nhân":
+            st.write("Thông tin cá nhân của bạn")
+        elif menu_choice == "Cài đặt":
+            st.write("Cài đặt")
+        elif menu_choice == "Đăng xuất":
+            logout()
+            state["logged_in"] = False  # Reset logged_in state after logout
+        main_app()  # Display main application when logged in
+        
+    else:
+        _, center, _ = st.columns([1, 8, 1])
+        with center:
+            with st.container():
+                options = ["Đăng nhập", "Đăng kí"]
+                choice = st.selectbox("Chọn 1 tùy chọn", options)
+                if choice == "Đăng nhập":
+                    login_ui()
+                elif choice == "Đăng kí":
+                    register_ui()
 
 if __name__ == "__main__":
     main()
