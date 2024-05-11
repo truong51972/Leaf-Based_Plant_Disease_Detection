@@ -23,4 +23,4 @@ if __name__ == '__main__':
     }
 
     response = check_login(item)
-    print(response.json())
+    print(response)
