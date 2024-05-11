@@ -62,15 +62,19 @@ def add_user(userName:str, userPassword:str) -> dict:
 
 # Login function
 # return 'status'
-def user_login(userName:str, userPassword:str) -> dict:
+def user_login(userData) -> dict:
     '''
         PERFORMANCE CODE:
             '000': Action proceeded successfully 
             '002': userPassword doesn't match with the userName in the database (WrongPassword)
             '003': userName doesn't exist in the database (UserNotFound)
     '''
+
+    userName = userData.user_name
+    userPassword = userData.password
+
     if check_user(userName):
-        if check_password(userPassword):
+        if check_password(userName, userPassword):
             return {'message':'Success!',
                     'code':'000'}
         else:
@@ -79,19 +83,9 @@ def user_login(userName:str, userPassword:str) -> dict:
     else:
         return {'message':'userName not exist!',
                 'code':'003'}
-    
-'''
-    PERFORMANCE CODE:
-        '000': Action proceeded successfully 
-
-        Login code:
-            '001': userName has already existed in the database (UserExisted)
-            '002': userPassword doesn't match with the userName in the database (WrongPassword)
-            '003': userName doesn't exist in the database (UserNotFound)
-'''
 
 def main():
-   print(check_password('abc', 'zxy')) 
+   print() 
 
 if __name__ == '__main__':
     main()
