@@ -49,7 +49,7 @@ class Query:
         userPassword = userData.password
 
     # Inner function to add user to database
-        if self.__check_user(userName, self.database):
+        if self.__check_user(userName):
             return {'message':'userName already existed!',
                     'code':'001'}
         else:
