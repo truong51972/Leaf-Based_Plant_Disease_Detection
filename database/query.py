@@ -51,8 +51,8 @@ def add_user(userData, database='data.db') -> dict:
         con = sqlite3.connect(database)
         cur = con.cursor()
         cur.execute(f"""
-    INSERT INTO USER VALUES ({userName}, {userPassword})  
-    """)
+            INSERT INTO USER VALUES ({userName}, {userPassword})  
+        """)
         con.commit()
         con.close()
 
@@ -106,7 +106,7 @@ def add_picture(picData, database='data.db'):
     cur = con.cursor()
 
     cur.execute(f"""
-    INSERT INTO PIC VALUES (1, 1, '{formatted_time}', 'abc') 
+        INSERT INTO PIC VALUES (1, 1, '{formatted_time}', 'abc') 
     """)
 
     con.commit()
