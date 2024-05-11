@@ -1,6 +1,6 @@
 import requests
 from packages import get_ip_from_ddns
-from packages.encode_deconde import encrypt_password
+from packages.encode_decode import encrypt_password
     
 my_ddns = 'truong51972.ddns.net'
 port = 8000
