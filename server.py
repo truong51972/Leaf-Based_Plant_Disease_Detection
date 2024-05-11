@@ -29,4 +29,18 @@ class Request_API(BaseModel):
 async def check_login(item: User_Info):
     print(dict(item))
     response = query.user_login(item, database_path)
+    print(response)
     return response
+
+@app.post("/create-new-user")
+async def create_new_user(item: User_Info):
+    print(dict(item))
+    response = query.add_user(item, database_path)
+    print(response)
+    return response
+
+# @app.post("/analyze")
+# async def check_login(item: User_Info):
+#     print(dict(item))
+#     response = query.user_login(item, database_path)
+#     return response
