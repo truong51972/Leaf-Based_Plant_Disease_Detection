@@ -9,18 +9,20 @@ import asyncio
 
 database_path = './database/data.db'
 models = {}
+# models['query'] = Query(database_path)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    models['query'] = Query(database_path)
     # Load the ML model
     print('starting..................')
     # query = Query(database_path)
-    models['query'] = Query(database_path)
     yield
     # Clean up the ML models and release the resources
     print('shuting down..................')
 
 app = FastAPI(lifespan= lifespan)
+
 request = {
     'user_info': {
         'info': {
@@ -42,9 +44,9 @@ class Request_API(BaseModel):
     date: str
 
 @app.post("/check-login")
-def check_login(item: User_Info):
+async def check_login(item: User_Info):
     print(dict(item))
-    response = models['query'].user_login(item)
+    response = await models['query'].user_login(item)
     print(response)
     return response
 
