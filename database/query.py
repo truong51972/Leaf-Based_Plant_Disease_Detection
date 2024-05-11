@@ -8,7 +8,7 @@ class Query:
         self.con = sqlite3.connect(database)
         self.cur = self.con.cursor()
 
-    async def __check_user(self, userName:str) -> bool:
+    def __check_user(self, userName:str) -> bool:
         self.cur.execute(f"""
         SELECT userName from USER  
         """)    
@@ -19,7 +19,7 @@ class Query:
         else:
             return False
                      
-    async def __check_password(self, userName:str, userPassword:str) -> bool:
+    def __check_password(self, userName:str, userPassword:str) -> bool:
                  
         self.cur.execute(f"""
             SELECT userPassword from USER WHERE userName = '{userName}'
@@ -32,7 +32,7 @@ class Query:
         else:
             return False
         
-    async def __add_user(self, userName:str, userPassword:str):
+    def __add_user(self, userName:str, userPassword:str):
         self.cur.execute(f"""
             INSERT INTO USER VALUES ('{userName}', '{userPassword}')  
         """)
