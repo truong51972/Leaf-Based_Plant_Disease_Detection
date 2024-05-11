@@ -4,7 +4,7 @@ from database import query
 
 # run: uvicorn server:app --host 0.0.0.0 --port 8000 --reload
 app = FastAPI()
-
+database_path = './database/data.db'
 request = {
     'user_info': {
         'info': {
@@ -32,5 +32,5 @@ async def check_login(item: User_Info):
     # }
     print(item.user_name)
     print(item.password)
-    response = query.check_password(item.user_name, item.password)
+    response = query.check_password(item.user_name, item.password, database_path)
     return response
