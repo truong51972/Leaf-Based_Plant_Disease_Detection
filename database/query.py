@@ -173,7 +173,7 @@ def main():
     class User:
         def __init__(self) -> None:
             self.user_name = 'admin'
-            self.password = 'xW2PqVk-e29mqX3T2aZAYPuBl5e4SKVeKDXfvU9XC9g='
+            self.password = 'xW2PqVk-e29mqX3T2aZAYPuBl5e4SKVeKDXfvU9XC9g'
     user = User()
     query = Query()
 
