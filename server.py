@@ -27,10 +27,6 @@ class Request_API(BaseModel):
 
 @app.post("/check-login")
 async def check_login(item: User_Info):
-    # response = {
-    #     'status': 'oki',
-    # }
-    print(item.user_name)
-    print(item.password)
-    response = query.check_password(item.user_name, item.password, database_path)
+    print(dict(item))
+    response = query.user_login(item, database_path)
     return response
