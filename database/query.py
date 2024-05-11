@@ -43,16 +43,19 @@ def add_user(userData, database='data.db') -> dict:
             '000': Action proceeded successfully 
             '001': userName has already existed in the database (UserExisted)
     '''
-    userName = userData.user_name
-    userPassword = userData.password
+    userName = userData['user_name']
+    userPassword = userData['password']
+    
+    #userName = userData.user_name
+    #userPassword = userData.password
 
     # Inner function to add user to database
     def __add_user(userName:str, userPassword:str, database):
         con = sqlite3.connect(database)
         cur = con.cursor()
         cur.execute(f"""
-    INSERT INTO USER VALUES ({userName}, {userPassword})  
-    """)
+            INSERT INTO USER VALUES ('{userName}', '{userPassword}')  
+        """)
         con.commit()
         con.close()
 
@@ -106,29 +109,15 @@ def add_picture(picData, database='data.db'):
     cur = con.cursor()
 
     cur.execute(f"""
-    INSERT INTO PIC VALUES (1, 1, '{formatted_time}', 'abc') 
+        INSERT INTO PIC VALUES (1, 1, '{formatted_time}', 'abc') 
     """)
 
     con.commit()
     con.close()
 
 def main():
-    current_time = datetime.now()
-
-    # Định dạng thời gian theo YYYY-MM-DD HH:MI:SS
-    formatted_time = current_time.strftime('%Y-%m-%d %H:%M:%S')
-
-    print(formatted_time)
-   
-    con = sqlite3.connect('data.db')
-    cur = con.cursor()
-
-    cur.execute(f"""
-    INSERT INTO PIC VALUES (1, 1, '{formatted_time}', 'abc') 
-    """)
-
-    con.commit()
-    con.close()
+    print(add_user({'user_name': 'abd',
+                    'password':'xyz'}))
 
 if __name__ == '__main__':
     main()
