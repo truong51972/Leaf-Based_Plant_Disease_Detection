@@ -14,7 +14,22 @@ def login_ui():
     
     if st.button("Đăng nhập", use_container_width=True):
         user_name = st.session_state.get('username').strip()
-        if is_valid(user_name):
+        error_message = ""
+        
+        if not user_name.strip() and not password.strip():
+            error_message += "Tên đăng nhập và mật khẩu không được để trống!\n"
+        else:
+            if not is_valid(user_name):
+                error_message += "Tên đăng nhập không hợp lệ!\n"
+            
+            if not password.strip():
+                error_message += "Mật khẩu không được để trống!\n"
+            
+            if not is_valid(user_name) and not password.strip():
+                error_message = "Tên đăng nhập không hợp lệ và mật khẩu không được để trống!\n"
+
+        if is_valid(user_name) and password.strip():
+            st.session_state['encrypted_password'] = encrypt_password(password).decode()
             user_info = {
                 'user_name': user_name,
                 'password': st.session_state.get('encrypted_password')
@@ -28,32 +43,45 @@ def login_ui():
                 st.error("Tên đăng nhập không tồn tại!")
             else:
                 st.error("Lỗi không xác định!")
-        else:
-            st.error("Tên không hợp lệ!")
+
+        if error_message:
+            st.markdown(f"<p style='color:red'>{error_message}</p>", unsafe_allow_html=True)
 
 def register_ui():
-    new_username = st.text_input("Tên đăng nhập mới", key='new_username',help= 'Tên đăng kí không được chứ khoảng trắng hoặc kí tự đặc biệt!')
+    new_username = st.text_input("Tên đăng nhập mới", key='new_username', help='Tên đăng ký không được chứ khoảng trắng hoặc kí tự đặc biệt!')
     new_password = st.text_input("Mật khẩu mới", type="password", key='new_password')
     confirm_password = st.text_input("Xác nhận mật khẩu", type="password", key='confirm_password')
     st.session_state['encrypted_password'] = encrypt_password(new_password).decode()
 
     if st.button("Đăng ký"):
-        if is_valid(new_username):
+        user_name = st.session_state.get('new_username', '').strip()  # Lấy giá trị của trường nhập tên đăng nhập mới
+        error_message = ""
+        
+        if not user_name:
+            error_message += "Tên đăng nhập không được để trống!\n"
+        if not new_password.strip():
+            error_message += "Mật khẩu không được để trống!\n"
+        elif not is_valid(user_name):
+            error_message += "Tên đăng nhập không hợp lệ!\n"
+        
+        if error_message:
+            st.error(error_message)
+        else:
             if new_password == confirm_password:
                 encrypted_password = encrypt_password(new_password).decode()
                 user_info = {
-                    'user_name': st.session_state.get('new_username'),
+                    'user_name': user_name,
                     'password': st.session_state.get('encrypted_password')
                 }
                 response = create_new_user(user_info).json()
                 if response['code'] == '000':
                     st.success("Đăng ký thành công!")
                 elif response['code'] == '001':
-                    st.error("Tên đăng nhập đẫ tồn tại!")
+                    st.error("Tên đăng nhập đã tồn tại!")
             else:
                 st.error("Mật khẩu không khớp")
-        else:
-            st.error("Tên không hợp lệ!")
+
+
 
 
 def logout():
