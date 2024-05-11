@@ -126,4 +126,4 @@ if __name__ == '__main__':
     #     loop = asyncio.get_event_loop()
     #     results = await loop.run_in_executor(None, some_library) # type: ignore
     #     return results
-    await main()
+    main()
