@@ -43,11 +43,10 @@ def add_user(userData, database='data.db') -> dict:
             '000': Action proceeded successfully 
             '001': userName has already existed in the database (UserExisted)
     '''
-    userName = userData['user_name']
-    userPassword = userData['password']
+
     
-    #userName = userData.user_name
-    #userPassword = userData.password
+    userName = userData.user_name
+    userPassword = userData.password
 
     # Inner function to add user to database
     def __add_user(userName:str, userPassword:str, database):
