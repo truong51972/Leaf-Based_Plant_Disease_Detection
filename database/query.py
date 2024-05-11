@@ -56,11 +56,11 @@ def add_user(userData, database='data.db') -> dict:
         con.commit()
         con.close()
 
-    if __check_user(userName):
+    if __check_user(userName, database):
         return {'message':'userName already existed!',
                 'code':'001'}
     else:
-        __add_user(userName, userPassword)
+        __add_user(userName, userPassword, database)
         return {'message':'Success!',
                 'code':'000'}
 
@@ -87,6 +87,30 @@ def user_login(userData, database='data.db') -> dict:
     else:
         return {'message':'userName not exist!',
                 'code':'003'}
+    
+def add_picture(picData, database='data.db'):
+    
+    picID = picData.id
+    diseaseID = picData.diseaseID
+    picDate = picData.date
+    pic = picData.pic
+    
+    current_time = datetime.now()
+
+    # Định dạng thời gian theo YYYY-MM-DD HH:MI:SS
+    formatted_time = current_time.strftime('%Y-%m-%d %H:%M:%S')
+
+    print(formatted_time)
+   
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+
+    cur.execute(f"""
+    INSERT INTO PIC VALUES (1, 1, '{formatted_time}', 'abc') 
+    """)
+
+    con.commit()
+    con.close()
 
 def main():
     current_time = datetime.now()
@@ -100,7 +124,7 @@ def main():
     cur = con.cursor()
 
     cur.execute(f"""
-    INSERT INTO PIC VALUES (0, 0, {formatted_time}, 'abc') 
+    INSERT INTO PIC VALUES (1, 1, '{formatted_time}', 'abc') 
     """)
 
     con.commit()
