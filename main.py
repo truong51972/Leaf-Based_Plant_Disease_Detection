@@ -1,6 +1,7 @@
 import streamlit as st
 from login import login_ui, state, register_ui, logout
 from app import app as main_app
+from user import user_profile
 
 def main():
     if state["logged_in"]:
@@ -9,7 +10,7 @@ def main():
         if menu_choice == "Trang chủ":
             st.write("Đây là trang chủ")
         elif menu_choice == "Thông tin cá nhân":
-            st.write("Thông tin cá nhân của bạn")
+            user_profile()
         elif menu_choice == "Cài đặt":
             st.write("Cài đặt")
         elif menu_choice == "Đăng xuất":

@@ -11,6 +11,7 @@ def login_ui():
         if username == "admin" and password == "123":
             st.success("Chào mừng bạn quay lại, {}!".format(username))
             state["logged_in"] = True
+            state["username"] = username
             time.sleep(1.8)
             st.experimental_rerun()
         else:
@@ -29,4 +30,5 @@ def register_ui():
 def logout():
     global state
     state["logged_in"] = False
+    state["username"] = None
     st.experimental_rerun()
