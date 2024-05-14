@@ -15,24 +15,14 @@ models = {}
 async def lifespan(app: FastAPI):
     models['query'] = Query(database_path)
     # Load the ML model
-    print('starting..................')
+    print('Setup Successfully!')
     # query = Query(database_path)
     yield
     # Clean up the ML models and release the resources
-    print('shuting down..................')
+    Query.close()
+    print('Shut Down!')
 
 app = FastAPI(lifespan= lifespan)
-
-request = {
-    'user_info': {
-        'info': {
-            'user_name' : 'admin',
-            'password' : b'admin'
-        }
-    },
-    'image' : 'ma hinh anh',
-    'date' : 'DD-MM-YYYY'
-}
 
 class User_Info(BaseModel):
     user_name: str
