@@ -37,6 +37,9 @@ def login_ui():
             response = check_login(user_info).json()
             if response['code'] == '000':
                 st.success("Đăng nhập thành công!")
+                time.sleep(1.8)
+                st.session_state['logged_in'] = True
+                st.experimental_rerun()
             elif response['code'] == '002':
                 st.error("Sai mật khẩu!")
             elif response['code'] == '003':
@@ -48,13 +51,13 @@ def login_ui():
             st.markdown(f"<p style='color:red'>{error_message}</p>", unsafe_allow_html=True)
 
 def register_ui():
-    new_username = st.text_input("Tên đăng nhập mới", key='new_username', help='Tên đăng ký không được chứ khoảng trắng hoặc kí tự đặc biệt!')
+    new_username = st.text_input("Tên đăng nhập mới", key='new_username', help='Tên đăng ký không được chứ khoảng trắng hoặc kí tự đặc biệt!\n')
     new_password = st.text_input("Mật khẩu mới", type="password", key='new_password')
     confirm_password = st.text_input("Xác nhận mật khẩu", type="password", key='confirm_password')
     st.session_state['encrypted_password'] = encrypt_password(new_password).decode()
 
     if st.button("Đăng ký"):
-        user_name = st.session_state.get('new_username', '').strip()  # Lấy giá trị của trường nhập tên đăng nhập mới
+        user_name = st.session_state.get('new_username', '').strip()  
         error_message = ""
         
         if not user_name:
@@ -62,7 +65,7 @@ def register_ui():
         if not new_password.strip():
             error_message += "Mật khẩu không được để trống!\n"
         elif not is_valid(user_name):
-            error_message += "Tên đăng nhập không hợp lệ!\n"
+            error_message += "Tên đăng kí không được chứa kí tự đặc biệt!\n"
         
         if error_message:
             st.error(error_message)
@@ -85,7 +88,6 @@ def register_ui():
 
 
 def logout():
-    global state
-    state["logged_in"] = False
-    state["username"] = None
+    st.session_state['logged_in'] = False
+    st.session_state['logout_success'] = True
     st.experimental_rerun()
