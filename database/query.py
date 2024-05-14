@@ -90,7 +90,6 @@ class Query:
         picDate = picData.date
         pic = picData.pic
     
-
         # Định dạng thời gian theo YYYY-MM-DD HH:MI:SS
         formatted_time = picDate.strftime('%Y-%m-%d %H:%M:%S')
 
