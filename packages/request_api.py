@@ -104,13 +104,13 @@ def predict(item: dict):
 
     >>> item = {
             'user_info': {
-                'info': {
-                    'user_name' : 'user name',
-                    'password' : 'password'
-                },
+                'user_name' : 'user name',
+                'password' : 'password'
+            },
             'image_info' : {
                 'image' : 'decoded image',
-                'date' : 'DD-MM-YYYY'
+                'date' : 'DD-MM-YYYY',
+                'class_name': None
             }
         }
     >>> predict(item = item)
