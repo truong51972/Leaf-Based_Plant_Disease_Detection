@@ -44,6 +44,8 @@ def login_ui():
                 st.error("Sai mật khẩu!")
             elif response['code'] == '003':
                 st.error("Tên đăng nhập không tồn tại!")
+            elif response['code'] == '004':
+                    st.error("Không tìm thấy sever")
             else:
                 st.error("Lỗi không xác định!")
 
@@ -81,6 +83,8 @@ def register_ui():
                     st.success("Đăng ký thành công!")
                 elif response['code'] == '001':
                     st.error("Tên đăng nhập đã tồn tại!")
+                elif response['code'] == '004':
+                    st.error("Không tìm thấy sever")
             else:
                 st.error("Mật khẩu không khớp")
 
