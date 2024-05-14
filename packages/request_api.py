@@ -21,10 +21,16 @@ def __request(api_name: str, json: dict):
         print(f"Sending request to: '{url}'!")
         response = requests.post(url, json= json, timeout=5)
     except:
-        response = {
-            'message' : 'Server not Found!',
-            'code': '404'
-        }
+        class Response:
+            def __init__(self) -> None:
+                self.response = {
+                    'message' : 'Server not Found!',
+                    'code': '404'
+                }
+            def json(self) -> dict[str, str]:
+                return self.response
+            
+        response = Response()
     return response
 
 def check_login(item: dict):
@@ -135,4 +141,4 @@ if __name__ == '__main__':
         'user_name' : 'user name',
         'password' : 'password'
     }
-    print(analyze(item))
+    print(analyze(item).json())
