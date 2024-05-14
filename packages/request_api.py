@@ -82,7 +82,7 @@ def create_new_user(item: dict):
     response = __request(api_name, item)
     return response
 
-def predict(item: dict):
+def analyze(item: dict):
     """
     Make a request to database server to create new user.
 
@@ -113,7 +113,7 @@ def predict(item: dict):
                 'class_name': None
             }
         }
-    >>> predict(item = item)
+    >>> analyze(item = item)
     {
         'message' : 'message!',
         'code': 'error code!',
@@ -125,7 +125,7 @@ def predict(item: dict):
     }
     """
     
-    api_name = '/predict'
+    api_name = '/analyze'
     
     response = __request(api_name, item)
     return response
@@ -135,4 +135,4 @@ if __name__ == '__main__':
         'user_name' : 'user name',
         'password' : 'password'
     }
-    print(predict(item))
+    print(analyze(item))
