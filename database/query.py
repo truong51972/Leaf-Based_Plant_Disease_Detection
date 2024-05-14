@@ -7,7 +7,6 @@ class Query:
     def __init__(self, database='data.db'):
         self.con = sqlite3.connect(database)
         
-
     def __check_user(self, userName:str) -> bool:
         self.cur = self.con.cursor()
         self.cur.execute(f"""
@@ -91,15 +90,14 @@ class Query:
         picDate = picData.date
         pic = picData.pic
     
-        current_time = datetime.now()
 
         # Định dạng thời gian theo YYYY-MM-DD HH:MI:SS
-        formatted_time = current_time.strftime('%Y-%m-%d %H:%M:%S')
+        formatted_time = picDate.strftime('%Y-%m-%d %H:%M:%S')
 
         print(formatted_time)
 
         self.cur.execute(f"""
-        INSERT INTO PIC VALUES (1, 1, '{formatted_time}', 'abc') 
+        INSERT INTO PIC VALUES ({picID}, {diseaseID}, '{formatted_time}', '{pic}') 
         """)
 
     async def close(self):
