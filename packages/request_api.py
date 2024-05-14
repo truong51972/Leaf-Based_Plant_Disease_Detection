@@ -18,8 +18,8 @@ def __request(api_name: str, json: dict):
     try:
         ip = __ddns_to_ip(my_ddns)
         url = base_url.format(ip, port) + api_name
-        print("Sending request to: '{url}'!")
-        response = requests.post(url, json= json)
+        print(f"Sending request to: '{url}'!")
+        response = requests.post(url, json= json, timeout=5)
     except:
         response = {
             'message' : 'Server not Found!',
