@@ -7,7 +7,7 @@ def plot_loss_curves(results: dict[str, list[float]]):
     
     # Get the loss values of the results dictionary (training and val)
     train_loss = results['train_loss']
-    val_loss = results['train_loss']
+    val_loss = results['val_loss']
     # Get the accuracy values of the results dictionary (training and val)
     train_accuracy = results['train_acc']
     val_accuracy = results['val_acc']
@@ -41,6 +41,7 @@ def save_model(model: torch.nn.Module,
     graph = plot_loss_curves(results)
     
     target_dir = Path('runs/classify/')
+    target_dir.mkdir(parents=True, exist_ok=True)
     model_name = 'model.pth'
     graph_name = 'loss.jpg'
     
@@ -66,6 +67,6 @@ def save_model(model: torch.nn.Module,
     graph_save_path = target_dir_path / graph_name
     
     print(f"[INFO] Saving model to: {target_dir}")
-    graph.savefig('graph_save_path')
+    graph.savefig(graph_save_path)
     torch.save(obj=model.state_dict(),
              f=model_save_path)
