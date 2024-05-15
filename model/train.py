@@ -10,7 +10,7 @@ from model.engine import train
 from model.utils import save_model
 from model.model_builder import resnet50_model
 
-def run(dataset_path: str= 'path_to_dataset', learning_rate: float= 0.001, batch_size: int= 32):
+def run(dataset_path: str= 'path_to_dataset', epoch:int= 25, learning_rate: float= 0.001, batch_size: int= 32):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     
     dataset_path = Path(dataset_path)
@@ -47,7 +47,7 @@ def run(dataset_path: str= 'path_to_dataset', learning_rate: float= 0.001, batch
             loss_func= loss_func,
             optimizer= optimizer,
             mectric_func= mectric_func,
-            epochs= 25,
+            epochs= epoch,
             device= device
     )
 
