@@ -6,9 +6,10 @@ import torch
 def plot_loss_curves(results: dict[str, list[float]]):
     
     # Get the loss values of the results dictionary (training and val)
-    loss = results['train_loss']
+    train_loss = results['train_loss']
+    val_loss = results['train_loss']
     # Get the accuracy values of the results dictionary (training and val)
-    accuracy = results['train_acc']
+    train_accuracy = results['train_acc']
     val_accuracy = results['val_acc']
 
     # Figure out how many epochs there were
@@ -19,7 +20,7 @@ def plot_loss_curves(results: dict[str, list[float]]):
 
     # Plot loss
     plt.subplot(1, 2, 1)
-    plt.plot(epochs, loss, label='train_loss')
+    plt.plot(epochs, train_loss, label='train_loss')
     plt.plot(epochs, val_loss, label='val_loss')
     plt.title('Loss')
     plt.xlabel('Epochs')
@@ -27,7 +28,7 @@ def plot_loss_curves(results: dict[str, list[float]]):
 
     # Plot accuracy
     plt.subplot(1, 2, 2)
-    plt.plot(epochs, accuracy, label='train_accuracy')
+    plt.plot(epochs, train_accuracy, label='train_accuracy')
     plt.plot(epochs, val_accuracy, label='val_accuracy')
     plt.title('Accuracy')
     plt.xlabel('Epochs')
