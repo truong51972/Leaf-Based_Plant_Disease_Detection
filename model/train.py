@@ -10,7 +10,7 @@ from model.engine import train
 from model.utils import save_model
 from model.model_builder import resnet50_model
 
-def run(dataset_path: str= 'path_to_dataset', epoch:int= 25, learning_rate: float= 0.001, batch_size: int= 32, pretrain_model: None|str= None):
+def run(dataset_path: str= 'path_to_dataset', epoch:int= 25, learning_rate: float= 0.001, batch_size: int= 32, pretrain_model_path: None|str= None):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     
     dataset_path = Path(dataset_path)
@@ -33,7 +33,7 @@ def run(dataset_path: str= 'path_to_dataset', epoch:int= 25, learning_rate: floa
                                                               val_transform=val_transforms_data)
 
 
-    model = resnet50_model(class_names= class_names, pretrain_model= pretrain_model, device= device)
+    model = resnet50_model(class_names= class_names, pretrain_model_path= pretrain_model_path, device= device)
     
     loss_func = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(params= model.parameters(), lr= learning_rate)

@@ -3,7 +3,7 @@ from torch import nn
 from torchvision.models import efficientnet_v2_s, EfficientNet_V2_S_Weights
 from torchvision.models import resnet50, ResNet50_Weights
 
-def efficientnet_v2_s_model(class_names: list, pretrain_model_path: None|str= None, device: str):
+def efficientnet_v2_s_model(class_names: list, device: str, pretrain_model_path: None|str= None):
     weights = EfficientNet_V2_S_Weights.DEFAULT
     model = efficientnet_v2_s(weights= weights)
 
@@ -15,7 +15,7 @@ def efficientnet_v2_s_model(class_names: list, pretrain_model_path: None|str= No
     model = model.to(device)
     return model
 
-def resnet50_model(class_names: list, pretrain_model_path: None|str= None, device: str):
+def resnet50_model(class_names: list, device: str, pretrain_model_path: None|str= None):
     if pretrain_model_path is None:
         weights = ResNet50_Weights.DEFAULT
         model = resnet50(weights= weights).to(device)
