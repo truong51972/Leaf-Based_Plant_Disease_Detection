@@ -33,6 +33,8 @@ def plot_loss_curves(results: dict[str, list[float]]):
     plt.title('Accuracy')
     plt.xlabel('Epochs')
     plt.legend()
+
+    plt.savefig('haha.png')
     return plt
 
 def save_model(model: torch.nn.Module,
@@ -42,11 +44,11 @@ def save_model(model: torch.nn.Module,
     
     target_dir = Path('runs/classify/')
     target_dir.mkdir(parents=True, exist_ok=True)
+    
     model_name = 'model.pth'
     graph_name = 'loss.jpg'
     
     train_paths = os.listdir(target_dir)
-    print(train_paths)
     
     i = 0
     
@@ -60,13 +62,11 @@ def save_model(model: torch.nn.Module,
     target_dir = target_dir / train_path
     
     target_dir_path = Path(target_dir)
-    target_dir_path.mkdir(parents=True,
-                        exist_ok=True)
+    target_dir_path.mkdir(parents=True,exist_ok=True)
     
     model_save_path = target_dir_path / model_name
     graph_save_path = target_dir_path / graph_name
     
     print(f"[INFO] Saving model to: {target_dir}")
     graph.savefig(graph_save_path)
-    torch.save(obj=model.state_dict(),
-             f=model_save_path)
+    torch.save(obj=model.state_dict(), f=model_save_path)
