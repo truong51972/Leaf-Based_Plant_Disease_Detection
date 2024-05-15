@@ -31,6 +31,18 @@ def main():
         else:
             return False
         
+    def validate_password(userName, userPassword) -> dict:
+        if not is_exist_user(userName):
+            return {'message':'userName not exist!',
+                    'code':'003'} 
+        else:
+            if is_password_correct(userName, userPassword):
+                return {'message':'Success!',
+                        'code':'000'}
+            else:
+                return {'message':'Wrong password!',
+                        'code':'002'}  
+        
     def user_login(userData) -> dict:
         '''
             PERFORMANCE CODE:
@@ -44,12 +56,7 @@ def main():
 
         print(userName, userPassword)
 
-    def add_picture_to_database(picData):
-    
-        picID = picData.id
-        diseaseID = picData.diseaseID
-        picDate = picData.date
-        pic = picData.pic
+    def add_picture_to_database(picID, diseaseID, picDate, pic):
 
         # Định dạng thời gian theo YYYY-MM-DD HH:MI:SS
         formatted_time = picDate.strftime('%Y-%m-%d %H:%M:%S')
@@ -66,8 +73,32 @@ def main():
         con.commit()
         con.close()
 
-    def bruh(item):       
-        def ___id_list_len():
+    def bruh(item):   
+        '''
+    :input:
+    item = {
+        'user_info': {
+            'user_name' : 'user name',
+            'password' : 'password'
+        },
+        'image_info' : {
+            'image' : 'decoded image',
+            'date' : 'YYYY-MM-DD HH:MI:SS',
+            'class_name': None
+        }
+    }
+
+    :return:
+    {
+    'message' : 'message!',
+    'code': 'error code!',
+    'result': {
+        'class_name' : 'class name' or None,
+        'description' : (type = dictionary) or None,
+        'solution' : (type = dictionary) or None
+    }
+    }'''     
+        def __picID_list_len():
             con = sqlite3.connect('data.db')
             cur = con.cursor()
 
@@ -141,121 +172,69 @@ def main():
             return class_name, description, solution
 
             # return class_name, description, solution
-        '''
-    Input:
+               
+
+        userName = item['user_info']['user_name']
+        userPassword = item['user_info']['password']
+
+        validate_result = validate_password(userName, userPassword)
+        if validate_result['code'] == '002' or validate_result['code'] == '003':
+            return {
+                'message' : validate_result['message'],
+                'code': validate_result['code'],
+                'result': {
+                    'class_name' : None,
+                    'description' : None,
+                    'solution' : None
+                        }
+                    }
+
+
+        pic = item['image_info']['image']
+        picDate = item['image_info']['date']
+        diseaseID = item['image_info']['class_name']
+        picID = __picID_list_len()
+
+        add_picture_to_database(picID, diseaseID, picDate, pic)
+        class_name, description, solution = __extract_result(picID)
+        return {
+                'message' : validate_result['message'],
+                'code': validate_result['code'],
+                'result': {
+                    'class_name' : class_name,
+                    'description' : description,
+                    'solution' : solution
+                          }
+                }
+
+    class User:
+        def __init__(self) -> None:
+            self.user_name = 'admin'
+            self.password = 'xW2PqVk-e29mqX3T2aZAYPuBl5e4SKVeKDXfvU9XC9g='
+
+    class Pic:
+        def __init__(self) -> None:
+            self.diseaseID = 1
+            self.date = datetime.now()
+            self.pic = 'lmao'
+
+    user = User()
+
+    pic = Pic()
+
     item = {
         'user_info': {
-            'user_name' : 'user name',
-            'password' : 'password'
+            'user_name' : user.user_name, 
+            'password' : user.password
         },
         'image_info' : {
-            'image' : 'decoded image',
-            'date' : 'YYYY-MM-DD HH:MI:SS',
-            'class_name': None
+            'image' : pic.pic,
+            'date' : pic.date,
+            'class_name': pic.diseaseID
         }
     }
-    predict(item = item)
-    :return:
-    {
-    'message' : 'message!',
-    'code': 'error code!',
-    'result': {
-        'class_name' : 'class name',
-        'description' : (type = dictionary),
-        'solution' : (type = dictionary)
-    }
-    }'''
-        
-        
 
-        userName = item.user_info.user_name
-        userPassword = item.user_info.password
-        pic = item.image_info.image
-        picDate = item.image_info.date
-        diseaseID = item.class_name
-        picID = ___id_list_len()
-
-
-
-        add_picture_to_database()
-
-
-
-        
-
-    # class User:
-    #     def __init__(self) -> None:
-    #         self.user_name = 'admin'
-    #         self.password = 'xW2PqVk-e29mqX3T2aZAYPuBl5e4SKVeKDXfvU9XC9g'
-
-    # class Pic:
-    #     def __init__(self) -> None:
-    #         self.id = 66
-    #         self.diseaseID = 1
-    #         self.date = datetime.now()
-    #         self.pic = 'lmao'
-
-    # pic = Pic()
-
-    # add_picture(pic)
-    def __extract_result(picID:int):    
-            con = sqlite3.connect('data.db')
-            cur = con.cursor()
-
-            cur.execute(f"""
-            select picID,
-                   diseaseName, 
-                   diseaseCause, 
-                   diseaseSymptom, 
-                   solutionPreventation,
-                   solutionGardening,
-                   solutionFertilization,
-                   solutionSource
-            from
-            (
-            select * from 
-            (
-                PIC join DISEASE on PIC.diseaseID=DISEASE.diseaseID
-            )
-                join SOLUTION on SOLUTION.diseaseID=PIC.diseaseID
-            )
-            """)
-
-            data_list = cur.fetchall()[0]
-            (diseaseName, 
-             diseaseCause,
-             diseaseSymptom, 
-             solutionPreventation,
-             solutionGardening,
-             solutionFertilization,
-             solutionSource) = (
-                 data_list[1],
-                 data_list[2],
-                 data_list[3],
-                 data_list[4],
-                 data_list[5],
-                 data_list[6],
-                 data_list[7]
-                 ) 
-            
-            class_name = diseaseName
-            description = {
-                'cause':diseaseCause,
-                'symptom':diseaseSymptom                
-            }
-            solution = {
-                'prevention':solutionPreventation,
-                'gardening':solutionGardening,
-                'fertilization':solutionFertilization,
-                'source':solutionSource
-            }
-
-            con.commit()
-            con.close()
-
-            return class_name, description, solution
-    
-    print(__extract_result(0))
+    print(bruh(item))
 
 
 if __name__ == '__main__':
