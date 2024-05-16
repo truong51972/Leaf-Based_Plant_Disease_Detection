@@ -12,7 +12,7 @@ from model.model_builder import resnet50_model
 
 def run(dataset_path: str= 'path_to_dataset', epoch:int= 25, learning_rate: float= 0.001, batch_size: int= 32, pretrain_model_path: None|str= None):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    
+    print(f"Device: '{device}'")
     dataset_path = Path(dataset_path)
     
     train_transforms_data = transforms.Compose([
@@ -33,7 +33,7 @@ def run(dataset_path: str= 'path_to_dataset', epoch:int= 25, learning_rate: floa
                                                               val_transform=val_transforms_data)
 
 
-    model = resnet50_model(class_names= class_names, pretrain_model_path= pretrain_model_path, device= device)
+    model, info_data = resnet50_model(class_names= class_names, pretrain_model_path= pretrain_model_path, device= device)
     
     loss_func = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(params= model.parameters(), lr= learning_rate)
@@ -48,7 +48,8 @@ def run(dataset_path: str= 'path_to_dataset', epoch:int= 25, learning_rate: floa
             optimizer= optimizer,
             mectric_func= mectric_func,
             epochs= epoch,
+            info_data = info_data,
             device= device
     )
 
-    save_model(model= model, results= results)
+    save_model(model= model, results= results, class_names= class_names)

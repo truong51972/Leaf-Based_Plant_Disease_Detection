@@ -69,15 +69,18 @@ def train(model: torch.nn.Module,
           optimizer: torch.optim.Optimizer,
           mectric_func: Accuracy,
           epochs: int,
+          info_data: list,
           device: str):
-    
-    results = {
-        'train_loss': [],
-        'train_acc': [],
-        'val_loss': [],
-        'val_acc': [],    
-    }
-    
+
+    if info_data is None:
+        results = {
+            'train_loss': [],
+            'train_acc': [],
+            'val_loss': [],
+            'val_acc': [],    
+        }
+    else:
+        results = info_data['results']
     torch.manual_seed(42) 
     torch.cuda.manual_seed(42)
 

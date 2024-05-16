@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 import matplotlib.pyplot as plt
 import torch
+import json
 
 def plot_loss_curves(results: dict[str, list[float]]):
     
@@ -38,7 +39,8 @@ def plot_loss_curves(results: dict[str, list[float]]):
     return plt
 
 def save_model(model: torch.nn.Module,
-               results: dict[str, list[float]]):
+               results: dict[str, list[float]],
+               class_names: list):
     
     graph = plot_loss_curves(results)
     
@@ -47,6 +49,7 @@ def save_model(model: torch.nn.Module,
     
     model_name = 'model.pth'
     graph_name = 'loss.jpg'
+    info_file_name = 'info.json'
     
     train_paths = os.listdir(target_dir)
     
@@ -66,7 +69,17 @@ def save_model(model: torch.nn.Module,
     
     model_save_path = target_dir_path / model_name
     graph_save_path = target_dir_path / graph_name
+    info_save_path = target_dir_path / info_file_name
     
     print(f"[INFO] Saving model to: {target_dir}")
+    
+    info_data = {
+        "class_names" : class_names,
+        "results" : results
+    }
+    
+    with open(info_save_path, 'w') as f:
+        json.dump(info_data, f)
+            
     graph.savefig(graph_save_path)
     torch.save(obj=model.state_dict(), f=model_save_path)
