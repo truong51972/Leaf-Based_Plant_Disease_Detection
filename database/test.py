@@ -195,6 +195,14 @@ def main():
         diseaseID = item['image_info']['class_name']
         picID = __picID_list_len()
 
+        con = sqlite3.connect('data.db')
+        cur = con.cursor()
+        cur.execute(f'''
+        INSERT INTO USER_PIC VALUES ('{userName}', {picID})
+        ''')
+        con.commit()
+        con.close()
+
         add_picture_to_database(picID, diseaseID, picDate, pic)
         class_name, description, solution = __extract_result(picID)
         return {
@@ -206,6 +214,46 @@ def main():
                     'solution' : solution
                           }
                 }
+    
+    def get_history(userData):
+
+        userName = userData['user_info']['user_name']
+        userPassword = userData['user_info']['password']
+
+        def validate_password(userName, userPassword) -> dict:
+            if not is_exist_user(userName):
+                return {'message':'userName not exist!',
+                     'code':'003'} 
+            else:
+                if is_password_correct(userName, userPassword):
+                    return {'message':'Success!',
+                           'code':'000'}
+                else:
+                    return {'message':'Wrong password!',
+                           'code':'002'} 
+
+        validate_result = validate_password(userName, userPassword)
+        if validate_result['code'] == '002' or validate_result['code'] == '003':
+            return {
+                'message' : validate_result['message'],
+                'code': validate_result['code'],
+                'result': {
+                    'class_name' : None,
+                    'description' : None,
+                    'solution' : None
+                        }
+                    }
+                
+        if userName == 'admin':
+            con = sqlite3.connect('data.db')
+            cur = con.cursor()
+            cur.execute(f'''
+            select * from PIC
+            ''')
+            con.commit()
+            con.close()
+                
+        
 
     class User:
         def __init__(self) -> None:
