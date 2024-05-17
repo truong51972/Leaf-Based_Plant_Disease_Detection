@@ -137,9 +137,9 @@ class Query:
             (
             select * from 
             (
-                PIC join DISEASE on PIC.diseaseID=DISEASE.diseaseID
+                PIC join DISEASE on PIC.class_name=DISEASE.class_name
             )
-                join SOLUTION on SOLUTION.diseaseID=PIC.diseaseID
+                join SOLUTION on SOLUTION.class_name=PIC.class_name
             )
             where picID = 1
             """)
@@ -311,8 +311,8 @@ class Query:
                    solutionSource
             from USER_PIC
             join PIC on USER_PIC.picID = PIC.picID
-            join DISEASE on PIC.diseaseID=DISEASE.diseaseID
-            join SOLUTION on SOLUTION.diseaseID=DISEASE.diseaseID
+            join DISEASE on PIC.class_name=DISEASE.class_name
+            join SOLUTION on SOLUTION.class_name=DISEASE.class_name
             order by picDate desc
             
             ''')
@@ -336,8 +336,8 @@ class Query:
                    solutionSource
             from USER_PIC
             join PIC on USER_PIC.picID = PIC.picID
-            join DISEASE on PIC.diseaseID=DISEASE.diseaseID
-            join SOLUTION on SOLUTION.diseaseID=DISEASE.diseaseID
+            join DISEASE on PIC.class_name=DISEASE.class_name
+            join SOLUTION on SOLUTION.class_name=DISEASE.class_name
             where userName = '{userName}'
             order by picDate desc
             
@@ -384,12 +384,12 @@ class Query:
         fertilization,
         source)
 
-    def __add_picture_to_database(self, picID, diseaseID, picDate, pic, pred_pic, class_prob):
+    def __add_picture_to_database(self, picID, class_name, picDate, pic, pred_pic, class_prob):
         '''
         This private function is used for adding picture information to database
         :input:
         picID: int,
-        diseaseID: int,
+        class_name: int,
         picDate: datetime (YYYY-MM-DD HH:MI:SS)
         pic: str (enscripted content of the pic)
         '''
@@ -400,7 +400,7 @@ class Query:
         print(formatted_time)
 
         self.cur.execute(f"""
-        INSERT INTO PIC VALUES ({picID}, {diseaseID}, '{formatted_time}', '{pic}', '{pred_pic}', {class_prob}) 
+        INSERT INTO PIC VALUES ({picID}, {class_name}, '{formatted_time}', '{pic}', '{pred_pic}', {class_prob}) 
         """)
 
         self.con.commit()
@@ -451,10 +451,10 @@ class Query:
         pred_acc = item.image_info.class_prob
         pic = item.image_info.image
         picDate = item.image_info.date
-        diseaseID = item.image_info.class_name
+        class_name = item.image_info.class_name
         picID = self.__picID_list_len()
 
-        self.__add_picture_to_database(picID, diseaseID, picDate, pic, pred_pic, pred_acc)
+        self.__add_picture_to_database(picID, class_name, picDate, pic, pred_pic, pred_acc)
 
         self.cur.execute(f'''
         INSERT INTO USER_PIC VALUES ('{userName}', {picID})

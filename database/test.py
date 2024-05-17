@@ -274,17 +274,9 @@ def main():
 
             con.commit()
     
-    con = sqlite3.connect('data.db')
-    cur = con.cursor()
-
-    formatted_time = datetime.strptime('2024-05-17 16:50:17', '%Y-%m-%d %H:%M:%S')
-
-    print(str(formatted_time))
-
-    cur.execute(f'''
-    INSERT INTO PIC VALUES (2, 0, '{formatted_time}', 'asd', 'asd', 1)
-''')
-    con.commit()
+    keys = ["Bacterial_spot", "Early_blight", "Late_blight", "Leaf_Mold", "Septoria_leaf_spot", "Spider_mites_Two-spotted_spider_mite", "Target_Spot", "Tomato_Yellow_Leaf_Curl_Virus", "Tomato_mosaic_virus", "healthy"]
+    a = zip
+    print(dictionary)
 
 if __name__ == '__main__':
     main()
