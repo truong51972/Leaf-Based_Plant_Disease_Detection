@@ -5,7 +5,7 @@ from database.query import Query
 import asyncio
 
 from model.disease_detection import AI_model
-from packages.encode_decode import decode_image
+from packages.encode_decode import decode_image, encode_image
 
 # run: uvicorn server:app --host 0.0.0.0 --port 8000 --reload
 
@@ -66,6 +66,10 @@ async def analyze(item: Analyze):
     # print(dict(item))
     image = decode_image(item.image_info.image)
     result = await models['AI_model'].predict(image)
-    # item.image_info.class_name = result.
     print(result)
-    # return response
+
+    item.image_info.class_name = result['class_name']
+    item.image_info.class_prob = result['class_prob']
+    item.image_info.predicted_image = encode_image(result['predicted_image'])
+
+    return item
