@@ -1,7 +1,6 @@
 .*
 *__pycache__*
 .venv/
-database/data.db
 datasets/
 runs/
 jupyter_run.bat
