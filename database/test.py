@@ -56,7 +56,7 @@ def main():
 
         print(userName, userPassword)
 
-    def add_picture_to_database(picID, diseaseID, picDate, pic):
+    def add_picture_to_database(picID, diseaseID, picDate, pic, pred_pic, pred_accuracy):
 
         # Định dạng thời gian theo YYYY-MM-DD HH:MI:SS
         formatted_time = picDate.strftime('%Y-%m-%d %H:%M:%S')
@@ -67,7 +67,7 @@ def main():
         cur = con.cursor()
 
         cur.execute(f"""
-        INSERT INTO PIC VALUES ({picID}, {diseaseID}, '{formatted_time}', '{pic}') 
+        INSERT INTO PIC VALUES ({picID}, {diseaseID}, '{formatted_time}', '{pic}', '{pred_pic}', {pred_accuracy}) 
         """)
 
         con.commit()
@@ -84,7 +84,9 @@ def main():
         'image_info' : {
             'image' : 'decoded image',
             'date' : 'YYYY-MM-DD HH:MI:SS',
-            'class_name': None
+            'class_name': None,
+            'accuracy': None,
+            'predicted_image': None
         }
     }
 
@@ -189,7 +191,8 @@ def main():
                         }
                     }
 
-
+        pred_pic = item['image_info']['predicted_image']
+        pred_acc = item['image_info']['accuracy']
         pic = item['image_info']['image']
         picDate = item['image_info']['date']
         diseaseID = item['image_info']['class_name']
@@ -203,7 +206,7 @@ def main():
         con.commit()
         con.close()
 
-        add_picture_to_database(picID, diseaseID, picDate, pic)
+        add_picture_to_database(picID, diseaseID, picDate, pic, pred_pic, pred_acc)
         class_name, description, solution = __extract_result(picID)
         return {
                 'message' : validate_result['message'],
@@ -243,51 +246,72 @@ def main():
                     'solution' : None
                         }
                     }
-                
+        
+        con = sqlite3.connect('data.db')
+        cur = con.cursor()    
+
         if userName == 'admin':
-            con = sqlite3.connect('data.db')
-            cur = con.cursor()
+            
             cur.execute(f'''
             select * from PIC
+            order by picDate desc
             ''')
-            con.commit()
-            con.close()
-                
+
+            history = cur.fetchall()
+
+            return history
         
+        else:
+            cur.execute(f'''
+            select PIC.picID from 
+            ( 
+            USER_PIC join PIC on PIC.picID=USER_PIC.picID
+            )
+            ''')
 
-    class User:
-        def __init__(self) -> None:
-            self.user_name = 'admin'
-            self.password = 'xW2PqVk-e29mqX3T2aZAYPuBl5e4SKVeKDXfvU9XC9g='
+            picID_list = cur.fetchall()
+            final_picID_list = tuple(i[0] for i in picID_list)
 
-    class Pic:
-        def __init__(self) -> None:
-            self.diseaseID = 1
-            self.date = datetime.now()
-            self.pic = 'lmao'
+            con.commit()
+              
+    (pic, 
+        picDate, 
+        class_name, 
+        pred_pic, 
+        class_prob,
+        cause,
+        symptom,
+        prevention,
+        gardening, 
+        fertilization,
+        source) = ([1, 2], [3, 4], [5, 6], [7, 8], [9, 10], [11, 12], [13, 14], [15, 16], [17, 18], [19, 20], [21, 22])
 
-    user = User()
+    for index, attribute in enumerate([pic, 
+        picDate, 
+        class_name, 
+        pred_pic, 
+        class_prob,
+        cause,
+        symptom,
+        prevention,
+        gardening, 
+        fertilization,
+        source]):
+            for i in [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], [11, 12, 13, 14, 15, 16, 17, 18, 19, 110, 111, 112]]:
+                attribute.append(i[index+1])
 
-    pic = Pic()
-
-    item = {
-        'user_info': {
-            'user_name' : user.user_name, 
-            'password' : user.password
-        },
-        'image_info' : {
-            'image' : pic.pic,
-            'date' : pic.date,
-            'class_name': pic.diseaseID
-        }
-    }
-
-    print(bruh(item))
+    print((pic, 
+        picDate, 
+        class_name, 
+        pred_pic, 
+        class_prob,
+        cause,
+        symptom,
+        prevention,
+        gardening, 
+        fertilization,
+        source))
 
 
 if __name__ == '__main__':
-    # async def read_results():
-    #     loop = asyncio.get_event_loop()
-    #     results = await loop.run_in_executor(None, some_library) # type: ignore
-    #     return results
     main()
