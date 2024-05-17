@@ -8,17 +8,17 @@ state = {"logged_in": False}
 
 def login_ui():
     with st.form("Login Form"):
-        user_name = st.text_input("Tên đăng nhập", key='username', help='Tên đăng nhập không được chứ khoảng trắng hoặc kí tự đặc biệt!')
+        st.session_state.user_name = st.text_input("Tên đăng nhập", key='username', help='Tên đăng nhập không được chứ khoảng trắng hoặc kí tự đặc biệt!')
         password = st.text_input("Mật khẩu", type="password", key='password')
         submit_button = st.form_submit_button("Đăng nhập")
 
     if submit_button:
         error_message = ""
         
-        if not user_name.strip() or not password.strip():
+        if not st.session_state.user_name.strip() or not password.strip():
             error_message += "Tên đăng nhập và mật khẩu không được để trống!\n"
         else:
-            if not is_valid(user_name):
+            if not is_valid(st.session_state.user_name):
                 error_message += "Tên đăng nhập không hợp lệ!\n"
             if not password.strip():
                 error_message += "Mật khẩu không được để trống!\n"
@@ -27,11 +27,11 @@ def login_ui():
             st.error(error_message)
             return
         
-        if is_valid(user_name) and password.strip():
-            encrypted_password = encrypt_password(password).decode()
+        if is_valid(st.session_state.user_name) and password.strip():
+            st.session_state.encrypted_password = encrypt_password(password).decode()
             user_info = {
-                'user_name': user_name,
-                'password': encrypted_password
+                'user_name': st.session_state.user_name,
+                'password': st.session_state.encrypted_password
             }
             response = check_login(user_info).json()
             if response['code'] == '000':

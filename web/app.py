@@ -35,8 +35,8 @@ def app():
         current_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         item = {
             'user_info': {
-                'user_name': 'user name',
-                'password': 'password'
+                'user_name': st.session_state.user_name,
+                'password': st.session_state.encrypted_password
             },
             'image_info': {
                 'image': encoded_image,
