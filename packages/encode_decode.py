@@ -19,12 +19,12 @@ def encrypt_password(password: str) -> bytes:
     encrypted_password = base64.urlsafe_b64encode(kdf.derive(password))
     return encrypted_password
 
-def encode_image(image: Image.Image) -> bytes:
-    encoded_image = pickle.dumps(image)
+def encode_image(image: Image.Image) -> str:
+    encoded_image = pickle.dumps(image).decode('latin-1')
     return encoded_image
 
-def decode_image(encoded_image: bytes) -> Image.Image:
-    image = pickle.loads(encoded_image)
+def decode_image(encoded_image: str) -> Image.Image:
+    image = pickle.loads(encoded_image.encode('latin-1'))
     return image
 
 if __name__ == '__main__':
