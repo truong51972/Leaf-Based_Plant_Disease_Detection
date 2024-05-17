@@ -90,7 +90,7 @@ def create_new_user(item: dict):
 
 def analyze(item: dict):
     """
-    Make a request to database server to create new user.
+    Make a request to database server to analyze.
 
     Args:
         item: data to request.
@@ -108,15 +108,18 @@ def analyze(item: dict):
         
     Example:
 
-    >>> item = {
-            'user_info': {
+    >>> from PIL import Image
+    >>> from encode_decode import encode_image
+    >>> image = Image.open('image.JPG')
+    >>> encoded_image = encode_image(image)
+        >>> item = {
+            'user_info' : {
                 'user_name' : 'user name',
                 'password' : 'password'
             },
             'image_info' : {
-                'image' : 'decoded image',
-                'date' : 'DD-MM-YYYY',
-                'class_name': None
+                'image' : encoded_image,
+                'date' : '12093'
             }
         }
     >>> analyze(item = item)
@@ -137,8 +140,20 @@ def analyze(item: dict):
     return response
 
 if __name__ == '__main__':
+    from PIL import Image
+    from encode_decode import encode_image
+
+    image = Image.open('049230435087359914.JPG')
+    encoded_image = encode_image(image)
+    print(type(encoded_image))
     item = {
-        'user_name' : 'user name',
-        'password' : 'password'
+        'user_info' : {
+            'user_name' : 'user name',
+            'password' : 'password'
+        },
+        'image_info' : {
+            'image' : encoded_image,
+            'date' : '12093'
+        }
     }
     print(analyze(item).json())
