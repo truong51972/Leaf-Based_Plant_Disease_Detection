@@ -21,10 +21,16 @@ def __request(api_name: str, json: dict):
         print(f"Sending request to: '{url}'!")
         response = requests.post(url, json= json, timeout=5)
     except:
-        response = {
-            'message' : 'Server not Found!',
-            'code': '404'
-        }
+        class Response:
+            def __init__(self) -> None:
+                self.response = {
+                    'message' : 'Server not Found!',
+                    'code': '404'
+                }
+            def json(self) -> dict[str, str]:
+                return self.response
+            
+        response = Response()
     return response
 
 def check_login(item: dict):
@@ -82,7 +88,7 @@ def create_new_user(item: dict):
     response = __request(api_name, item)
     return response
 
-def predict(item: dict):
+def analyze(item: dict):
     """
     Make a request to database server to create new user.
 
@@ -113,7 +119,7 @@ def predict(item: dict):
                 'class_name': None
             }
         }
-    >>> predict(item = item)
+    >>> analyze(item = item)
     {
         'message' : 'message!',
         'code': 'error code!',
@@ -125,7 +131,7 @@ def predict(item: dict):
     }
     """
     
-    api_name = '/predict'
+    api_name = '/analyze'
     
     response = __request(api_name, item)
     return response
@@ -135,4 +141,4 @@ if __name__ == '__main__':
         'user_name' : 'user name',
         'password' : 'password'
     }
-    print(predict(item))
+    print(analyze(item).json())
