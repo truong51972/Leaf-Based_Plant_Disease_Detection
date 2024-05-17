@@ -15,10 +15,6 @@ def __ddns_to_ip(domain: str) -> str:
     return next(iter(answers)).address
 
 def __request(api_name: str, json: dict):
-    ip = __ddns_to_ip(my_ddns)
-    url = base_url.format(ip, port) + api_name
-    print(f"Sending request to: '{url}'!")
-    response = requests.post(url, json= json, timeout=5)
     try:
         ip = __ddns_to_ip(my_ddns)
         url = base_url.format(ip, port) + api_name
@@ -94,7 +90,7 @@ def create_new_user(item: dict):
 
 def analyze(item: dict):
     """
-    Make a request to database server to create new user.
+    Make a request to database server to analyze.
 
     Args:
         item: data to request.
@@ -112,15 +108,18 @@ def analyze(item: dict):
         
     Example:
 
-    >>> item = {
-            'user_info': {
+    >>> from PIL import Image
+    >>> from encode_decode import encode_image
+    >>> image = Image.open('image.JPG')
+    >>> encoded_image = encode_image(image)
+        >>> item = {
+            'user_info' : {
                 'user_name' : 'user name',
                 'password' : 'password'
             },
             'image_info' : {
-                'image' : 'decoded image',
-                'date' : 'DD-MM-YYYY',
-                'class_name': None
+                'image' : encoded_image,
+                'date' : '12093'
             }
         }
     >>> analyze(item = item)
@@ -142,7 +141,7 @@ def analyze(item: dict):
 
 if __name__ == '__main__':
     from PIL import Image
-    from encode_decode import encode_image, decode_image
+    from encode_decode import encode_image
 
     image = Image.open('049230435087359914.JPG')
     encoded_image = encode_image(image)
