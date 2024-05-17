@@ -71,6 +71,8 @@ async def analyze(item: Analyze):
     item.image_info.class_prob = result['class_prob']
     item.image_info.predicted_image = encode_image(result['predicted_image'])
 
+    print(item.user_info)
+    
     response = await models['query'].add_pic_and_get_solution(item)
     print(response)
     return response
