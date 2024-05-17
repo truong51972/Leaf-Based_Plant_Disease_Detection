@@ -516,7 +516,7 @@ class Query:
                            }
                 }
 
-    async def close(self):
+    def close(self):
         self.con.commit()
         self.con.close() 
 
