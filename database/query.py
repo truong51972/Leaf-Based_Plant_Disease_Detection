@@ -291,8 +291,8 @@ class Query:
         fertilization,
         source)
         '''
-        userName = userData.user_info.user_name
-        userPassword = userData.user_info.password
+        userName = userData.user_name
+        userPassword = userData.password
 
         if userName == 'admin':
             
@@ -519,7 +519,6 @@ class Query:
     async def close(self):
         self.con.commit()
         self.con.close() 
-
 
 def main():
     a = ['aed', 'aeda', 'aewvww']
