@@ -1,4 +1,9 @@
 .*
 *__pycache__*
 .venv/
-database/data.db/
+database/data.db
+datasets/
+runs/
+jupyter_run.bat
+rename_dataset.py
+All_module.ipynb
