@@ -1,19 +1,23 @@
 import streamlit as st
 from PIL import Image, ExifTags
 
+from PIL import Image, ExifTags
+
 def correct_orientation(image):
     try:
         for orientation in ExifTags.TAGS.keys():
             if ExifTags.TAGS[orientation] == 'Orientation':
                 break
         exif = image._getexif()
-        if exif[orientation] == 3:
-            image = image.rotate(180, expand=True)
-        elif exif[orientation] == 6:
-            image = image.rotate(270, expand=True)
-        elif exif[orientation] == 8:
-            image = image.rotate(90, expand=True)
+        if exif is not None and orientation in exif:  # Thêm kiểm tra này
+            if exif[orientation] == 3:
+                image = image.rotate(180, expand=True)
+            elif exif[orientation] == 6:
+                image = image.rotate(270, expand=True)
+            elif exif[orientation] == 8:
+                image = image.rotate(90, ewaxpand=True)
     except (AttributeError, KeyError, IndexError):
+        # cases: image don't have getexif
         pass
     return image
 
@@ -26,6 +30,8 @@ def app():
         # Correct orientation based on EXIF data
         corrected_image = correct_orientation(image)
         st.image(corrected_image, use_column_width=True)
+        if st.button("Gửi"):
+            st.write("Bức ảnh đã được gửi!")
 
 if __name__ == "__main__":
     app()
