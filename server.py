@@ -17,12 +17,10 @@ models = {}
 async def lifespan(app: FastAPI):
     models['query'] = Query(database_path)
     models['AI_model'] = AI_model(path_to_model= './model')
-    # Load the ML model
-    print('Setup Successfully!')
-    # query = Query(database_path)
+
     yield
-    # Clean up the ML models and release the resources
-    Query.close()
+
+    models['query'].close()
     print('Shut Down!')
 
 app = FastAPI(lifespan= lifespan)
@@ -34,6 +32,7 @@ class User_Info(BaseModel):
 class Image_info(BaseModel):
     image: str
     date: str
+    predicted_image: str = None
     class_name: str = None
     class_prob: float  = None
 
@@ -42,7 +41,7 @@ class Image_info(BaseModel):
 #     image_info : dict[str, Image_info]
 
 
-class Request_API(BaseModel):
+class Analyze(BaseModel):
     user_info: User_Info
     image_info : Image_info
 
@@ -63,19 +62,10 @@ async def create_new_user(item: User_Info):
 
 
 @app.post("/analyze")
-async def analyze(item: Request_API):
-    print(dict(item))
+async def analyze(item: Analyze):
+    # print(dict(item))
     image = decode_image(item.image_info.image)
     result = await models['AI_model'].predict(image)
+    # item.image_info.class_name = result.
     print(result)
     # return response
-
-# @app.on_event("shutdown")
-# async def shutdown_event():
-#     print("Server is shutting down...")
-
-# @app.post("/analyze")
-# async def check_login(item: User_Info):
-#     print(dict(item))
-#     response = query.user_login(item, database_path)
-#     return response
