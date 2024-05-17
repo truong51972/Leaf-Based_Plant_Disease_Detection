@@ -1,7 +1,7 @@
 import streamlit as st
 from PIL import Image, ExifTags
-
-from PIL import Image, ExifTags
+from packages.encode_decode import encode_image
+from packages.encode_decode import decode_image
 
 def correct_orientation(image):
     try:
