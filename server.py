@@ -45,7 +45,6 @@ class Analyze(BaseModel):
     user_info: User_Info
     image_info : Image_info
 
-
 @app.post("/check-login")
 async def check_login(item: User_Info):
     print(dict(item))
