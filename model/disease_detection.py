@@ -54,10 +54,10 @@ class AI_model:
         visualization = show_cam_on_image(rgb_img, grayscale_cam[0], use_rgb=True)
 
         results = {
-            "original_img" : img,
-            "predicted_img" : Image.fromarray(visualization),
-            "predicted_class" : predicted_class,
-            "probability" : probability
+            "image" : img,
+            "predicted_image" : Image.fromarray(visualization),
+            "class_name" : predicted_class,
+            "class_prob" : probability
         }
         return results
         
