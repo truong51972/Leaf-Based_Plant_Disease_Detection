@@ -1,1 +1,2 @@
-start jupyter notebook --ip=0.0.0.0 --no-browser
+conda activate Leaf_based_project
+jupyter notebook

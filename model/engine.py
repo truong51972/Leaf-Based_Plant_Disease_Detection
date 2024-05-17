@@ -1,5 +1,5 @@
 import torch
-from torchmetrics import Accuracy
+from torchmetrics import Accuracy, ConfusionMatrix
 from tqdm.auto import tqdm
 
 def __train(model: torch.nn.Module,
@@ -62,12 +62,20 @@ def __val(model: torch.nn.Module,
 
     return val_loss, val_acc
 
+def __test(model: torch.nn.Module,
+           dataloader: torch.utils.data.DataLoader,
+           loss_func: torch.nn.Module,
+           mectric_func: Accuracy,
+           device: str):
+
+    pass
+
 def train(model: torch.nn.Module,
           train_dataloader: torch.utils.data.DataLoader,
           val_dataloader: torch.utils.data.DataLoader,
           loss_func: torch.nn.Module,
           optimizer: torch.optim.Optimizer,
-          mectric_func: Accuracy,
+          mectric_funcs: list(Accuracy, ConfusionMatrix),
           epochs: int,
           info_data: list,
           device: str):
@@ -84,19 +92,19 @@ def train(model: torch.nn.Module,
     torch.manual_seed(42) 
     torch.cuda.manual_seed(42)
 
-    for epoch in tqdm(range(epochs), desc= 'Epoch'):
+    for epoch in tqdm(range(epochs), desc= 'Training'):
         print(f"\n\nEpoch: {epoch+1:2} ------------")
         train_loss, train_acc = __train(model=model,
                                         dataloader=train_dataloader,
                                         loss_func=loss_func,
                                         optimizer=optimizer,
-                                        mectric_func=mectric_func,
+                                        mectric_func=mectric_funcs[0],
                                         device= device)
         
         val_loss, val_acc = __val(model=model,
                                 dataloader=val_dataloader,
                                 loss_func=loss_func,
-                                mectric_func=mectric_func,
+                                mectric_func=mectric_funcs[0],
                                 device= device)
         
         print(f"Epoch: {epoch+1:2} | Train Loss: {train_loss:.5f} | Train Acc: {train_acc:.4f} | Val Loss: {val_loss:.5f} | Val Acc: {val_acc:.4f}")
