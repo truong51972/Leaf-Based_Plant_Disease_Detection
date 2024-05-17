@@ -1,2 +1,0 @@
-conda activate Leaf_based_project
-jupyter notebook
