@@ -273,45 +273,18 @@ def main():
             final_picID_list = tuple(i[0] for i in picID_list)
 
             con.commit()
-              
-    (pic, 
-        picDate, 
-        class_name, 
-        pred_pic, 
-        class_prob,
-        cause,
-        symptom,
-        prevention,
-        gardening, 
-        fertilization,
-        source) = ([1, 2], [3, 4], [5, 6], [7, 8], [9, 10], [11, 12], [13, 14], [15, 16], [17, 18], [19, 20], [21, 22])
+    
+    con = sqlite3.connect('data.db')
+    cur = con.cursor()
 
-    for index, attribute in enumerate([pic, 
-        picDate, 
-        class_name, 
-        pred_pic, 
-        class_prob,
-        cause,
-        symptom,
-        prevention,
-        gardening, 
-        fertilization,
-        source]):
-            for i in [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], [11, 12, 13, 14, 15, 16, 17, 18, 19, 110, 111, 112]]:
-                attribute.append(i[index+1])
+    formatted_time = datetime.strptime('2024-05-17 16:50:17', '%Y-%m-%d %H:%M:%S')
 
-    print((pic, 
-        picDate, 
-        class_name, 
-        pred_pic, 
-        class_prob,
-        cause,
-        symptom,
-        prevention,
-        gardening, 
-        fertilization,
-        source))
+    print(str(formatted_time))
 
+    cur.execute(f'''
+    INSERT INTO PIC VALUES (2, 0, '{formatted_time}', 'asd', 'asd', 1)
+''')
+    con.commit()
 
 if __name__ == '__main__':
     main()

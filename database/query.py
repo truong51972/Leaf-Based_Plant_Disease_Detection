@@ -395,7 +395,7 @@ class Query:
         '''
     
         # formatted time: YYYY-MM-DD HH:MI:SS
-        formatted_time = picDate.strftime('%Y-%m-%d %H:%M:%S')
+        formatted_time = datetime.strptime(picDate, '%Y-%m-%d %H:%M:%S')
 
         print(formatted_time)
 
