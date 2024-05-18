@@ -27,6 +27,7 @@ def run():
                     time.sleep(2)
                     st.session_state['logout_success'] = False
                     st.experimental_rerun()
+                    
                 else:
                     options = ["Đăng nhập", "Đăng kí"]
                     choice = st.selectbox("Chọn 1 tùy chọn", options)

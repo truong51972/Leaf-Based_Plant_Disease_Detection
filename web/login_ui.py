@@ -1,9 +1,9 @@
 import streamlit as st
 import time
-from packages.request_api import check_login
-from packages.request_api import create_new_user
+from packages.request_api import check_login, create_new_user
 from packages.encode_decode import encrypt_password
 from packages.preprocess_text import is_valid
+
 state = {"logged_in": False}
 
 def login_ui():
@@ -37,6 +37,7 @@ def login_ui():
             if response['code'] == '000':
                 st.success("Đăng nhập thành công!")
                 st.session_state['logged_in'] = True
+                time.sleep(1.5)
                 st.experimental_rerun()
             elif response['code'] == '002':
                 st.error("Sai mật khẩu!")
@@ -79,16 +80,13 @@ def register_ui():
             }
             response = create_new_user(user_info).json()
             if response['code'] == '000':
-                st.success("Đăng ký thành công!")
+                st.success("Đăng ký thành công! Vui lòng đăng nhập.")
             elif response['code'] == '001':
                 st.error("Tên đăng nhập đã tồn tại!")
             elif response['code'] == '404':
                 st.error("Không tìm thấy server")
         else:
             st.error("Mật khẩu không khớp")
-
-
-
 
 def logout():
     st.session_state['logged_in'] = False
