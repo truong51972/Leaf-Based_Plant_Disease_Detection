@@ -1,5 +1,5 @@
 import torch
-from torchmetrics import Accuracy, ConfusionMatrix
+from torchmetrics import Accuracy
 from tqdm.auto import tqdm
 
 def __train(model: torch.nn.Module,
@@ -16,7 +16,7 @@ def __train(model: torch.nn.Module,
 
     for _, (X, y) in enumerate(tqdm(dataloader, desc= '-----Train')):
         X, y = X.to(device), y.to(device)
-        
+
         y_pred = model(X)
         loss = loss_func(y_pred, y)
 
@@ -64,18 +64,37 @@ def __val(model: torch.nn.Module,
 
 def __test(model: torch.nn.Module,
            dataloader: torch.utils.data.DataLoader,
-           loss_func: torch.nn.Module,
-           mectric_func: Accuracy,
            device: str):
+    
+    model.eval()
+    target = torch.tensor([]).to(device)
+    preds = torch.tensor([]).to(device)
+    with torch.inference_mode():
+        for _, (X, y) in enumerate(tqdm(dataloader, desc= '------Test')):
+            X, y = X.to(device), y.to(device)
 
-    pass
+            
+            y_pred = model(X)
+            
+            y_pred_class = torch.argmax(torch.softmax(y_pred, dim= 1), dim= 1)
+
+            target = torch.cat((target, y), dim= 0)
+            preds = torch.cat((preds, y_pred_class), dim= 0)
+
+    test_results = {
+        'preds' : preds.tolist(),
+        'target' : target.tolist()
+    }
+
+    return test_results
 
 def train(model: torch.nn.Module,
           train_dataloader: torch.utils.data.DataLoader,
           val_dataloader: torch.utils.data.DataLoader,
+          test_dataloader: torch.utils.data.DataLoader,
           loss_func: torch.nn.Module,
           optimizer: torch.optim.Optimizer,
-          mectric_funcs: list(Accuracy, ConfusionMatrix),
+          mectric_funcs: Accuracy,
           epochs: int,
           info_data: list,
           device: str):
@@ -85,7 +104,8 @@ def train(model: torch.nn.Module,
             'train_loss': [],
             'train_acc': [],
             'val_loss': [],
-            'val_acc': [],    
+            'val_acc': [],
+            'test_results' : {}
         }
     else:
         results = info_data['results']
@@ -98,13 +118,13 @@ def train(model: torch.nn.Module,
                                         dataloader=train_dataloader,
                                         loss_func=loss_func,
                                         optimizer=optimizer,
-                                        mectric_func=mectric_funcs[0],
+                                        mectric_func=mectric_funcs,
                                         device= device)
         
         val_loss, val_acc = __val(model=model,
                                 dataloader=val_dataloader,
                                 loss_func=loss_func,
-                                mectric_func=mectric_funcs[0],
+                                mectric_func=mectric_funcs,
                                 device= device)
         
         print(f"Epoch: {epoch+1:2} | Train Loss: {train_loss:.5f} | Train Acc: {train_acc:.4f} | Val Loss: {val_loss:.5f} | Val Acc: {val_acc:.4f}")
@@ -113,4 +133,7 @@ def train(model: torch.nn.Module,
         results["val_loss"].append(val_loss)
         results["val_acc"].append(val_acc)
 
+    results["test_results"] = __test(model=model,
+                                     dataloader=test_dataloader,
+                                     device= device)
     return results

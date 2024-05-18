@@ -16,6 +16,7 @@ def create_dataloader(
                 ):
     train_path = dataset_path / 'train'
     val_path = dataset_path / 'val'
+    test_path = dataset_path / 'test'
     
     train_data = ImageFolder(
         root= train_path,
@@ -24,6 +25,11 @@ def create_dataloader(
     
     val_data = ImageFolder(
         root= val_path,
+        transform= val_transform
+    )
+
+    test_data = ImageFolder(
+        root= test_path,
         transform= val_transform
     )
     
@@ -38,6 +44,11 @@ def create_dataloader(
         batch_size= batch_size,
         shuffle= False
     )
-    
+
+    test_dataloader = DataLoader(
+        dataset= test_data,
+        batch_size= batch_size,
+        shuffle= False
+    )
     class_names = train_data.classes
-    return train_dataloader, val_dataloader, class_names
+    return train_dataloader, val_dataloader, test_dataloader, class_names

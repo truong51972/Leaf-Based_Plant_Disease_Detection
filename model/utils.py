@@ -1,8 +1,11 @@
 import os
 from pathlib import Path
-import matplotlib.pyplot as plt
 import torch
 import json
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from torchmetrics import ConfusionMatrix
 
 def plot_loss_curves(results: dict[str, list[float]]):
     train_loss = results['train_loss']
@@ -29,17 +32,34 @@ def plot_loss_curves(results: dict[str, list[float]]):
     plt.legend()
     return plt
 
+def plot_confmat(table):
+    plt.figure(figsize=(8, 6))
+    sns.heatmap(table, annot=True)
+    plt.title('Confusion Matrix')
+
+    return plt
+
 def save_model(model: torch.nn.Module,
                results: dict[str, list[float]],
-               class_names: list):
+               class_names: list,
+               device: str):
     
-    graph = plot_loss_curves(results)
+    graph_loss = plot_loss_curves(results)
+
+    confmat = ConfusionMatrix(task="multiclass", num_classes= len(class_names)).to(device)
+    
+    preds = torch.tensor(results['test_results']['preds']).to(device)
+    target = torch.tensor(results['test_results']['target']).to(device)
+    table = confmat(preds, target).tolist()
+    
+    graph_confmat = plot_confmat(table)
     
     target_dir = Path('runs/classify/')
     target_dir.mkdir(parents=True, exist_ok=True)
     
     model_name = 'model.pth'
-    graph_name = 'loss.jpg'
+    graph_loss_name = 'loss_acc.jpg'
+    grapg_confmat_name = 'confusion_matrix.jpg'
     info_file_name = 'info.json'
     
     train_paths = os.listdir(target_dir)
@@ -59,7 +79,8 @@ def save_model(model: torch.nn.Module,
     target_dir_path.mkdir(parents=True,exist_ok=True)
     
     model_save_path = target_dir_path / model_name
-    graph_save_path = target_dir_path / graph_name
+    graph_loss_save_path = target_dir_path / graph_loss_name
+    graph_confmat_save_path = target_dir_path / grapg_confmat_name
     info_save_path = target_dir_path / info_file_name
     
     print(f"[INFO] Saving model to: {target_dir}")
@@ -70,7 +91,8 @@ def save_model(model: torch.nn.Module,
     }
     
     with open(info_save_path, 'w') as f:
-        json.dump(info_data, findent=4)
-            
-    graph.savefig(graph_save_path)
+        json.dump(info_data, f, indent=4)
+
+    graph_loss.savefig(graph_loss_save_path)
+    graph_confmat.savefig(graph_confmat_save_path)
     torch.save(obj=model.state_dict(), f=model_save_path)

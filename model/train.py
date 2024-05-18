@@ -3,7 +3,7 @@ from torch import nn
 from torchvision import transforms
 
 from pathlib import Path
-from torchmetrics import Accuracy
+from torchmetrics import Accuracy, ConfusionMatrix
 
 from model.data_setup import create_dataloader
 from model.engine import train
@@ -27,7 +27,7 @@ def run(dataset_path: str= 'path_to_dataset', epoch:int= 25, learning_rate: floa
         transforms.ToTensor()
     ])
 
-    train_dataloader, val_dataloader, class_names = create_dataloader(dataset_path=dataset_path,
+    train_dataloader, val_dataloader, test_dataloader, class_names = create_dataloader(dataset_path=dataset_path,
                                                               batch_size=batch_size,
                                                               train_transform=train_transforms_data,
                                                               val_transform=val_transforms_data)
@@ -38,18 +38,19 @@ def run(dataset_path: str= 'path_to_dataset', epoch:int= 25, learning_rate: floa
     loss_func = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(params= model.parameters(), lr= learning_rate)
     
-    mectric_func = Accuracy(task='multiclass', num_classes= len(class_names)).to(device)
+    accur = Accuracy(task='multiclass', num_classes= len(class_names)).to(device)
     
     results = train(
             model= model,
             train_dataloader= train_dataloader,
             val_dataloader= val_dataloader,
+            test_dataloader= test_dataloader,
             loss_func= loss_func,
             optimizer= optimizer,
-            mectric_func= mectric_func,
+            mectric_funcs= accur,
             epochs= epoch,
             info_data = info_data,
             device= device
     )
-
-    save_model(model= model, results= results, class_names= class_names)
+    
+    save_model(model= model, results= results, class_names= class_names, device= device)
