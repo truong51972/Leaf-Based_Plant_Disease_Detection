@@ -5,18 +5,21 @@ from packages.encode_decode import encode_image,decode_image
 from packages.request_api import analyze
 import pandas as pd
 
-def correct_orientation(image):
+def correct_orientation_and_resize(image, max_size=(224,224)):
+    # Handle orientation
     for orientation in ExifTags.TAGS.keys():
         if ExifTags.TAGS[orientation] == 'Orientation':
             break
     exif = image._getexif()
-    if exif is not None and orientation in exif:  # Thêm kiểm tra này
+    if exif is not None and orientation in exif:
         if exif[orientation] == 3:
             image = image.rotate(180, expand=True)
         elif exif[orientation] == 6:
             image = image.rotate(270, expand=True)
         elif exif[orientation] == 8:
-            image = image.rotate(90, ewaxpand=True)
+            image = image.rotate(90, expand=True)
+    
+    image = image.resize(max_size)
     return image
 
 def app():
@@ -27,9 +30,9 @@ def app():
 
         if uploaded_image is not None:
             image = Image.open(uploaded_image)
-        
-            corrected_image = correct_orientation(image)
+            corrected_image = correct_orientation_and_resize(image)
             st.image(corrected_image, use_column_width=True)
+
     if st.button("Gửi",use_container_width=True):
         encoded_image = encode_image(image)
         current_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
