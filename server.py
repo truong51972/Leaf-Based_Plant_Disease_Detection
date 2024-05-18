@@ -4,6 +4,10 @@ from pydantic import BaseModel
 from database.query import Query
 import asyncio
 
+import io
+import base64
+from PIL import Image
+
 from model.disease_detection import AI_model
 from packages.encode_decode import decode_image, encode_image
 
@@ -21,7 +25,6 @@ async def lifespan(app: FastAPI):
     yield
 
     models['query'].close()
-    print('Shut Down!')
 
 app = FastAPI(lifespan= lifespan)
 
@@ -35,11 +38,6 @@ class Image_info(BaseModel):
     predicted_image: str = None
     class_name: str = None
     class_prob: float  = None
-
-# class Request_API(BaseModel):
-#     user_info: dict[str, User_Info]
-#     image_info : dict[str, Image_info]
-
 
 class Analyze(BaseModel):
     user_info: User_Info
@@ -59,23 +57,47 @@ async def create_new_user(item: User_Info):
     print(response)
     return response
 
+def encode_image_to_base64(img):
+    try:
+        buffer = io.BytesIO()
+        img.save(buffer, format="PNG")
+        img_data = buffer.getvalue()
+        encoded_image = base64.b64encode(img_data)
+        return encoded_image.decode('utf-8')
+    except Exception as e:
+        print("Error:", e)
+
+def decode_base64_to_image(encoded_image):
+    try:
+        decoded_data = base64.b64decode(encoded_image.encode('utf-8'))
+        img = Image.open(io.BytesIO(decoded_data))
+        return img
+    except Exception as e:
+        print("Error:", e)
 
 @app.post("/analyze")
 async def analyze(item: Analyze):
     # print(dict(item))
     image = decode_image(item.image_info.image)
     result = await models['AI_model'].predict(image)
-    print(result)
 
+    item.image_info.image = encode_image_to_base64(image)
+    # print(result)
+    # print(item)
     item.image_info.class_name = result['class_name']
     item.image_info.class_prob = result['class_prob']
-    item.image_info.predicted_image = encode_image(result['predicted_image'])
+    item.image_info.predicted_image = encode_image_to_base64(result['predicted_image'])
 
+    print(decode_base64_to_image(item.image_info.image))
+    print(type(encode_image_to_base64(result['predicted_image'])))
+    # for key, value in item.image_info:
+    #     print(key)
+    #     print(value == None)
 
-    print(item.image_info.date)
-    print(item.image_info.class_prob)
-    print(item.image_info.class_name)
+    # print(item.image_info.date)
+    # print(item.image_info.class_prob)
+    # print(item.image_info.class_name)
     
     response = await models['query'].add_pic_and_get_solution(item)
-    print(response)
+    # print(response)
     return response

@@ -397,14 +397,12 @@ class Query:
         # formatted time: YYYY-MM-DD HH:MI:SS
         formatted_time = datetime.strptime(picDate, '%Y-%m-%d %H:%M:%S')
 
-        print(formatted_time)
+        self.cur = self.con.cursor()
 
         self.cur.execute(f"""
-        INSERT INTO PIC VALUES ({picID}, {class_name}, '{formatted_time}', '{pic}', '{pred_pic}', {class_prob}) 
+        INSERT INTO PIC VALUES ({picID}, '{class_name}', '{formatted_time}', '{pic}', '{pred_pic}', {class_prob}) 
         """)
-
         self.con.commit()
-    
     async def add_pic_and_get_solution(self, item):   
         '''
     This function is used to add picture to database and extract solution for that picture.
