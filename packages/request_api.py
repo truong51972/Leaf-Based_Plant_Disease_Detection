@@ -83,7 +83,7 @@ def create_new_user(item: dict):
     {'message' : '...','code': 'XXX'}
     """
 
-    api_name = '//create-new-user'
+    api_name = '/create-new-user'
     
     response = __request(api_name, item)
     return response
