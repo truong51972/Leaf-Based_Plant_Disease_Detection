@@ -45,16 +45,16 @@ class Analyze(BaseModel):
 
 @app.post("/check-login")
 async def check_login(item: User_Info):
-    print(dict(item))
+    # print(dict(item))
     response = await models['query'].login_and_get_history(item)
-    print(response)
+    # print(response)
     return response
 
 @app.post("/create-new-user")
 async def create_new_user(item: User_Info):
-    print(dict(item))
+    # print(dict(item))
     response = await models['query'].add_user(item)
-    print(response)
+    # print(response)
     return response
 
 def encode_image_to_base64(img):
@@ -77,27 +77,13 @@ def decode_base64_to_image(encoded_image):
 
 @app.post("/analyze")
 async def analyze(item: Analyze):
-    # print(dict(item))
     image = decode_image(item.image_info.image)
     result = await models['AI_model'].predict(image)
-
-    item.image_info.image = encode_image_to_base64(image)
-    # print(result)
-    # print(item)
+    print(result['class_name'])
     item.image_info.class_name = result['class_name']
     item.image_info.class_prob = result['class_prob']
-    item.image_info.predicted_image = encode_image_to_base64(result['predicted_image'])
+    item.image_info.predicted_image = encode_image(result['predicted_image'])
 
-    print(decode_base64_to_image(item.image_info.image))
-    print(type(encode_image_to_base64(result['predicted_image'])))
-    # for key, value in item.image_info:
-    #     print(key)
-    #     print(value == None)
-
-    # print(item.image_info.date)
-    # print(item.image_info.class_prob)
-    # print(item.image_info.class_name)
-    
     response = await models['query'].add_pic_and_get_solution(item)
-    # print(response)
+    # print(response['solution'])
     return response

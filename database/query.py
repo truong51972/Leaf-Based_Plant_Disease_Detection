@@ -141,7 +141,7 @@ class Query:
             )
                 join SOLUTION on SOLUTION.class_name=PIC.class_name
             )
-            where picID = 1
+            where picID = {picID}
             """)
 
             data_list = self.cur.fetchall()[0]
