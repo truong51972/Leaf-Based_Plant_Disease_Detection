@@ -1,6 +1,5 @@
+import io
 import base64
-import pickle
-
 from PIL import Image
 
 from cryptography.fernet import Fernet
@@ -19,13 +18,23 @@ def encrypt_password(password: str) -> bytes:
     encrypted_password = base64.urlsafe_b64encode(kdf.derive(password))
     return encrypted_password
 
-def encode_image(image: Image.Image) -> str:
-    encoded_image = pickle.dumps(image).decode('latin-1')
-    return encoded_image
+def encode_image(img):
+    try:
+        buffer = io.BytesIO()
+        img.save(buffer, format="PNG")
+        img_data = buffer.getvalue()
+        encoded_image = base64.b64encode(img_data)
+        return encoded_image.decode('utf-8')
+    except Exception as e:
+        print("Error:", e)
 
-def decode_image(encoded_image: str) -> Image.Image:
-    image = pickle.loads(encoded_image.encode('latin-1'))
-    return image
+def decode_image(encoded_image):
+    try:
+        decoded_data = base64.b64decode(encoded_image.encode('utf-8'))
+        img = Image.open(io.BytesIO(decoded_data))
+        return img
+    except Exception as e:
+        print("Error:", e)
 
 if __name__ == '__main__':
 
