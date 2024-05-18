@@ -21,7 +21,7 @@ def correct_orientation(image):
 
 def app():
     with st.container(border=True):
-        # st.title("Ảnh Đầu Vào và Đầu Ra")
+
         uploaded_image = st.file_uploader("Kéo và thả", type=["jpg", "jpeg", "png"])
         print(uploaded_image)
 
@@ -45,8 +45,32 @@ def app():
         }
         with st.container(border=True):
             results = analyze(item=item).json()
+
             predicted_image = decode_image(results['image_info']['predicted_image'])
-            st.image(predicted_image,caption="Kết quả", use_column_width= True)
+            class_prob = round(results['image_info']['class_prob']*100, 2)
+
+            st.image(predicted_image,caption = f'Vùng khả năng bị bệnh ({class_prob}%)', use_column_width= True)
+
+        with st.container(border=True):
+            st.markdown("<h2 style='text-align: center; color: black;'>Tên Bệnh</h2>", unsafe_allow_html=True)
+            st.markdown(f"<p>{results['solution']['Tên bệnh']}</p>", unsafe_allow_html=True)
+
+        with st.container(border=True):
+            st.markdown("<h2 style='text-align: center; color: black;'>Mô Tả Bệnh</h2>", unsafe_allow_html=True)
+            st.markdown(f"<h4>Nguyên nhân</h4><p>{results['solution']['Mô tả']['cause']}</p>", unsafe_allow_html=True)
+            st.markdown("---")
+            st.markdown(f"<h4>Triệu chứng</h4><p>{results['solution']['Mô tả']['symptom']}</p>", unsafe_allow_html=True)
+
+        with st.container(border=True):
+            st.markdown("<h2 style='text-align: center; color: black;'>Giải Pháp</h2>", unsafe_allow_html=True)
+            st.markdown(f"<h4>Ngăn ngừa</h4><p>{results['solution']['Giải pháp']['prevention']}</p>", unsafe_allow_html=True)
+            st.markdown("---")
+            st.markdown(f"<h4>Làm vườn</h4><p>{results['solution']['Giải pháp']['gardening']}</p>", unsafe_allow_html=True)
+            st.markdown("---")
+            st.markdown(f"<h4>Phân bón</h4><p>{results['solution']['Giải pháp']['fertilization']}</p>", unsafe_allow_html=True)
+            st.markdown("---")
+            st.markdown(f"<h4>Nguồn</h4><p>{results['solution']['Giải pháp']['source']}</p>", unsafe_allow_html=True)
+
 
 if __name__ == "__main__":
     app()
