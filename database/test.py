@@ -274,9 +274,52 @@ def main():
 
             con.commit()
     
-    keys = ["Bacterial_spot", "Early_blight", "Late_blight", "Leaf_Mold", "Septoria_leaf_spot", "Spider_mites_Two-spotted_spider_mite", "Target_Spot", "Tomato_Yellow_Leaf_Curl_Virus", "Tomato_mosaic_virus", "healthy"]
-    a = zip
-    print(dictionary)
+    def __picID_list_len():
+            '''
+            This private function is used for getting number of pictures saved in database
+
+            :return:
+            list_len: int
+            '''  
+            con = sqlite3.connect('data.db')
+            cur = con.cursor()
+
+            cur.execute(f"""
+            SELECT picID FROM PIC
+            """)
+
+            picID_list = cur.fetchall()
+            list_len = len(picID_list)
+            print(picID_list)
+            con.commit()
+
+            return list_len
+    
+    def __add_picture_to_database(picID=3, class_name='Tomato_mosaic_virus', picDate='2024-05-18 17:50:17', pic='adwadw', pred_pic='awdad', class_prob=0.3):
+        '''
+        This private function is used for adding picture information to database
+        :input:
+        picID: int,
+        class_name: int,
+        picDate: datetime (YYYY-MM-DD HH:MI:SS)
+        pic: str (enscripted content of the pic)
+        '''
+
+        con = sqlite3.connect('data.db')
+        cur = con.cursor()
+        # formatted time: YYYY-MM-DD HH:MI:SS
+        formatted_time = datetime.strptime(picDate, '%Y-%m-%d %H:%M:%S')
+
+        print(formatted_time)
+
+        cur.execute(f"""
+        INSERT INTO PIC VALUES ({picID}, '{class_name}', '{formatted_time}', '{pic}', '{pred_pic}', {class_prob}) 
+        """)
+
+        con.commit()
+    
+    print(__picID_list_len())
+    __add_picture_to_database()
 
 if __name__ == '__main__':
     main()
