@@ -20,7 +20,7 @@ models = {}
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     models['query'] = Query(database_path)
-    models['AI_model'] = AI_model(path_to_model= './model')
+    models['AI_model'] = AI_model(path_to_model= './model/model')
 
     yield
 
@@ -46,7 +46,7 @@ class Analyze(BaseModel):
 @app.post("/check-login")
 async def check_login(item: User_Info):
     # print(dict(item))
-    response = await models['query'].login_and_get_history(item)
+    response = await models['query'].user_login(item)
     # print(response)
     return response
 
@@ -57,33 +57,20 @@ async def create_new_user(item: User_Info):
     # print(response)
     return response
 
-def encode_image_to_base64(img):
-    try:
-        buffer = io.BytesIO()
-        img.save(buffer, format="PNG")
-        img_data = buffer.getvalue()
-        encoded_image = base64.b64encode(img_data)
-        return encoded_image.decode('utf-8')
-    except Exception as e:
-        print("Error:", e)
-
-def decode_base64_to_image(encoded_image):
-    try:
-        decoded_data = base64.b64decode(encoded_image.encode('utf-8'))
-        img = Image.open(io.BytesIO(decoded_data))
-        return img
-    except Exception as e:
-        print("Error:", e)
-
 @app.post("/analyze")
 async def analyze(item: Analyze):
     image = decode_image(item.image_info.image)
     result = await models['AI_model'].predict(image)
-    print(result['class_name'])
+    # print(result['class_name'])
     item.image_info.class_name = result['class_name']
     item.image_info.class_prob = result['class_prob']
     item.image_info.predicted_image = encode_image(result['predicted_image'])
 
     response = await models['query'].add_pic_and_get_solution(item)
     # print(response['solution'])
+    return response
+
+@app.post("/get-history")
+async def get_history(item: User_Info):
+    response = await models['query'].get_history(item)
     return response
