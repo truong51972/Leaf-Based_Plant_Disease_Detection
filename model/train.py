@@ -31,10 +31,10 @@ def run(**kwargs):
         transforms.ToTensor()
     ])
     
-    train_dataloader, val_dataloader, test_dataloader, class_names = create_dataloader(**kwargs,
-                                                                          train_transform=train_transforms_data,
-                                                                          val_transform=val_transforms_data,
-                                                                          test_transform=test_transforms_data)
+    train_dataloader, val_dataloader, test_dataloader, class_names = create_dataloader(train_transform=train_transforms_data,
+                                                                                      val_transform=val_transforms_data,
+                                                                                      test_transform=test_transforms_data,
+                                                                                      **kwargs)
 
 
     model, info_data = resnet50_model(class_names= class_names, pretrain_model_path= kwargs['train_para']['pretrain_model_path'], device= device)
@@ -57,4 +57,4 @@ def run(**kwargs):
             device= device
     )
     
-    save_model(model= model, results= results, class_names= class_names, device= device)
+    save_model(model= model, results= results, class_names= class_names, device= device, **kwargs)

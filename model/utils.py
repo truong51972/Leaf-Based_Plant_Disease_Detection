@@ -42,9 +42,8 @@ def plot_confmat(table):
 def save_model(model: torch.nn.Module,
                results: dict[str, list[float]],
                class_names: list,
-               device: str):
-    
-    graph_loss = plot_loss_curves(results)
+               device: str,
+               **kwargs):
 
     confmat = ConfusionMatrix(task="multiclass", num_classes= len(class_names)).to(device)
     
@@ -52,15 +51,15 @@ def save_model(model: torch.nn.Module,
     target = torch.tensor(results['test_results']['target']).to(device)
     table = confmat(preds, target).tolist()
     
-    graph_confmat = plot_confmat(table)
+    
     
     target_dir = Path('runs/classify/')
     target_dir.mkdir(parents=True, exist_ok=True)
     
-    model_name = 'model.pth'
-    graph_loss_name = 'loss_acc.jpg'
-    graph_confmat_name = 'confusion_matrix.jpg'
-    info_file_name = 'info.json'
+    model_name = kwargs['save_para']['model_name']
+    graph_loss_name = kwargs['save_para']['graph_loss_name']
+    graph_confmat_name = kwargs['save_para']['graph_confmat_name']
+    info_file_name = kwargs['save_para']['info_file_name']
     
     train_paths = os.listdir(target_dir)
     
@@ -92,7 +91,11 @@ def save_model(model: torch.nn.Module,
     
     with open(info_save_path, 'w') as f:
         json.dump(info_data, f, indent=4)
-
+        
+    graph_loss = plot_loss_curves(results)
     graph_loss.savefig(graph_loss_save_path)
+
+    graph_confmat = plot_confmat(table)
     graph_confmat.savefig(graph_confmat_save_path)
+    
     torch.save(obj=model.state_dict(), f=model_save_path)
