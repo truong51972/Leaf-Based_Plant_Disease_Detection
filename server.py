@@ -57,6 +57,11 @@ async def create_new_user(item: User_Info):
     # print(response)
     return response
 
+@app.post("/get-history")
+async def get_history(item: User_Info):
+    response = await models['query'].get_history(item)
+    return response
+
 @app.post("/analyze")
 async def analyze(item: Analyze):
     image = decode_image(item.image_info.image)
@@ -68,9 +73,4 @@ async def analyze(item: Analyze):
 
     response = await models['query'].add_pic_and_get_solution(item)
     # print(response['solution'])
-    return response
-
-@app.post("/get-history")
-async def get_history(item: User_Info):
-    response = await models['query'].get_history(item)
     return response
