@@ -239,9 +239,9 @@ class Query:
             return {'message':'Success!',
                     'code':'000'}
 
-    def user_login(self, userData) -> dict:
+    async def user_login(self, userData) -> dict:
         '''
-            This private function is used for user login
+            This function is used for user login
 
             :input:
             userData: User()
@@ -463,7 +463,7 @@ class Query:
                            }
                 }
 
-    def close(self):
+    async def close(self):
         self.con.commit()
         self.con.close() 
 
