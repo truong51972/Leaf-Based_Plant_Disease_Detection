@@ -33,8 +33,8 @@ def plot_loss_curves(results: dict[str, list[float]]):
     return plt
 
 def plot_confmat(table):
-    plt.figure(figsize=(8, 6))
-    sns.heatmap(table, annot=True)
+    plt.figure(figsize=(11, 8))
+    sns.heatmap(table, annot=True, fmt='.0f')
     plt.title('Confusion Matrix')
 
     return plt
@@ -59,7 +59,7 @@ def save_model(model: torch.nn.Module,
     
     model_name = 'model.pth'
     graph_loss_name = 'loss_acc.jpg'
-    grapg_confmat_name = 'confusion_matrix.jpg'
+    graph_confmat_name = 'confusion_matrix.jpg'
     info_file_name = 'info.json'
     
     train_paths = os.listdir(target_dir)
@@ -80,7 +80,7 @@ def save_model(model: torch.nn.Module,
     
     model_save_path = target_dir_path / model_name
     graph_loss_save_path = target_dir_path / graph_loss_name
-    graph_confmat_save_path = target_dir_path / grapg_confmat_name
+    graph_confmat_save_path = target_dir_path / graph_confmat_name
     info_save_path = target_dir_path / info_file_name
     
     print(f"[INFO] Saving model to: {target_dir}")

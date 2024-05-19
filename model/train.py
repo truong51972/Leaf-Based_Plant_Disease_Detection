@@ -10,10 +10,9 @@ from model.engine import train
 from model.utils import save_model
 from model.model_builder import resnet50_model
 
-def run(dataset_path: str= 'path_to_dataset', epoch:int= 25, learning_rate: float= 0.001, batch_size: int= 32, pretrain_model_path: None|str= None):
+def run(**kwargs):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     print(f"Device: '{device}'")
-    dataset_path = Path(dataset_path)
     
     train_transforms_data = transforms.Compose([
         transforms.RandomResizedCrop(size=(224, 224), antialias=True),
@@ -27,16 +26,21 @@ def run(dataset_path: str= 'path_to_dataset', epoch:int= 25, learning_rate: floa
         transforms.ToTensor()
     ])
 
-    train_dataloader, val_dataloader, test_dataloader, class_names = create_dataloader(dataset_path=dataset_path,
-                                                              batch_size=batch_size,
-                                                              train_transform=train_transforms_data,
-                                                              val_transform=val_transforms_data)
+    test_transforms_data = transforms.Compose([
+        transforms.Resize(size= 224),
+        transforms.ToTensor()
+    ])
+    
+    train_dataloader, val_dataloader, test_dataloader, class_names = create_dataloader(**kwargs,
+                                                                          train_transform=train_transforms_data,
+                                                                          val_transform=val_transforms_data,
+                                                                          test_transform=test_transforms_data)
 
 
-    model, info_data = resnet50_model(class_names= class_names, pretrain_model_path= pretrain_model_path, device= device)
+    model, info_data = resnet50_model(class_names= class_names, pretrain_model_path= kwargs['train_para']['pretrain_model_path'], device= device)
     
     loss_func = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(params= model.parameters(), lr= learning_rate)
+    optimizer = torch.optim.SGD(params= model.parameters(), lr= kwargs['train_para']['learning_rate'])
     
     accur = Accuracy(task='multiclass', num_classes= len(class_names)).to(device)
     
@@ -48,7 +52,7 @@ def run(dataset_path: str= 'path_to_dataset', epoch:int= 25, learning_rate: floa
             loss_func= loss_func,
             optimizer= optimizer,
             mectric_funcs= accur,
-            epochs= epoch,
+            epochs= kwargs['train_para']['epoch'],
             info_data = info_data,
             device= device
     )

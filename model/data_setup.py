@@ -9,14 +9,16 @@ Contain for setting updata with full func to create dataloader
 """
 
 def create_dataloader(
-                    dataset_path: Path,
-                    batch_size: int,
                     train_transform: transforms.Compose,
                     val_transform: transforms.Compose,
+                    test_transform: transforms.Compose,
+                    **kwargs,
                 ):
-    train_path = dataset_path / 'train'
-    val_path = dataset_path / 'val'
-    test_path = dataset_path / 'test'
+    dataset_path = Path(kwargs['dataset']['dataset_path'])
+    
+    train_path = dataset_path / kwargs['dataset']['folder_train']
+    val_path = dataset_path / kwargs['dataset']['folder_val']
+    test_path = dataset_path / kwargs['dataset']['folder_test']
     
     train_data = ImageFolder(
         root= train_path,
@@ -30,24 +32,24 @@ def create_dataloader(
 
     test_data = ImageFolder(
         root= test_path,
-        transform= val_transform
+        transform= test_transform
     )
     
     train_dataloader = DataLoader(
         dataset= train_data,
-        batch_size= batch_size,
+        batch_size= kwargs['dataset']['batch_size'],
         shuffle= True
     )
     
     val_dataloader = DataLoader(
         dataset= val_data,
-        batch_size= batch_size,
+        batch_size= kwargs['dataset']['batch_size'],
         shuffle= False
     )
 
     test_dataloader = DataLoader(
         dataset= test_data,
-        batch_size= batch_size,
+        batch_size= kwargs['dataset']['batch_size'],
         shuffle= False
     )
     class_names = train_data.classes

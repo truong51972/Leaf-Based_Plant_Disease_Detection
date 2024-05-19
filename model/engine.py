@@ -69,6 +69,7 @@ def __test(model: torch.nn.Module,
     model.eval()
     target = torch.tensor([]).to(device)
     preds = torch.tensor([]).to(device)
+    print('\n\n')
     with torch.inference_mode():
         for _, (X, y) in enumerate(tqdm(dataloader, desc= '------Test')):
             X, y = X.to(device), y.to(device)
