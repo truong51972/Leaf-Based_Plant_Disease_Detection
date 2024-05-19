@@ -2,7 +2,7 @@ import streamlit as st
 from web.login_ui import login_ui, state, register_ui, logout
 from web.app import app as main_app
 import time
-from web.user import user_profile
+from web.history import display_history
 
 def run():
     _, center, _ = st.columns([1, 8, 1])
@@ -12,12 +12,12 @@ def run():
                 st.session_state['logged_in'] = False
             
             if st.session_state['logged_in']:
-                tab1, tab2, tab3 = st.tabs(["Home", "User Profile", "Logout"])
+                tab1, tab2, tab3 = st.tabs(["Trang chủ", "Lịch sử", "Đăng xuất"])
             
                 with tab1:
                     main_app()
                 with tab2:
-                    st.header('user_profile')
+                    display_history()
                 with tab3:
                     if st.button("Confirm Logout"):
                         logout()

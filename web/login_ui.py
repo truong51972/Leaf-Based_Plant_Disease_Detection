@@ -37,6 +37,7 @@ def login_ui():
             if response['code'] == '000':
                 st.success("Đăng nhập thành công!")
                 st.session_state['logged_in'] = True
+                st.session_state['history'] = response['history']
                 time.sleep(1.5)
                 st.experimental_rerun()
             elif response['code'] == '002':
