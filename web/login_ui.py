@@ -37,9 +37,8 @@ def login_ui():
             if response['code'] == '000':
                 st.success("Đăng nhập thành công!")
                 st.session_state['logged_in'] = True
-                st.session_state['history'] = response['history']
                 time.sleep(1.5)
-                st.experimental_rerun()
+                st.rerun()
             elif response['code'] == '002':
                 st.error("Sai mật khẩu!")
             elif response['code'] == '003':
@@ -92,4 +91,4 @@ def register_ui():
 def logout():
     st.session_state['logged_in'] = False
     st.session_state['logout_success'] = True
-    st.experimental_rerun()
+    st.rerun()

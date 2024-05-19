@@ -26,7 +26,7 @@ def run():
                     st.success("Bạn đã đăng xuất thành công!")
                     time.sleep(2)
                     st.session_state['logout_success'] = False
-                    st.experimental_rerun()
+                    st.rerun()
                     
                 else:
                     options = ["Đăng nhập", "Đăng kí"]
