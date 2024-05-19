@@ -239,9 +239,9 @@ class Query:
             return {'message':'Success!',
                     'code':'000'}
 
-    def __user_login(self, userData) -> dict:
+    async def user_login(self, userData) -> dict:
         '''
-            This private function is used for user login
+            This function is used for user login
 
             :input:
             userData: User()
@@ -283,13 +283,7 @@ class Query:
         picDate, 
         class_name, 
         pred_pic, 
-        class_prob,
-        cause,
-        symptom,
-        prevention,
-        gardening, 
-        fertilization,
-        source)
+        class_prob)
         '''
         userName = userData.user_name
         userPassword = userData.password
@@ -298,23 +292,15 @@ class Query:
             
             self.cur.execute(f'''
             select userName, 
-                   picDate, 
                    pic, 
+                   picDate, 
+                   diseaseName,
                    pred_pic,
-                   class_prob,
-                   diseaseName, 
-                   diseaseCause, 
-                   diseaseSymptom, 
-                   solutionGardening, 
-                   solutionPrevention, 
-                   solutionFertilization, 
-                   solutionSource
+                   class_prob
             from USER_PIC
             join PIC on USER_PIC.picID = PIC.picID
             join DISEASE on PIC.class_name=DISEASE.class_name
-            join SOLUTION on SOLUTION.class_name=DISEASE.class_name
-            order by picDate desc
-            
+            order by picDate desc           
             ''')
 
             history = self.cur.fetchall()
@@ -323,24 +309,16 @@ class Query:
         else:
             self.cur.execute(f'''
             select userName, 
-                   picDate, 
                    pic, 
+                   picDate, 
+                   diseaseName,
                    pred_pic,
-                   class_prob,
-                   diseaseName, 
-                   diseaseCause, 
-                   diseaseSymptom, 
-                   solutionGardening, 
-                   solutionPrevention, 
-                   solutionFertilization, 
-                   solutionSource
+                   class_prob
             from USER_PIC
             join PIC on USER_PIC.picID = PIC.picID
             join DISEASE on PIC.class_name=DISEASE.class_name
-            join SOLUTION on SOLUTION.class_name=DISEASE.class_name
             where userName = '{userName}'
-            order by picDate desc
-            
+            order by picDate desc           
             ''')
             history = self.cur.fetchall()
             self.con.commit()
@@ -349,26 +327,16 @@ class Query:
         picDate, 
         class_name, 
         pred_pic, 
-        class_prob,
-        cause,
-        symptom,
-        prevention,
-        gardening, 
-        fertilization,
-        source) = ([], [], [], [], [], [], [], [], [], [], [])
+        class_prob) = ([], [], [], [], [])
 
-        for index, attribute in enumerate(
+
+
+        for index, attribute in zip(range(5),
         [pic, 
         picDate, 
         class_name, 
         pred_pic, 
-        class_prob,
-        cause,
-        symptom,
-        prevention,
-        gardening, 
-        fertilization,
-        source]):
+        class_prob]):
             for i in history:
                 attribute.append(i[index+1])
 
@@ -376,13 +344,7 @@ class Query:
         picDate, 
         class_name, 
         pred_pic, 
-        class_prob,
-        cause,
-        symptom,
-        prevention,
-        gardening, 
-        fertilization,
-        source)
+        class_prob)
 
     def __add_picture_to_database(self, picID, class_name, picDate, pic, pred_pic, class_prob):
         '''
@@ -471,50 +433,35 @@ class Query:
                            }
                 }
     
-    async def login_and_get_history(self, userData):
-        login = self.__user_login(userData)
-        if login['code'] == '002' or login['code'] == '003':
+    async def get_history(self, userData):
+        userName = userData.user_name
+        userPassword = userData.password
+
+        validate_result = self.__validate_password(userName, userPassword)
+        if validate_result['code'] == '002' or validate_result['code'] == '003':
             return {
-                'message' : login['message'],
-                'code': login['code'],
+                'message' : validate_result['message'],
+                'code': validate_result['code'],
                     }
-        # history = {'message' : 'message!',
-        #            'code': 'error code!',
-        #            'result': {
-        #                 'class_name' : None,
-        #                 'accuracy': None,
-        #                 'predicted_image': None,
-        #                 'description' : None,
-        #                 'solution' : None
-        #                     }
-        #             }
-        message = login['message']
-        code = login['code']
         (pic, 
         picDate, 
         class_name, 
         pred_pic, 
-        class_prob,
-        cause,
-        symptom,
-        prevention,
-        gardening, 
-        fertilization,
-        source) = self.__get_history(userData)       
+        class_prob) = self.__get_history(userData)       
 
         return {
-                'message' : login['message'],
-                'code': login['code'],
+                'message' : validate_result['message'],
+                'code': validate_result['code'],
                 'history': {
-                    'Ảnh Gốc' : pic,
-                    'Ảnh Phân Tích': pred_pic,
-                    'Độ Tin Cậy': class_prob,
-                    'Ngày Chụp' : picDate,
-                    'Tên Bệnh' : class_name    
+                    'Ảnh gốc' : pic,
+                    'Tên bệnh' : class_name,
+                    'Ảnh phân tích': pred_pic,
+                    'Độ tin cậy': class_prob,
+                    'Ngày chụp' : picDate
                            }
                 }
 
-    def close(self):
+    async def close(self):
         self.con.commit()
         self.con.close() 
 
