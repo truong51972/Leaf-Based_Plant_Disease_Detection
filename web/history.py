@@ -11,19 +11,19 @@ def display_history():
             'password': st.session_state.get('encrypted_password')
         }
     
-    response =  get_history(item=item).json()
-    
-    df_history = pd.DataFrame(response['history'])
+    if st.button("Xem thông tin."):
+        response =  get_history(item=item).json()
+        
+        df_history = pd.DataFrame(response['history'])
 
-    df_history['Ảnh gốc'] = df_history['Ảnh gốc'].apply(__url_gen)
-    df_history['Ảnh phân tích'] = df_history['Ảnh phân tích'].apply(__url_gen)
-    
+        df_history['Ảnh gốc'] = df_history['Ảnh gốc'].apply(__url_gen)
+        df_history['Ảnh phân tích'] = df_history['Ảnh phân tích'].apply(__url_gen)
 
-    st.data_editor(
-        df_history,
-        column_config={
-            'Ảnh gốc': st.column_config.ImageColumn(width='small'),
-            'Ảnh phân tích':st.column_config.ImageColumn(width='small')
-        },
-        hide_index=True,
-    )
+        st.data_editor(
+            df_history,
+            column_config={
+                'Ảnh gốc': st.column_config.ImageColumn(width='small'),
+                'Ảnh phân tích':st.column_config.ImageColumn(width='small')
+            },
+            hide_index=True,
+        )

@@ -23,7 +23,7 @@ def correct_orientation_and_resize(image, max_size=(224, 224)):
     return image
 
 def app():
-    st.title("Ứng dụng chẩn đoán bệnh cây trồng")
+    st.title("Khám bệnh lá online!")
     with st.container(border = True):
          uploaded_image = st.file_uploader("Kéo và thả", type=["jpg", "jpeg", "png"])
 

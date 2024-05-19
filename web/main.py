@@ -10,10 +10,10 @@ def run():
         with st.container():
             if 'logged_in' not in st.session_state:
                 st.session_state['logged_in'] = False
+  
             
             if st.session_state['logged_in']:
                 tab1, tab2, tab3 = st.tabs(["Trang chủ", "Lịch sử", "Đăng xuất"])
-            
                 with tab1:
                     main_app()
                 with tab2:
@@ -24,7 +24,7 @@ def run():
             else:
                 if 'logout_success' in st.session_state and st.session_state['logout_success']:
                     st.success("Bạn đã đăng xuất thành công!")
-                    time.sleep(2)
+                    time.sleep(1.6)
                     st.session_state['logout_success'] = False
                     st.rerun()
                     
