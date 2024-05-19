@@ -455,11 +455,11 @@ class Query:
                 'message' : validate_result['message'],
                 'code': validate_result['code'],
                 'history': {
-                    'Ảnh Gốc' : pic,
-                    'Ảnh Phân Tích': pred_pic,
-                    'Độ Tin Cậy': class_prob,
-                    'Ngày Chụp' : picDate,
-                    'Tên Bệnh' : class_name    
+                    'Ảnh gốc' : pic,
+                    'Tên bệnh' : class_name,
+                    'Ảnh phân tích': pred_pic,
+                    'Độ tin cậy': class_prob,
+                    'Ngày chụp' : picDate
                            }
                 }
 
