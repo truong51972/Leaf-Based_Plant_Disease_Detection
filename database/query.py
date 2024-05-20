@@ -46,11 +46,11 @@ class Query:
         userName = userData.user_name
         userPassword = userData.password
         
-        if check_user(userName):
+        if check_user(userName, self.con):
             return {'message':'userName already existed!',
                     'code':'001'}
         else:
-            add_user(userName, userPassword)
+            add_user(userName, userPassword, self.con)
             return {'message':'Success!',
                     'code':'000'}
 
@@ -80,11 +80,11 @@ class Query:
         userName = userData.user_name
         userPassword = userData.password
 
-        if not check_user(userName):
+        if not check_user(userName, self.con):
             return {'message':'userName not exist!',
                     'code':'003'} 
         else:
-            if check_password(userName, userPassword):
+            if check_password(userName, userPassword, self.con):
                 return {'message':'Success!',
                         'code':'000'}
             else:
@@ -138,16 +138,16 @@ class Query:
         pic = item.image_info.image
         picDate = item.image_info.date
         class_name = item.image_info.class_name
-        picID = picID_list_len()
+        picID = picID_list_len(self.con)
 
-        add_picture_to_database(picID, class_name, picDate, pic, pred_pic, pred_acc)
+        add_picture_to_database(picID, class_name, picDate, pic, pred_pic, pred_acc, self.con)
 
         self.cur.execute(f'''
         INSERT INTO USER_PIC VALUES ('{userName}', {picID})
         ''')
         self.con.commit()
 
-        class_name, description, solution = extract_result(picID)
+        class_name, description, solution = extract_result(picID, self.con)
         return {
                 'message' : validate_result['message'],
                 'code': validate_result['code'],
@@ -173,7 +173,7 @@ class Query:
         picDate, 
         class_name, 
         pred_pic, 
-        class_prob) = extract_history(userData)       
+        class_prob) = extract_history(userData, self.con)       
 
         return {
                 'message' : validate_result['message'],
@@ -199,7 +199,7 @@ class Query:
                 'code': validate_result['code'],
                     }
         
-        change_password(userName, newPassword)
+        change_password(userName, newPassword, self.con)
 
     async def close(self):
         self.con.commit()

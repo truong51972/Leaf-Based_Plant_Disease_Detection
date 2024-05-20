@@ -325,12 +325,18 @@ def main():
 
         con.commit()
     
-    class User():
-        def __init__(self):
-            self.user_name = 'admin'
-            self.password = '123'
+    # class User:
+    #     def __init__(self) -> None:
+    #         self.user_name = 'admin'
+    #         self.password = 'xW2PqVk-e29mqX3T2aZAYPuBl5e4SKVeKDXfvU9XC9g='
 
-    user = User()
+    # user = User()
+
+    # con1 = sqlite3.connect('data.db')
+    # con2 = sqlite3.connect('data.db')
+
+    # check_user(user, con1)
+    # check_user(user, con2)
     
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 import sqlite3
 
-def extract_result(picID:int, database='data.db'):  
+def extract_result(picID:int, con):  
     '''
             This private function is used for extract result with known picID
 
@@ -22,7 +22,6 @@ def extract_result(picID:int, database='data.db'):
                 'source':solutionSource
             }
             '''  
-    con = sqlite3.connect(database)
     cur = con.cursor()
 
     cur.execute(f"""
@@ -77,6 +76,6 @@ def extract_result(picID:int, database='data.db'):
     }
 
     con.commit()
-    con.close()
+
 
     return class_name, description, solution

@@ -1,6 +1,6 @@
 import sqlite3
 
-def extract_history(userData, database='data.db'):
+def extract_history(userData, con):
     '''
         :return:
         (pic, 
@@ -12,7 +12,6 @@ def extract_history(userData, database='data.db'):
     userName = userData.user_name
 
     if userName == 'admin':
-        con = sqlite3.connect(database)
         cur = con.cursor()
         cur.execute(f'''
         select userName, 
@@ -31,7 +30,6 @@ def extract_history(userData, database='data.db'):
         con.commit()
         
     else:
-        con = sqlite3.connect(database)
         cur = con.cursor()
         cur.execute(f'''
         select userName, 
@@ -48,7 +46,6 @@ def extract_history(userData, database='data.db'):
         ''')
         history = cur.fetchall()
         con.commit()
-        con.close()
         
     pic = [i[1] for i in history]
     picDate = [i[2] for i in history]

@@ -1,8 +1,7 @@
 import sqlite3
 
-def change_password(userName:str, newPassword:str, database='data.db'):
+def change_password(userName:str, newPassword:str, con):
     
-    con = sqlite3.connect(database)
     cur = con.cursor()
 
     cur.execute(f'''
@@ -12,7 +11,7 @@ def change_password(userName:str, newPassword:str, database='data.db'):
     ''')
 
     con.commit()
-    con.close()
+
 
 def main():
     class User():

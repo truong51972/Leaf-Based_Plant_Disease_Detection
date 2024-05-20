@@ -1,7 +1,7 @@
 import sqlite3
 from datetime import datetime
 
-def add_picture_to_database(picID, class_name, picDate, pic, pred_pic, class_prob, database='data.db'):
+def add_picture_to_database(picID, class_name, picDate, pic, pred_pic, class_prob, con):
     '''
         This private function is used for adding picture information to database
         :input:
@@ -12,7 +12,6 @@ def add_picture_to_database(picID, class_name, picDate, pic, pred_pic, class_pro
         '''
     
         # formatted time: YYYY-MM-DD HH:MI:SS
-    con = sqlite3.connect(database)
     cur = con.cursor()
     
     formatted_time = datetime.strptime(picDate, '%Y-%m-%d %H:%M:%S')

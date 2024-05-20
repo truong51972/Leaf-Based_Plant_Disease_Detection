@@ -1,13 +1,12 @@
 import sqlite3
 
-def picID_list_len(database='data.db'):
+def picID_list_len(con):
     '''
             This private function is used for getting number of pictures saved in database
 
             :return:
             list_len: int
             '''  
-    con = sqlite3.connect(database)
     cur = con.cursor()
 
     cur.execute(f"""

@@ -48,7 +48,7 @@ def extract_history(userData, database='data.db'):
         ''')
         history = cur.fetchall()
         con.commit()
-        con.close()
+
         
     pic = [i[1] for i in history]
     picDate = [i[2] for i in history]

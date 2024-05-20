@@ -1,6 +1,6 @@
 import sqlite3
 
-def check_password(userName:str, userPassword:str, database='data.db') -> bool:
+def check_password(userName:str, userPassword:str, con) -> bool:
         '''
             This private function is used for checking user password
 
@@ -11,7 +11,6 @@ def check_password(userName:str, userPassword:str, database='data.db') -> bool:
             :return:
             type(bool)
             '''  
-        con = sqlite3.connect(database)
 
         cur = con.cursor()         
         cur.execute(f"""
