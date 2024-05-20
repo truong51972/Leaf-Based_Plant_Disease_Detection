@@ -12,7 +12,7 @@ def display_history():
             'password': st.session_state.get('encrypted_password')
         }
     
-    if st.button("Xem thông tin."):
+    if st.button("Xem thông tin"):
         response =  get_history(item=item).json()
         
         df_history = pd.DataFrame(response['history'])
