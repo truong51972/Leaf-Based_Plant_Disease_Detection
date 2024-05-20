@@ -1,6 +1,13 @@
+from __check_user import check_user
+from __change_password import change_password
+from __check_password import check_password
+from __add_user import add_user
+from __picID_len import picID_list_len
+from __extract_history import extract_history
 def main():
     import sqlite3
     from datetime import datetime
+    import pytz
     def is_password_correct(userName:str, userPassword:str) -> bool:
         con = sqlite3.connect('data.db')
         cur = con.cursor()
@@ -218,7 +225,7 @@ def main():
                           }
                 }
     
-    def get_history(userData):
+    def __get_history(userData):
 
         userName = userData['user_info']['user_name']
         userPassword = userData['user_info']['password']
@@ -318,8 +325,13 @@ def main():
 
         con.commit()
     
-    print(__picID_list_len())
-    __add_picture_to_database()
+    class User():
+        def __init__(self):
+            self.user_name = 'admin'
+            self.password = '123'
+
+    user = User()
+    
 
 if __name__ == '__main__':
     main()
