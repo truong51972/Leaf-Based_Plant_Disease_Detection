@@ -4,6 +4,7 @@ from datetime import datetime
 from packages.encode_decode import encode_image, decode_image
 from packages.request_api import analyze
 import pandas as pd
+import pytz
 
 def correct_orientation_and_resize(image, max_size=(224, 224)):
     # Handle orientation
@@ -35,7 +36,8 @@ def app():
     if st.button("Gửi", use_container_width=True):
         if uploaded_image is not None:
             encoded_image = encode_image(st.session_state.corrected_image)
-            current_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            timezone = pytz.timezone('Asia/Ho_Chi_Minh')
+            current_datetime = datetime.now(timezone).strftime("%Y-%m-%d %H:%M:%S")
             item = {
                 'user_info': {
                     'user_name': st.session_state.get('user_name'),
