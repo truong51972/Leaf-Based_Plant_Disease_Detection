@@ -11,7 +11,6 @@ def add_picture_to_database(picID, class_name, picDate, pic, pred_pic, class_pro
         pic: str (enscripted content of the pic)
         '''
     
-        # formatted time: YYYY-MM-DD HH:MI:SS
     cur = con.cursor()
     
     formatted_time = datetime.strptime(picDate, '%Y-%m-%d %H:%M:%S')

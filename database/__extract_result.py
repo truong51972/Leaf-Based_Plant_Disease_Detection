@@ -33,14 +33,7 @@ def extract_result(picID:int, con):
                    solutionGardening,
                    solutionFertilization,
                    solutionSource
-            from
-            (
-            select * from 
-            (
-                PIC join DISEASE on PIC.class_name=DISEASE.class_name
-            )
-                join SOLUTION on SOLUTION.class_name=PIC.class_name
-            )
+            from PIC join DISEASE on PIC.class_name = DISEASE.class_name
             where picID = {picID}
             """)
 
@@ -76,6 +69,5 @@ def extract_result(picID:int, con):
     }
 
     con.commit()
-
-
+    
     return class_name, description, solution
