@@ -201,6 +201,10 @@ class Query:
                     }
         
         change_password(userName, newPassword, self.con)
+        return {
+                'message' : validate_result['message'],
+                'code': validate_result['code'],
+                    }
 
     async def close(self):
         self.con.commit()
