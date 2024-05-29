@@ -187,10 +187,11 @@ class Query:
                            }
                 }
     
-    async def change_password(self, userData, newPassword):
+    async def change_password(self, item):
 
-        userName = userData.user_name
-        userPassword = userData.password
+        userName = item.user_info.user_name
+        userPassword = item.user_info.password
+        newPassword = item.new_password
 
         validate_result = validate_password(userName, userPassword)
         if validate_result['code'] == '002' or validate_result['code'] == '003':
