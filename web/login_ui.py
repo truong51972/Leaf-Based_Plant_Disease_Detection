@@ -92,3 +92,5 @@ def logout():
     st.session_state['logged_in'] = False
     st.session_state['logout_success'] = True
     st.rerun()
+
+# def change_password():

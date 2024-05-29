@@ -13,12 +13,14 @@ def run():
   
             
             if st.session_state['logged_in']:
-                tab1, tab2, tab3 = st.tabs(["Trang chủ", "Lịch sử", "Đăng xuất"])
+                tab1, tab2, tab3, tab4 = st.tabs(["Trang chủ","Thông tin cá nhân", "Lịch sử", "Đăng xuất"])
                 with tab1:
                     main_app()
                 with tab2:
                     display_history()
                 with tab3:
+                    pass
+                with tab4:
                     if st.button("Confirm Logout"):
                         logout()
             else:
