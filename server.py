@@ -74,3 +74,8 @@ async def analyze(item: Analyze):
     response = await models['query'].add_pic_and_get_solution(item)
     # print(response['solution'])
     return response
+
+@app.post("/change-password")
+async def change_password(item: User_Info):
+    response = await models['query'].change_password(item)
+    return response
