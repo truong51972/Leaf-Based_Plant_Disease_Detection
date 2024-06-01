@@ -83,7 +83,7 @@ def create_new_user(item: dict):
     {'message' : '...','code': 'XXX'}
     """
 
-    api_name = '//create-new-user'
+    api_name = '/create-new-user'
     
     response = __request(api_name, item)
     return response
@@ -135,6 +135,83 @@ def analyze(item: dict):
     """
     
     api_name = '/analyze'
+    
+    response = __request(api_name, item)
+    return response
+
+def get_history(item: dict):
+    """
+    Make a request to database server to check user login.
+
+    Args:
+        item: dict[str, str]
+
+    Returns:
+        response = {
+            'message' : 'message!',
+            'code': 'error code!',
+            'history': {
+                'Ảnh gốc': [...],
+                'Ảnh phân tích': [...],
+                'Tên bệnh': [...]
+                'Độ tin cây': [...],
+                'Ngày chụp': [...]
+            }
+        }
+        
+    Example:
+
+    >>> item = {
+            'user_name' : 'user name',
+            'password' : 'password'
+        }
+    >>> get_history(item = item)
+    {
+        'message' : 'message!',
+        'code': 'error code!',
+        'history': {
+            'Ảnh gốc': [...],
+            'Ảnh phân tích': [...],
+            'Tên bệnh': [...]
+            'Độ tin cây': [...],
+            'Ngày chụp': [...]
+        }
+    }
+    """
+    api_name = '/get-history'
+    
+    response = __request(api_name, item)
+    return response
+
+def change_password(item: dict):
+    """
+    Make a request to database server to check user login.
+
+    Args:
+        item: dict[str, str]
+
+    Returns:
+        response = {
+            'message' : 'message!',
+            'code': 'error code!',
+        }
+        
+    Example:
+
+    >>> item = {
+            'user_info': {
+                'user_name' : 'user name',
+                'password' : 'password'
+            }
+            'new_password': 'new password'
+        }
+    >>> change_password(item = item)
+    {
+        'message' : 'message!',
+        'code': 'error code!',
+    }
+    """
+    api_name = '/change-password'
     
     response = __request(api_name, item)
     return response
