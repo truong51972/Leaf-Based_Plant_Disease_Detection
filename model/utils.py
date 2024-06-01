@@ -15,7 +15,7 @@ def plot_loss_curves(results: dict[str, list[float]]):
 
     epochs = range(len(results['train_loss']))
 
-    plt.figure(figsize=(15, 7))
+    plt.figure(figsize=(14, 5))
 
     plt.subplot(1, 2, 1)
     plt.plot(epochs, train_loss, label='train_loss')
@@ -33,7 +33,7 @@ def plot_loss_curves(results: dict[str, list[float]]):
     return plt
 
 def plot_confmat(table):
-    plt.figure(figsize=(11, 8))
+    plt.figure(figsize=(10, 7))
     sns.heatmap(table, annot=True, fmt='.0f')
     plt.title('Confusion Matrix')
 
@@ -91,7 +91,7 @@ def save_model(model: torch.nn.Module,
     
     with open(info_save_path, 'w') as f:
         json.dump(info_data, f, indent=4)
-        
+
     graph_loss = plot_loss_curves(results)
     graph_loss.savefig(graph_loss_save_path)
 
@@ -99,3 +99,19 @@ def save_model(model: torch.nn.Module,
     graph_confmat.savefig(graph_confmat_save_path)
     
     torch.save(obj=model.state_dict(), f=model_save_path)
+
+def save_checkpoint(model: torch.nn.Module, num: int):
+    target_path = Path('runs/classify/')
+    target_path.mkdir(parents=True, exist_ok=True)
+
+    checkpoint_dir = target_path / 'checkpoints'
+    checkpoint_dir.mkdir(parents=True, exist_ok=True)
+
+    checkpoint_names = os.listdir(checkpoint_dir)
+    
+    checkpoint_name = f'.checkpoint_{num}.pth'
+
+    checkpoint_path = checkpoint_dir / checkpoint_name
+    torch.save(obj=model.state_dict(), f=checkpoint_path)
+
+    print(f'Save checkpoint to {checkpoint_path}')
