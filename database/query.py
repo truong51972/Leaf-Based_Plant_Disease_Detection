@@ -193,7 +193,7 @@ class Query:
         userPassword = item.user_info.password
         newPassword = item.new_password
 
-        validate_result = validate_password(userName, userPassword)
+        validate_result = validate_password(userName, userPassword, self.con)
         if validate_result['code'] == '002' or validate_result['code'] == '003':
             return {
                 'message' : validate_result['message'],
