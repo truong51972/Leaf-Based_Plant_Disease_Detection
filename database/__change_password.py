@@ -1,6 +1,6 @@
 import sqlite3
 
-def change_password(userName:str, newPassword:str, con):
+def reset_password(userName:str, newPassword:str, con):
     
     cur = con.cursor()
 
