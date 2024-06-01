@@ -43,6 +43,9 @@ class Analyze(BaseModel):
     user_info: User_Info
     image_info : Image_info
 
+class Change_password(BaseModel):
+    user_info: User_Info
+    new_password: str = None
 @app.post("/check-login")
 async def check_login(item: User_Info):
     # print(dict(item))
@@ -76,6 +79,6 @@ async def analyze(item: Analyze):
     return response
 
 @app.post("/change-password")
-async def change_password(item: User_Info):
+async def change_password(item: Change_password):
     response = await models['query'].change_password(item)
     return response

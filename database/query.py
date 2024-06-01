@@ -1,7 +1,7 @@
 import sqlite3
 import asyncio
 from datetime import datetime
-from database.__change_password import change_password
+from database.__change_password import reset_password
 from database.__check_user import check_user
 from database.__check_password import check_password
 from database.__add_user import add_user
@@ -200,7 +200,7 @@ class Query:
                 'code': validate_result['code'],
                     }
         
-        change_password(userName, newPassword, self.con)
+        reset_password(userName, newPassword, self.con)
         return {
                 'message' : validate_result['message'],
                 'code': validate_result['code'],
