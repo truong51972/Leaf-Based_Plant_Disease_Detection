@@ -10,6 +10,7 @@ from database.__extract_result import extract_result
 from database.__validate_password import validate_password
 from database.__extract_history import extract_history
 from database.__add_picture import add_picture_to_database
+from database.__extract_solution import get_solution
 
 class Query:
     '''
@@ -160,6 +161,34 @@ class Query:
                 }
     
     async def get_history(self, userData):
+        '''
+        This function is used to change password of a user.
+    
+    :input:
+    userData = {
+            'user_name' : 'user name',
+            'password' : 'password'
+    }
+    :return:
+    If the user validation is True:
+                {
+                'message' : validate_result['message'],
+                'code': validate_result['code'],
+                'history': {
+                    'Ảnh gốc' : pic,
+                    'Tên bệnh' : class_name,
+                    'Ảnh phân tích': pred_pic,
+                    'Độ tin cậy': class_prob,
+                    'Ngày chụp' : picDate
+                           }
+                }
+    Else:
+                {
+                'message' : validate_result['message'],
+                'code': validate_result['code'],
+                }
+        '''
+        
         userName = userData.user_name
         userPassword = userData.password
 
@@ -188,6 +217,18 @@ class Query:
                 }
     
     async def change_password(self, item):
+        '''
+        This function is used to change password of a user.
+    
+    :input:
+    item = {
+        'user_info': {
+            'user_name' : 'user name',
+            'password' : 'password'
+        },
+        'new_password' : 'new_password'
+    }
+        '''
 
         userName = item.user_info.user_name
         userPassword = item.user_info.password
@@ -207,7 +248,20 @@ class Query:
                     }
     
     async def get_solution(self):
-        pass
+        '''
+        :return:
+        Dataframe / Dictionary of tuples:
+        {
+        'diseaseName' :         tuple(diseaseName), 
+        'diseaseCause':         tuple(diseaseCause),
+        'diseaseSymptom':       tuple(diseaseSymptom), 
+        'solutionPrevention':   tuple(solutionPrevention),
+        'solutionGardening':    tuple(solutionGardening),
+        'solutionFertilization':tuple(solutionFertilization),
+        'solutionSource':       tuple(solutionSource)
+        }
+        '''
+        return get_solution(self.con)
 
     async def close(self):
         self.con.commit()
