@@ -3,6 +3,7 @@ from web.login_ui import login_ui, state, register_ui, logout
 from web.app import app as main_app
 import time
 from web.history import display_history
+from web.user import user_info
 
 def run():
     _, center, _ = st.columns([1, 8, 1])
@@ -10,16 +11,15 @@ def run():
         with st.container():
             if 'logged_in' not in st.session_state:
                 st.session_state['logged_in'] = False
-  
-            
+              
             if st.session_state['logged_in']:
                 tab1, tab2, tab3, tab4 = st.tabs(["Trang chủ","Thông tin cá nhân", "Lịch sử", "Đăng xuất"])
                 with tab1:
                     main_app()
                 with tab2:
-                    display_history()
+                    user_info()
                 with tab3:
-                    pass
+                    display_history()
                 with tab4:
                     if st.button("Confirm Logout"):
                         logout()

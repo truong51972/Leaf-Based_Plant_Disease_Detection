@@ -1,7 +1,6 @@
 import streamlit as st
 from packages.request_api import get_history
 import pandas as pd
-from datetime import datetime, timedelta
 
 def __url_gen(x):
     return 'data:image/jpeg;base64,' + x
