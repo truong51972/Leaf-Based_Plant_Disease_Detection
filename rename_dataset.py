@@ -21,14 +21,14 @@ def rename_img(path):
             print(f"Renamed image: {img_path} -> {new_img_path}")
 
 if __name__ == '__main__':
-    datasets_path = Path('tomato')
+    datasets_path = Path(r'D:\data\tomato_realife\train')
     
-    # Rename class folders
-    rename_class(datasets_path / 'train')
-    rename_class(datasets_path / 'val')
-    rename_class(datasets_path / 'test')
+    # # Rename class folders
+    # rename_class(datasets_path / 'train')
+    # rename_class(datasets_path / 'val')
+    # rename_class(datasets_path / 'test')
     
     # Rename image files
-    rename_img(datasets_path / 'train')
-    rename_img(datasets_path / 'val')
-    rename_img(datasets_path / 'test')
+    rename_img(datasets_path / 'images')
+    # rename_img(datasets_path / 'val')
+    # rename_img(datasets_path / 'test')
