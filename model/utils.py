@@ -5,7 +5,7 @@ import json
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from torchmetrics import ConfusionMatrix
+from sklearn.metrics import confusion_matrix, f1_score, precision_score, recall_score
 
 def plot_loss_curves(results: dict[str, list[float]]):
     train_loss = results['train_loss']
@@ -32,11 +32,25 @@ def plot_loss_curves(results: dict[str, list[float]]):
     plt.legend()
     return plt
 
-def plot_confmat(table):
-    plt.figure(figsize=(10, 7))
-    sns.heatmap(table, annot=True, fmt='.0f')
+def plot_confmat(class_names, y_true, y_pred):
+    precision = precision_score(y_true, y_pred, average='macro')
+    recall = recall_score(y_true, y_pred, average='macro')
+    f1 = f1_score(y_true, y_pred, average='macro')
+    
+    table = confusion_matrix(y_true=y_true, y_pred=y_pred)
+    plt.figure(figsize=(7.5, 5))
+    sns.heatmap(table, annot=True, fmt='.0f', cmap=plt.cm.Blues)
     plt.title('Confusion Matrix')
+    plt.text(x=12.5, y=0.5, s= f'Metric:')
+    plt.text(x=12.5, y=1, s= f' - Precision: {round(precision, 3)}')
+    plt.text(x=12.5, y=1.5, s= f' - Recall: {round(recall, 3)}')
+    plt.text(x=12.5, y=2, s= f' - F1 score: {round(f1, 3)}')
 
+    plt.text(x=12.5, y=3, s= f'Class names:')
+    for i, class_name in enumerate(class_names):
+        plt.text(x=12.5, y=3.5+(i/2), s= f' {i}. {class_name[:15]}{"..." if len(class_name) > 15 else ""}')
+
+    plt.tight_layout()
     return plt
 
 def save_model(model: torch.nn.Module,
@@ -44,14 +58,9 @@ def save_model(model: torch.nn.Module,
                class_names: list,
                device: str,
                **kwargs):
-
-    confmat = ConfusionMatrix(task="multiclass", num_classes= len(class_names)).to(device)
     
-    preds = torch.tensor(results['test_results']['preds']).to(device)
-    target = torch.tensor(results['test_results']['target']).to(device)
-    table = confmat(preds, target).tolist()
-    
-    
+    preds = results['test_results']['preds']
+    targets = results['test_results']['targets']    
     
     target_dir = Path('runs/classify/')
     target_dir.mkdir(parents=True, exist_ok=True)
@@ -95,7 +104,7 @@ def save_model(model: torch.nn.Module,
     graph_loss = plot_loss_curves(results)
     graph_loss.savefig(graph_loss_save_path)
 
-    graph_confmat = plot_confmat(table)
+    graph_confmat = plot_confmat(class_names=class_names, y_true= targets, y_pred=preds)
     graph_confmat.savefig(graph_confmat_save_path)
     
     torch.save(obj=model.state_dict(), f=model_save_path)

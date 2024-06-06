@@ -8,6 +8,7 @@ def __train(model: torch.nn.Module,
             loss_func: torch.nn.Module,
             optimizer: torch.optim.Optimizer,
             mectric_func: Accuracy,
+            verbose: bool,
             device: str):
     
     train_loss = 0
@@ -15,7 +16,7 @@ def __train(model: torch.nn.Module,
     
     model.train()
 
-    for _, (X, y) in enumerate(tqdm(dataloader, desc= '-----Train', disable=True)):
+    for _, (X, y) in enumerate(tqdm(dataloader, desc= '-----Train', disable= (not verbose))):
         X, y = X.to(device), y.to(device)
 
         y_pred = model(X)
@@ -39,6 +40,7 @@ def __val(model: torch.nn.Module,
            dataloader: torch.utils.data.DataLoader,
            loss_func: torch.nn.Module,
            mectric_func: Accuracy,
+           verbose: bool,
            device: str):
 
     val_loss = 0
@@ -47,7 +49,7 @@ def __val(model: torch.nn.Module,
     model.eval()
     
     with torch.inference_mode():
-        for _, (X, y) in enumerate(tqdm(dataloader, desc= '-------Val', disable=True)):
+        for _, (X, y) in enumerate(tqdm(dataloader, desc= '-------Val', disable= (not verbose))):
             X, y = X.to(device), y.to(device)
             
             y_pred = model(X)
@@ -65,6 +67,7 @@ def __val(model: torch.nn.Module,
 
 def __test(model: torch.nn.Module,
            dataloader: torch.utils.data.DataLoader,
+           verbose: bool,
            device: str):
     
     model.eval()
@@ -72,7 +75,7 @@ def __test(model: torch.nn.Module,
     preds = torch.tensor([]).to(device)
     print('\n\n')
     with torch.inference_mode():
-        for _, (X, y) in enumerate(tqdm(dataloader, desc= '------Test', disable=True)):
+        for _, (X, y) in enumerate(tqdm(dataloader, desc= '------Test', disable= (not verbose))):
             X, y = X.to(device), y.to(device)
 
             
@@ -85,7 +88,7 @@ def __test(model: torch.nn.Module,
 
     test_results = {
         'preds' : preds.tolist(),
-        'target' : target.tolist()
+        'targets' : target.tolist()
     }
 
     return test_results
@@ -101,6 +104,7 @@ def train(model: torch.nn.Module,
           epochs: int,
           info_data: list,
           save_checkpoint_freq: int,
+          verbose: bool,
           device: str):
 
     if info_data is None:
@@ -117,19 +121,22 @@ def train(model: torch.nn.Module,
     torch.cuda.manual_seed(42)
 
     try:
-        for epoch in tqdm(range(epochs), desc= 'Training', disable=True):
-            # print(f"\n\nEpoch: {epoch+1:2} ------------")
+        for epoch in tqdm(range(epochs), desc= 'Training', disable=(not verbose)):
+            if (verbose):
+                print(f"\n\nEpoch: {epoch+1:2} ------------")
             train_loss, train_acc = __train(model=model,
                                             dataloader=train_dataloader,
                                             loss_func=loss_func,
                                             optimizer=optimizer,
                                             mectric_func=mectric_funcs,
+                                            verbose= verbose,
                                             device= device)
             lr_scheduler.step()
             val_loss, val_acc = __val(model=model,
                                     dataloader=val_dataloader,
                                     loss_func=loss_func,
                                     mectric_func=mectric_funcs,
+                                    verbose= verbose,
                                     device= device)
             
             print(f"Epoch: {epoch+1:2} | Train Loss: {train_loss:.5f} | Train Acc: {train_acc*100:.4f} | Val Loss: {val_loss:.5f} | Val Acc: {val_acc*100:.4f}")
@@ -148,5 +155,6 @@ def train(model: torch.nn.Module,
         
     results["test_results"] = __test(model=model,
                                      dataloader=test_dataloader,
+                                     verbose= verbose,
                                      device= device)
     return results

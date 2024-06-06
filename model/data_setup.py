@@ -20,6 +20,8 @@ def create_dataloader(
     val_path = dataset_path / kwargs['dataset']['folder_val']
     test_path = dataset_path / kwargs['dataset']['folder_test']
     
+    num_workers = 3
+    
     train_data = ImageFolder(
         root= train_path,
         transform= train_transform
@@ -38,18 +40,27 @@ def create_dataloader(
     train_dataloader = DataLoader(
         dataset= train_data,
         batch_size= kwargs['dataset']['batch_size'],
+        num_workers=num_workers,
+        pin_memory= True,
+        persistent_workers= True,
         shuffle= True
     )
     
     val_dataloader = DataLoader(
         dataset= val_data,
         batch_size= kwargs['dataset']['batch_size'],
+        num_workers=num_workers,
+        pin_memory= True,
+        persistent_workers= True,
         shuffle= False
     )
 
     test_dataloader = DataLoader(
         dataset= test_data,
         batch_size= kwargs['dataset']['batch_size'],
+        num_workers=num_workers,
+        pin_memory= True,
+        persistent_workers= True,
         shuffle= False
     )
     class_names = train_data.classes
