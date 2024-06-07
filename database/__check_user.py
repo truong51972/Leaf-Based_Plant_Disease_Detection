@@ -6,7 +6,8 @@ def check_user(userName:str, con) -> bool:
 
             :input:
             userName: str,
-            userPassword: str
+            userPassword: str,
+            con: sqlite3.connect(<database directory>)
 
             :return:
             type(bool)

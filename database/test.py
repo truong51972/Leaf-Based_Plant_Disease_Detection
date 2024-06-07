@@ -1,5 +1,4 @@
 from __check_user import check_user
-from __change_password import change_password
 from __check_password import check_password
 from __add_user import add_user
 from __picID_len import picID_list_len
@@ -340,6 +339,43 @@ def main():
     
 
 if __name__ == '__main__':
-    main()
-
+    import sqlite3
+    con = sqlite3.connect('data.db')
+    cur = con.cursor()
     
+    cur.execute(f'''
+            SELECT picID FROM USER_PIC WHERE userName = 'lol' ORDER BY picID ASC LIMIT 1
+        ''')
+    
+    deleted_id = cur.fetchall()[0][0]
+
+    con.commit()
+
+    cur.execute(f'''
+        DELETE FROM USER_PIC 
+        WHERE picID = {deleted_id}
+        ''')
+    con.commit()
+
+    cur.execute(f'''
+        DELETE FROM PIC 
+        WHERE picID = {deleted_id}
+        ''')
+    con.commit()
+
+    cur.execute(f'''
+        UPDATE PIC 
+        SET picID = picID - 1 
+        WHERE picID > {deleted_id} 
+        ''')
+    
+    con.commit()
+
+    cur.execute(f'''
+        UPDATE USER_PIC 
+        SET picID = picID - 1 
+        WHERE picID > {deleted_id} 
+        ''')
+    
+    con.commit()
+    con.close()

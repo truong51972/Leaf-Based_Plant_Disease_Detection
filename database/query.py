@@ -1,16 +1,16 @@
 import sqlite3
 import asyncio
 from datetime import datetime
-from database.__change_password import reset_password
-from database.__check_user import check_user
-from database.__check_password import check_password
-from database.__add_user import add_user
-from database.__picID_len import picID_list_len
-from database.__extract_result import extract_result
-from database.__validate_password import validate_password
-from database.__extract_history import extract_history
-from database.__add_picture import add_picture_to_database
-from database.__extract_solution import get_solution
+from __change_password import reset_password
+from __check_user import check_user
+from __check_password import check_password
+from __add_user import add_user
+from __picID_len import picID_list_len
+from __extract_result import extract_result
+from __validate_password import validate_password
+from __extract_history import extract_history
+from __add_picture import add_picture_to_database
+from __extract_solution import get_solution
 
 class Query:
     '''
@@ -141,12 +141,7 @@ class Query:
         class_name = item.image_info.class_name
         picID = picID_list_len(self.con)
 
-        add_picture_to_database(picID, class_name, picDate, pic, pred_pic, pred_acc, self.con)
-
-        self.cur.execute(f'''
-        INSERT INTO USER_PIC VALUES ('{userName}', {picID})
-        ''')
-        self.con.commit()
+        add_picture_to_database(userName, picID, class_name, picDate, pic, pred_pic, pred_acc, self.con)
 
         class_name, description, solution = extract_result(picID, self.con)
         return {

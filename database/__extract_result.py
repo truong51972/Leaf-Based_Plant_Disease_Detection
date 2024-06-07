@@ -5,7 +5,8 @@ def extract_result(picID:int, con):
             This private function is used for extract result with known picID
 
             :input:
-            picID: int
+            picID: int,
+            con: sqlite3.connect(<database directory>)
 
             :return:
             tuple(class_name: str, description: dict, solution: dict)
