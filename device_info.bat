@@ -1,0 +1,2 @@
+conda activate Leaf_based_project
+python display_info.py

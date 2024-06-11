@@ -14,13 +14,12 @@ def create_dataloader(
                     test_transform: transforms.Compose,
                     **kwargs,
                 ):
-    dataset_path = Path(kwargs['dataset']['dataset_path'])
     
-    train_path = dataset_path / kwargs['dataset']['folder_train']
-    val_path = dataset_path / kwargs['dataset']['folder_val']
-    test_path = dataset_path / kwargs['dataset']['folder_test']
+    train_path = Path(kwargs['dataset']['train'])
+    val_path = Path(kwargs['dataset']['val'])
+    test_path = Path(kwargs['dataset']['test'])
     
-    num_workers = 3
+    num_workers = 6
     
     train_data = ImageFolder(
         root= train_path,
@@ -58,9 +57,6 @@ def create_dataloader(
     test_dataloader = DataLoader(
         dataset= test_data,
         batch_size= kwargs['dataset']['batch_size'],
-        num_workers=num_workers,
-        pin_memory= True,
-        persistent_workers= True,
         shuffle= False
     )
     class_names = train_data.classes

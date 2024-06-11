@@ -62,7 +62,7 @@ def __val(model: torch.nn.Module,
 
         val_loss /= len(dataloader)
         val_acc /= len(dataloader)
-
+        
     return val_loss, val_acc
 
 def __test(model: torch.nn.Module,
@@ -73,22 +73,28 @@ def __test(model: torch.nn.Module,
     model.eval()
     target = torch.tensor([]).to(device)
     preds = torch.tensor([]).to(device)
-    print('\n\n')
+    score = torch.tensor([]).to(device)
+    
     with torch.inference_mode():
         for _, (X, y) in enumerate(tqdm(dataloader, desc= '------Test', disable= (not verbose))):
             X, y = X.to(device), y.to(device)
 
             
             y_pred = model(X)
-            
+
+            y_probs = torch.softmax(y_pred, dim= 1)
             y_pred_class = torch.argmax(torch.softmax(y_pred, dim= 1), dim= 1)
+
+            y_pred_scores = torch.max(y_probs, dim= 1)[0]
 
             target = torch.cat((target, y), dim= 0)
             preds = torch.cat((preds, y_pred_class), dim= 0)
+            score = torch.cat((score, y_pred_scores), dim= 0)
 
     test_results = {
         'preds' : preds.tolist(),
-        'targets' : target.tolist()
+        'targets' : target.tolist(),
+        'scores' : score.tolist()
     }
 
     return test_results
@@ -96,7 +102,6 @@ def __test(model: torch.nn.Module,
 def train(model: torch.nn.Module,
           train_dataloader: torch.utils.data.DataLoader,
           val_dataloader: torch.utils.data.DataLoader,
-          test_dataloader: torch.utils.data.DataLoader,
           loss_func: torch.nn.Module,
           optimizer: torch.optim.Optimizer,
           lr_scheduler: torch.optim.lr_scheduler.LRScheduler,
@@ -106,7 +111,9 @@ def train(model: torch.nn.Module,
           save_checkpoint_freq: int,
           verbose: bool,
           device: str):
-
+    
+    temp_model_state_dict = model.state_dict()
+    
     if info_data is None:
         results = {
             'train_loss': [],
@@ -117,10 +124,12 @@ def train(model: torch.nn.Module,
         }
     else:
         results = info_data['results']
-    torch.manual_seed(42) 
-    torch.cuda.manual_seed(42)
-
+    
+    if epochs <= 0: return results
+        
     try:
+        torch.manual_seed(42) 
+        torch.cuda.manual_seed(42)
         for epoch in tqdm(range(epochs), desc= 'Training', disable=(not verbose)):
             if (verbose):
                 print(f"\n\nEpoch: {epoch+1:2} ------------")
@@ -152,7 +161,17 @@ def train(model: torch.nn.Module,
     except KeyboardInterrupt:
         print('\nStop trainning')
         model.load_state_dict(temp_model_state_dict)
-        
+   
+    print('\n\n')
+    
+    return results
+    
+def test(model: torch.nn.Module,
+          test_dataloader: torch.utils.data.DataLoader,
+          results: dict,
+          verbose: bool,
+          device: str):
+    
     results["test_results"] = __test(model=model,
                                      dataloader=test_dataloader,
                                      verbose= verbose,
