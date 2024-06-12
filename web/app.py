@@ -25,6 +25,22 @@ def correct_orientation_and_resize(image, max_size=(224, 224)):
 
 def app():
     st.title("Khám bệnh lá online!")
+
+    with st.expander("Hướng dẫn chụp ảnh"):
+
+        st.markdown("""
+        ### Hướng dẫn chụp ảnh
+        1. **Cách chụp**: Chụp ảnh với tỉ lệ 1:1.
+        2. **Ánh sáng tốt**: Chụp ảnh dưới ánh sáng tự nhiên, tránh ánh sáng mạnh trực tiếp hoặc bóng râm quá nhiều.
+        3. **Tiêu cự gần**: Chụp ảnh lá ở khoảng cách gần để thấy rõ chi tiết.
+        4. **Nền đơn giản**: Đặt lá lên nền đơn giản để không bị nhiễu bởi các vật thể khác.
+        5. **Chụp toàn bộ lá**: Chụp từ trên xuống để thấy rõ toàn bộ bề mặt lá.
+        6. **Giữ máy ảnh ổn định**: Giữ máy ảnh cố định để tránh mờ nhòe.
+        7. **Tránh che khuất hoặc làm mờ lá**: Đảm bảo không có vật cản hoặc ngón tay che khuất lá khi chụp ảnh.
+        """)
+
+        st.image("D:\project\picture.png", caption="Ví dụ: Ảnh chụp tốt", use_column_width=True)
+
     with st.container(border = True):
          uploaded_image = st.file_uploader("Kéo và thả", type=["jpg", "jpeg", "png"])
 
