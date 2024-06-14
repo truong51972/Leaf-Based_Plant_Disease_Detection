@@ -1,63 +1,58 @@
 import torch
-from torchvision import transforms
 
+import cv2
 import numpy as np
+import pandas as pd
 from PIL import Image
 from pathlib import Path
+import matplotlib.pyplot as plt
 
-from model.model_builder import resnet50_model
+from model.sam_model import Sam_model
+from model.cnn_model import Cnn_model
+from model.grad_cam import Grad_cam
 
-from pytorch_grad_cam import GradCAM, HiResCAM, ScoreCAM, GradCAMPlusPlus, AblationCAM, XGradCAM, EigenCAM, FullGrad
-from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
-from pytorch_grad_cam.utils.image import show_cam_on_image
 import asyncio
 
 class AI_model:
     def __init__(self, path_to_model: str):
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
-        
-        self.model, info_data = resnet50_model(pretrain_model_path= path_to_model)
-        self.class_names = info_data['class_names']
 
-        self.img_transform = transforms.Compose([
-            transforms.Resize(size= 224),
-            transforms.ToTensor()
-        ])
+        self.sam_model = Sam_model()
+        
+        self.cnn_model = Cnn_model(path_to_model=path_to_model)
 
-        target_layers = [self.model.layer4[-1]]
-        self.cam = GradCAM(model=self.model, target_layers=target_layers)
-        # self.cam = ScoreCAM(model=self.model, target_layers=target_layers)
-        
-    async def predict(self, img: Image):   
-        img_tensor = self.img_transform(img)
-        img_tensor_in_batch = img_tensor.unsqueeze(dim= 0)
-        
-        rgb_img = img_tensor.permute(1, 2, 0).numpy()
-        
-        
-        
-        self.model.eval()
-        with torch.inference_mode():
-            
-            
-            predict = self.model(img_tensor_in_batch)
-            soft_max_persent = torch.softmax(predict, dim= 1)
-            predicted_class = self.class_names[torch.argmax(predict, dim= 1)]
+        model = self.cnn_model.get_model()
+        self.grad_cam = Grad_cam(model=model)
 
+        try:
+            self.best_threshold_df = pd.read_excel(path_to_model + '/best_threshold.xlsx', index_col=0)
+        except:
+            self.best_threshold_df = None
             
-            
-            probability = (soft_max_persent[0, torch.argmax(predict, dim= 1)].item())
-            # print(predicted_class)
-            
-        targets = [ClassifierOutputTarget(torch.argmax(predict, dim= 1).item())]
-        grayscale_cam = self.cam(input_tensor=img_tensor_in_batch, targets= targets)
-        visualization = show_cam_on_image(rgb_img, grayscale_cam[0], use_rgb=True)
+    def _predict(self, img: Image):
+        pointed_img = self.sam_model.plot_points(img)
+        removed_bg_img = self.sam_model.remove_bg(img)
+        
+        predict, predicted_class, probability = self.cnn_model.predict(removed_bg_img)
 
+        grayscale_cam, visualization = self.grad_cam.visualize(removed_bg_img, predict, threshold= 0.5)
+        
         results = {
             "image" : img,
-            "predicted_image" : Image.fromarray(visualization),
+            "pointed_img" : pointed_img,
+            "removed_bg_img": removed_bg_img,
+            "predicted_image" : visualization,
+            'heatmap': grayscale_cam,
             "class_name" : predicted_class,
-            "class_prob" : probability
+            "score" : probability
         }
         return results
         
+    async def predict(self, img: Image):
+        results = self._predict(img)
+        
+        if self.best_threshold_df is not None:
+            class_idx = self.cnn_model.class_name_to_idx[results["class_name"]]
+            results['threshold'] = self.best_threshold_df.loc['threshold', class_idx]
+        
+        return self._predict(img)

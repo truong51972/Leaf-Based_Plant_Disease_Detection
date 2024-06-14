@@ -43,7 +43,7 @@ class Sam_model:
         return dilated_mask
 
     def plot_points(self, image, radius=3):
-        image = np.array(img)
+        image = np.array(image)
         for i in range(len(self.input_label)):
             x = self.input_point[i, 0]
             y = self.input_point[i, 1]
@@ -56,8 +56,8 @@ class Sam_model:
         return image
 
     # @time_decorator
-    def remove_bg(self, img):
-        image = np.array(img)
+    def remove_bg(self, image):
+        image = np.array(image)
         self.predictor.set_image(image)
         
         mask, score, logit = self.predictor.predict(

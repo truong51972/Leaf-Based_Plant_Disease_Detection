@@ -38,6 +38,6 @@ class Cnn_model:
             soft_max_persent = torch.softmax(predict, dim= 1)
             predicted_class = self.class_names[torch.argmax(predict, dim= 1)]
 
-            probability = (soft_max_persent[0, torch.argmax(predict, dim= 1)].item())
+            score = (soft_max_persent[0, torch.argmax(predict, dim= 1)].item())
 
-        return predict, predicted_class, probability
+        return predict, predicted_class, score

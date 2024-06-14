@@ -33,37 +33,39 @@ def plot_loss_curves(results: dict[str, list[float]]):
     plt.legend()
     return plt
 
-def plot_confmat(class_names, df_test_results, threshold= .90):
-    over_threshold = df_test_results[df_test_results['scores'] >= threshold]
-    under_threshold = df_test_results[df_test_results['scores'] < threshold]
+def plot_confmat(class_names, test_results):
+    # over_threshold = df_test_results[df_test_results['scores'] >= threshold]
+    # under_threshold = df_test_results[df_test_results['scores'] < threshold]
 
-    y_true = over_threshold['targets']
-    y_pred = over_threshold['preds']
-    len_known = len(under_threshold)
+    # y_true = over_threshold['targets']
+    # y_pred = over_threshold['preds']
+    # len_known = len(under_threshold)
     
-    precision = precision_score(y_true, y_pred, average='macro')
-    recall = recall_score(y_true, y_pred, average='macro')
-    f1 = f1_score(y_true, y_pred, average='macro')
+    # precision = precision_score(y_true, y_pred, average='macro')
+    # recall = recall_score(y_true, y_pred, average='macro')
+    # f1 = f1_score(y_true, y_pred, average='macro')
 
-    accurancy = round(len(over_threshold) / len(df_test_results), 4)
+    # accurancy = round(len(over_threshold) / len(df_test_results), 4)
     
-    table = confusion_matrix(y_true=y_true, y_pred=y_pred)
+    # table = confusion_matrix(y_true=y_true, y_pred=y_pred)
+
+    table = confusion_matrix(y_true=test_results['targets'], y_pred=test_results['preds'])
     
     plt.figure(figsize=(7.5, 5))
     sns.heatmap(table, annot=True, fmt='.0f', cmap=plt.cm.Blues)
     plt.title('Confusion Matrix')
     
-    plt.text(x=12.5, y=0.5, s= f'Detected: {accurancy}')
-    plt.text(x=12.5, y=1.5, s= f'Threshold: {threshold}')
-    plt.text(x=12.5, y=2, s= f'Unknown: {len_known}')
-    plt.text(x=12.5, y=2.5, s= f'Metric:')
-    plt.text(x=12.5, y=3, s= f' - Precision: {round(precision, 3)}')
-    plt.text(x=12.5, y=3.5, s= f' - Recall: {round(recall, 3)}')
-    plt.text(x=12.5, y=4, s= f' - F1 score: {round(f1, 3)}')
+    # plt.text(x=12.5, y=0.5, s= f'Detected: {accurancy}')
+    # plt.text(x=12.5, y=1.5, s= f'Threshold: {threshold}')
+    # plt.text(x=12.5, y=2, s= f'Unknown: {len_known}')
+    # plt.text(x=12.5, y=2.5, s= f'Metric:')
+    # plt.text(x=12.5, y=3, s= f' - Precision: {round(precision, 3)}')
+    # plt.text(x=12.5, y=3.5, s= f' - Recall: {round(recall, 3)}')
+    # plt.text(x=12.5, y=4, s= f' - F1 score: {round(f1, 3)}')
 
-    plt.text(x=12.5, y=5, s= f'Class names:')
+    plt.text(x=12.5, y=1, s= f'Class names:')
     for i, class_name in enumerate(class_names):
-        plt.text(x=12.5, y=5.5+(i/2), s= f' {i}. {class_name[:15]}{"..." if len(class_name) > 15 else ""}')
+        plt.text(x=12.5, y=1.5+(i/2), s= f' {i}. {class_name[:15]}{"..." if len(class_name) > 15 else ""}')
 
     plt.tight_layout()
     return plt
