@@ -60,9 +60,7 @@ def statistics_ui():
     with st.container(border=True):
         first_upload_date = get_first_upload_date()
         if first_upload_date:
-            st.write(f"Ngày đầu tiên gửi ảnh vào ứng dụng: {first_upload_date}")
-        else:
-            st.warning("Không có dữ liệu để hiển thị.")
+            st.write(f"Ngày đầu tiên sử dụng app: {first_upload_date}")
 
     st.date_input("Vui lòng chọn ngày để xem thống kê.", datetime.today() - timedelta(days=1))
     item = {

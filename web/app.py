@@ -25,22 +25,21 @@ def correct_orientation_and_resize(image, max_size=(224, 224)):
 def app():
     st.title("Khám bệnh lá online!")
 
-    with st.expander("Hướng dẫn chụp ảnh"):
-
-        st.markdown("""
+    guard = """
         ### Hướng dẫn chụp ảnh
         1. **Cách chụp**: Chụp ảnh với tỷ lệ 1:1.
-        2. **Ánh sáng tốt**: Chụp ảnh dưới ánh sáng tự nhiên, tránh ánh sáng mạnh trực tiếp hoặc bóng râm quá nhiều.
-        3. **Tiêu cự gần**: Chụp ảnh lá ở khoảng cách gần để thấy rõ chi tiết.
-        4. **Nền đơn giản**: Đặt lá lên nền đơn giản để không bị nhiễu bởi các vật thể khác.
-        5. **Chụp toàn bộ lá**: Chụp từ trên xuống để thấy rõ toàn bộ bề mặt lá.
-        6. **Tránh che khuất hoặc làm mờ lá**: Đảm bảo không che khuất những điểm bị bệnh.
-        """)
-
-        st.image("./images/picture.jpg", caption="Ví dụ: Ảnh chụp tốt", use_column_width=True)
+        2.**Chọn ảnh**: Phải chọn ảnh là lá cà chua hoặc khoai tây
+        3. **Ánh sáng tốt**: Chụp ảnh dưới ánh sáng tự nhiên, tránh ánh sáng mạnh trực tiếp hoặc bóng râm quá nhiều.
+        4. **Tiêu cự gần**: Chụp ảnh lá ở khoảng cách gần để thấy rõ chi tiết.
+        5. **Nền đơn giản**: Đặt lá lên nền đơn giản để không bị nhiễu bởi các vật thể khác.
+        6. **Chụp toàn bộ lá**: Chụp từ trên xuống để thấy rõ toàn bộ bề mặt lá.
+        7. **Tránh che khuất hoặc làm mờ lá**: Đảm bảo không che khuất những điểm bị bệnh.
+        """
+    s = "Điểm số là điểm của mô hình dự đoán. Đây là một giá trị cho biết mức độ chắc chắn của mô hình đối với kết quả phân tích hình ảnh. Điểm số cao hơn thể hiện sự tự tin cao hơn trong chẩn đoán."
+    t = "Ngưỡng là điểm tổng quát đã được kiểm tra dựa trên dữ liệu thực tế. Đây là ngưỡng mà mô hình sử dụng để quyết định liệu một kết quả có đáng tin cậy hay không. Nếu điểm số vượt qua ngưỡng này, kết quả được coi là đáng tin cậy." 
 
     with st.container(border = True):
-         uploaded_image = st.file_uploader("Kéo và thả", type=["jpg", "jpeg", "png"])
+         uploaded_image = st.file_uploader("**Chọn ảnh**", type=["jpg", "jpeg", "png"], help=guard)
 
     if uploaded_image is not None:
         image = Image.open(uploaded_image)
@@ -69,14 +68,31 @@ def app():
                     with st.container(border = True):
                         st.markdown("<div class='container'>", unsafe_allow_html=True)
                         st.session_state.predicted_image = decode_image(results['image_info']['predicted_image'])
-                        class_prob = round(results['image_info']['class_prob'] * 100, 2)
-                        st.image(st.session_state.predicted_image, caption=f'Vùng khả năng bị bệnh ({class_prob}%)', use_column_width=True)
+                        score = round(results['image_info']['score'],4)
+                        threshold = round(results['image_info']['threshold'],4)
+                        st.image(st.session_state.predicted_image,use_column_width=True)
                         st.markdown("</div>", unsafe_allow_html=True)
 
-                    with st.container(border = True):
+                    with st.container(border=True):
                         st.markdown("<div class='container'>", unsafe_allow_html=True)
                         st.markdown("<h2>Tên Bệnh</h2>", unsafe_allow_html=True)
                         st.markdown(f"<p>{results['solution']['Tên bệnh']}</p>", unsafe_allow_html=True)
+                        st.markdown("---")
+                        st.markdown("<h4>Giải thích</h4>", unsafe_allow_html=True)
+                        st.markdown(f"Điểm số: {score}", help=s)
+                        st.markdown(f"Ngưỡng: {threshold}", help=t)
+                        
+                        if score > threshold:
+                            st.markdown(f"**Sự chắc chắn**: **Điểm số** đã vượt qua **ngưỡng**, điều này cho thấy mô hình rất tự tin chẩn đoán về **{results['solution']['Tên bệnh']}** trong trường hợp này.")
+                        
+                        else:
+                            st.markdown("Khả năng: **Điểm số** không vượt qua **ngưỡng**, bạn nên kiểm tra lại.")
+                            st.markdown("""
+                            **Lời khuyên**:
+                            1. Xem lại mục **Hướng dẫn chụp ảnh** với icon (❓) trong phần chọn ảnh để đảm bảo bạn đã chụp đúng cách.
+                            2. Thử chụp lại ảnh với chất lượng tốt hơn theo hướng dẫn.
+                            3. Nếu bạn vẫn không chắc chắn, hãy gửi ảnh này cho chuyên gia để được tư vấn thêm.
+                            """)
                         st.markdown("</div>", unsafe_allow_html=True)
 
                     with st.container(border = True):
