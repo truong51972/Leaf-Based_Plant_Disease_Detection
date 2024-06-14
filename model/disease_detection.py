@@ -55,4 +55,4 @@ class AI_model:
             class_idx = self.cnn_model.class_name_to_idx[results["class_name"]]
             results['threshold'] = self.best_threshold_df.loc['threshold', class_idx]
         
-        return self._predict(img)
+        return results
