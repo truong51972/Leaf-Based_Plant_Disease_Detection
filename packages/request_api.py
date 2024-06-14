@@ -183,6 +183,8 @@ def get_history(item: dict):
     response = __request(api_name, item)
     return response
 
+
+
 if __name__ == '__main__':
     from PIL import Image
     from encode_decode import encode_image
@@ -234,6 +236,42 @@ def change_password(item: dict):
     
     response = __request(api_name, item)
     return response
+
+def statictis(item: dict):
+    """
+    Make a request to database server to check user login.
+
+    Args:
+        item: dict[str, str]
+
+    Returns:
+        response = {
+            'message' : 'message!',
+            'code': 'error code!',
+            'statictis': {
+                'Tên bệnh': [...]
+            }
+        }
+    Example:
+    >>> item = {
+            'user_name' : 'user name',
+            'password' : 'password'
+        }
+    >>> statictis(item = item)
+    {
+        'message' : 'message!',
+        'code': 'error code!',
+        'statictis': {
+            'Tên bệnh': [...]
+        }
+    }
+    """
+    api_name = '/statictis'
+    
+    response = __request(api_name, item)
+    return response
+    
+
 
 if __name__ == '__main__':
     from PIL import Image

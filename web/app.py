@@ -7,7 +7,6 @@ import pandas as pd
 import pytz
 
 def correct_orientation_and_resize(image, max_size=(224, 224)):
-    # Handle orientation
     for orientation in ExifTags.TAGS.keys():
         if ExifTags.TAGS[orientation] == 'Orientation':
             break

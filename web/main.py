@@ -1,9 +1,12 @@
 import streamlit as st
-from web.login_ui import login_ui, state, register_ui, logout
+from web.login_ui import login_ui, register_ui, logout
 from web.app import app as main_app
 import time
 from web.history import display_history
 from web.user import user_info
+import os
+
+DEV_MODE = os.getenv('DEV_MODE', 'False').lower() == 'true'
 
 def run():
     _, center, _ = st.columns([1, 8, 1])
@@ -11,9 +14,13 @@ def run():
         with st.container():
             if 'logged_in' not in st.session_state:
                 st.session_state['logged_in'] = False
-              
+            
+            if DEV_MODE:
+                st.session_state['logged_in'] = True
+                st.write("Chế độ phát triển đang bật: Tự động đăng nhập.")
+
             if st.session_state['logged_in']:
-                tab1, tab2, tab3, tab4 = st.tabs(["Trang chủ","Thông tin cá nhân", "Lịch sử", "Đăng xuất"])
+                tab1, tab2, tab3, tab4 = st.tabs(["Trang chủ", "Thông tin cá nhân", "Lịch sử", "Đăng xuất"])
                 with tab1:
                     main_app()
                 with tab2:
@@ -23,12 +30,13 @@ def run():
                 with tab4:
                     if st.button("Confirm Logout"):
                         logout()
+                        st.experimental_rerun()
             else:
                 if 'logout_success' in st.session_state and st.session_state['logout_success']:
                     st.success("Bạn đã đăng xuất thành công!")
                     time.sleep(1.6)
                     st.session_state['logout_success'] = False
-                    st.rerun()
+                    st.experimental_rerun()
                     
                 else:
                     options = ["Đăng nhập", "Đăng kí"]

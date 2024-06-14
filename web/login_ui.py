@@ -1,14 +1,17 @@
 import streamlit as st
 import time
+import os
 from packages.request_api import check_login, create_new_user
 from packages.encode_decode import encrypt_password
 from packages.preprocess_text import is_valid
+
+DEV_MODE = os.getenv('DEV_MODE', 'False').lower() == 'true'
 
 state = {"logged_in": False}
 
 def login_ui():
     with st.form("Login Form"):
-        st.session_state.user_name = st.text_input("Tên đăng nhập", key='username', help='Tên đăng nhập không được chứ khoảng trắng hoặc kí tự đặc biệt!')
+        st.session_state.user_name = st.text_input("Tên đăng nhập", key='username', help='Tên đăng nhập không được chứa khoảng trắng hoặc kí tự đặc biệt!')
         password = st.text_input("Mật khẩu", type="password", key='password')
         submit_button = st.form_submit_button("Đăng nhập")
 
@@ -28,31 +31,34 @@ def login_ui():
             return
         
         if is_valid(st.session_state.user_name) and password.strip():
-            st.session_state.encrypted_password = encrypt_password(password).decode()
-            user_info = {
-                'user_name': st.session_state.user_name,
-                'password': st.session_state.encrypted_password
-            }
-            response = check_login(user_info).json()
-            if response['code'] == '000':
-                st.success("Đăng nhập thành công!")
+            if DEV_MODE:
                 st.session_state['logged_in'] = True
-                time.sleep(1)
-                st.rerun()
-            elif response['code'] == '002':
-                st.error("Sai mật khẩu!")
-            elif response['code'] == '003':
-                st.error("Tên đăng nhập không tồn tại!")
-            elif response['code'] == '404':
-                st.error("Không tìm thấy server")
+                st.success("Đăng nhập thành công (Dev Mode)!")
+                st.experimental_rerun()
             else:
-                st.error("Lỗi không xác định!")
-        if error_message:
-            st.markdown(f"<p style='color:red'>{error_message}</p>", unsafe_allow_html=True)
+                st.session_state.encrypted_password = encrypt_password(password).decode()
+                user_info = {
+                    'user_name': st.session_state.user_name,
+                    'password': st.session_state.encrypted_password
+                }
+
+                response = check_login(user_info).json()
+                if response['code'] == '000':
+                    st.success("Đăng nhập thành công!")
+                    st.session_state['logged_in'] = True
+                    st.experimental_rerun()
+                elif response['code'] == '002':
+                    st.error("Sai mật khẩu!")
+                elif response['code'] == '003':
+                    st.error("Tên đăng nhập không tồn tại!")
+                elif response['code'] == '404':
+                    st.error("Không tìm thấy server")
+                else:
+                    st.error("Lỗi không xác định!")
 
 def register_ui():
     with st.form("Registration Form"):
-        new_username = st.text_input("Tên đăng nhập mới", key='new_username', help='Tên đăng ký không được chứ khoảng trắng hoặc kí tự đặc biệt!')
+        new_username = st.text_input("Tên đăng nhập mới", key='new_username', help='Tên đăng ký không được chứa khoảng trắng hoặc kí tự đặc biệt!')
         new_password = st.text_input("Mật khẩu mới", type="password", key='new_password')
         confirm_password = st.text_input("Xác nhận mật khẩu", type="password", key='confirm_password')
         submit_button = st.form_submit_button("Đăng ký")
@@ -90,7 +96,7 @@ def register_ui():
 
 def logout():
     st.session_state['logged_in'] = False
-    st.session_state['logout_success'] = True
-    st.rerun()
+    st.experimental_rerun()
 
-# def change_password():
+if __name__ == "__main__":
+    login_ui()
