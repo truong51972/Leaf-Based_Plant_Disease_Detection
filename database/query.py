@@ -1,16 +1,16 @@
 import sqlite3
 import asyncio
 from datetime import datetime
-from __change_password import reset_password
-from __check_user import check_user
-from __check_password import check_password
-from __add_user import add_user
-from __picID_len import picID_list_len
-from __extract_result import extract_result
-from __validate_password import validate_password
-from __extract_history import extract_history
-from __add_picture import add_picture_to_database
-from __extract_solution import get_solution
+from .__change_password import reset_password
+from .__check_user import check_user
+from .__check_password import check_password
+from .__add_user import add_user
+from .__picID_len import picID_list_len
+from .__extract_result import extract_result
+from .__validate_password import validate_password
+from .__extract_history import extract_history
+from .__add_picture import add_picture_to_database
+from .__extract_solution import get_solution
 
 class Query:
     '''

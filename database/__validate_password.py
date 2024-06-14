@@ -1,5 +1,5 @@
-from __check_user import check_user
-from __check_password import check_password
+from .__check_user import check_user
+from .__check_password import check_password
 
 def validate_password(userName, userPassword, con) -> dict:
     '''
