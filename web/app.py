@@ -37,7 +37,7 @@ def app():
         6. **Tránh che khuất hoặc làm mờ lá**: Đảm bảo không che khuất những điểm bị bệnh.
         """)
 
-        st.image("./images/picture.png", caption="Ví dụ: Ảnh chụp tốt", use_column_width=True)
+        st.image("./images/picture.jpg", caption="Ví dụ: Ảnh chụp tốt", use_column_width=True)
 
     with st.container(border = True):
          uploaded_image = st.file_uploader("Kéo và thả", type=["jpg", "jpeg", "png"])
