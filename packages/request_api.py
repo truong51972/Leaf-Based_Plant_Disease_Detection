@@ -237,7 +237,7 @@ def change_password(item: dict):
     response = __request(api_name, item)
     return response
 
-def statictis(item: dict):
+def statistics(item: dict):
     """
     Make a request to database server to check user login.
 
@@ -248,7 +248,7 @@ def statictis(item: dict):
         response = {
             'message' : 'message!',
             'code': 'error code!',
-            'statictis': {
+            'statistics': {
                 'Tên bệnh': [...]
             }
         }
@@ -257,16 +257,16 @@ def statictis(item: dict):
             'user_name' : 'user name',
             'password' : 'password'
         }
-    >>> statictis(item = item)
+    >>> statistics(item = item)
     {
         'message' : 'message!',
         'code': 'error code!',
-        'statictis': {
+        'statistics': {
             'Tên bệnh': [...]
         }
     }
     """
-    api_name = '/statictis'
+    api_name = '/statistics'
     
     response = __request(api_name, item)
     return response

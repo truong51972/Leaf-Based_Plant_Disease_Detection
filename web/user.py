@@ -3,7 +3,8 @@ from packages.request_api import change_password
 from packages.encode_decode import encrypt_password
 from datetime import datetime, timedelta
 from web.history import get_first_upload_date
-from packages.request_api import statictis
+from packages.request_api import statistics
+import pandas as pd
 
 
 def user_info():
@@ -68,5 +69,11 @@ def statistics_ui():
             'user_name': st.session_state.get('user_name'),
             'password': st.session_state.get('encrypted_password')
         }
-    if st.button("Xem thông tin"):
-        response =  statictis(item=item).json()
+    if st.button("Xem thống kê"):
+        response =  statistics(item=item).json()
+        if 'statistics' in response:
+            df_statistics = pd.DataFrame(response['statistics'])
+            df_statistics = df_statistics[['Tên bệnh',]]
+            st.dataframe(df_statistics)
+        else:
+            st.warning("Không có dữ liệu thống kê để hiển thị.")
