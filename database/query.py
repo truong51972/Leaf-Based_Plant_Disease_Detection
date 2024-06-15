@@ -1,15 +1,16 @@
 import sqlite3
 import asyncio
 from datetime import datetime
-from database.__change_password import reset_password
-from database.__check_user import check_user
-from database.__check_password import check_password
-from database.__add_user import add_user
-from database.__picID_len import picID_list_len
-from database.__extract_result import extract_result
-from database.__validate_password import validate_password
-from database.__extract_history import extract_history
-from database.__add_picture import add_picture_to_database
+from .__change_password import reset_password
+from .__check_user import check_user
+from .__check_password import check_password
+from .__add_user import add_user
+from .__picID_len import picID_list_len
+from .__extract_result import extract_result
+from .__validate_password import validate_password
+from .__extract_history import extract_history
+from .__add_picture import add_picture_to_database
+from .__extract_solution import _get_solution
 
 class Query:
     '''
@@ -116,7 +117,7 @@ class Query:
     'code': 'error code!',
     'result': {
         'class_name' : str or None,
-        'class_prob': float or None,
+        'score': float or None,
         'predicted_image': str or None,
         'description' : (type = dictionary) or None,
         'solution' : (type = dictionary) or None
@@ -126,7 +127,7 @@ class Query:
         userName = item.user_info.user_name
         userPassword = item.user_info.password
 
-        validate_result = validate_password(userName, userPassword)
+        validate_result = validate_password(userName, userPassword, self.con)
         if validate_result['code'] == '002' or validate_result['code'] == '003':
             return {
                 'message' : validate_result['message'],
@@ -134,18 +135,13 @@ class Query:
                     }
 
         pred_pic = item.image_info.predicted_image
-        pred_acc = item.image_info.class_prob
+        pred_acc = item.image_info.score
         pic = item.image_info.image
         picDate = item.image_info.date
         class_name = item.image_info.class_name
         picID = picID_list_len(self.con)
 
-        add_picture_to_database(picID, class_name, picDate, pic, pred_pic, pred_acc, self.con)
-
-        self.cur.execute(f'''
-        INSERT INTO USER_PIC VALUES ('{userName}', {picID})
-        ''')
-        self.con.commit()
+        add_picture_to_database(userName, picID, class_name, picDate, pic, pred_pic, pred_acc, self.con)
 
         class_name, description, solution = extract_result(picID, self.con)
         return {
@@ -160,10 +156,38 @@ class Query:
                 }
     
     async def get_history(self, userData):
+        '''
+        This function is used to change password of a user.
+    
+    :input:
+    userData = {
+            'user_name' : 'user name',
+            'password' : 'password'
+    }
+    :return:
+    If the user validation is True:
+                {
+                'message' : validate_result['message'],
+                'code': validate_result['code'],
+                'history': {
+                    'Ảnh gốc' : pic,
+                    'Tên bệnh' : class_name,
+                    'Ảnh phân tích': pred_pic,
+                    'Độ tin cậy': score,
+                    'Ngày chụp' : picDate
+                           }
+                }
+    Else:
+                {
+                'message' : validate_result['message'],
+                'code': validate_result['code'],
+                }
+        '''
+        
         userName = userData.user_name
         userPassword = userData.password
 
-        validate_result = validate_password(userName, userPassword)
+        validate_result = validate_password(userName, userPassword, self.con)
         if validate_result['code'] == '002' or validate_result['code'] == '003':
             return {
                 'message' : validate_result['message'],
@@ -173,7 +197,7 @@ class Query:
         picDate, 
         class_name, 
         pred_pic, 
-        class_prob) = extract_history(userData, self.con)       
+        score) = extract_history(userData, self.con)       
 
         return {
                 'message' : validate_result['message'],
@@ -182,12 +206,24 @@ class Query:
                     'Ảnh gốc' : pic,
                     'Tên bệnh' : class_name,
                     'Ảnh phân tích': pred_pic,
-                    'Độ tin cậy': class_prob,
+                    'Độ tin cậy': score,
                     'Ngày chụp' : picDate
                            }
                 }
     
     async def change_password(self, item):
+        '''
+        This function is used to change password of a user.
+    
+    :input:
+    item = {
+        'user_info': {
+            'user_name' : 'user name',
+            'password' : 'password'
+        },
+        'new_password' : 'new_password'
+    }
+        '''
 
         userName = item.user_info.user_name
         userPassword = item.user_info.password
@@ -207,9 +243,22 @@ class Query:
                     }
     
     async def get_solution(self):
-        pass
+        '''
+        :return:
+        Dataframe / Dictionary of tuples:
+        {
+        'diseaseName' :         tuple(diseaseName), 
+        'diseaseCause':         tuple(diseaseCause),
+        'diseaseSymptom':       tuple(diseaseSymptom), 
+        'solutionPrevention':   tuple(solutionPrevention),
+        'solutionGardening':    tuple(solutionGardening),
+        'solutionFertilization':tuple(solutionFertilization),
+        'solutionSource':       tuple(solutionSource)
+        }
+        '''
+        return _get_solution(self.con)
 
-    async def close(self):
+    def close(self):
         self.con.commit()
         self.con.close() 
 

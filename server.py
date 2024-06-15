@@ -37,7 +37,7 @@ class Image_info(BaseModel):
     date: str
     predicted_image: str = None
     class_name: str = None
-    class_prob: float  = None
+    score: float  = None
     threshold: float  = None
     
 
@@ -73,7 +73,7 @@ async def analyze(item: Analyze):
     result = await models['AI_model'].predict(image)
     # print(result['class_name'])
     item.image_info.class_name = result['class_name']
-    item.image_info.class_prob = result['score']
+    item.image_info.score = result['score']
     item.image_info.threshold = result['threshold']
     item.image_info.predicted_image = encode_image(result['predicted_image'])
 

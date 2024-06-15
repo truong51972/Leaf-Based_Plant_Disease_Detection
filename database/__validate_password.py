@@ -1,5 +1,5 @@
-from database.__check_user import check_user
-from database.__check_password import check_password
+from .__check_user import check_user
+from .__check_password import check_password
 
 def validate_password(userName, userPassword, con) -> dict:
     '''
@@ -7,7 +7,8 @@ def validate_password(userName, userPassword, con) -> dict:
 
             :input:
             userName: str,
-            userPassword: str
+            userPassword: str,
+            con: sqlite3.connect(<database directory>)
 
             :return:
             type(bool)

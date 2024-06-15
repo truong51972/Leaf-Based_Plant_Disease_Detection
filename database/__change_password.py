@@ -1,7 +1,16 @@
 import sqlite3
 
-def reset_password(userName:str, newPassword:str, con):
-    
+def reset_password(userName:str, 
+                   newPassword:str, 
+                   con):
+    '''
+            This private function is used for adding user into database
+
+            :input:
+            userName: str,
+            userPassword: str,
+            con: sqlite3.connect(<database directory>)
+            '''  
     cur = con.cursor()
 
     cur.execute(f'''
@@ -14,13 +23,7 @@ def reset_password(userName:str, newPassword:str, con):
 
 
 def main():
-    class User():
-            def __init__(self):
-                self.user_name = 'hieu'
-                self.password = '123'
-
-    user = User()
-    change_password(user, 'asd')
+    pass
 
 if __name__ == '__main__':
-     main()
+    main()

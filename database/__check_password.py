@@ -1,12 +1,15 @@
 import sqlite3
 
-def check_password(userName:str, userPassword:str, con) -> bool:
+def check_password(userName:str, 
+                   userPassword:str, 
+                   con) -> bool:
         '''
             This private function is used for checking user password
 
             :input:
             userName: str,
-            userPassword: str
+            userPassword: str,
+            con: sqlite3.connect(<database directory>)
 
             :return:
             type(bool)
