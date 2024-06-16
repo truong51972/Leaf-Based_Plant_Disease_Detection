@@ -1,2 +1,2 @@
-conda activate Leaf_based_project
+conda activate leaf_project
 python display_info.py

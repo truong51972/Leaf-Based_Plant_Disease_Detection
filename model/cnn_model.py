@@ -1,14 +1,15 @@
 import torch
 from torchvision import transforms
 
-from model.model_builder import resnet50_model
+from model.model_builder import load_model
 
 class Cnn_model:
     def __init__(self, path_to_model: str):
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-        self.model, info_data = resnet50_model(pretrain_model_path= path_to_model)
+        self.model, info_data = load_model(pretrain_model_path= path_to_model)
         self.class_names = info_data['class_names']
+        self.model_name = info_data['model']
 
         self.img_transform_for_predict = transforms.Compose([
             transforms.Resize(size= 224),

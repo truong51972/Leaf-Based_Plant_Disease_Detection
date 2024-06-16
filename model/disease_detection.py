@@ -22,7 +22,7 @@ class AI_model:
         self.cnn_model = Cnn_model(path_to_model=path_to_model)
 
         model = self.cnn_model.get_model()
-        self.grad_cam = Grad_cam(model=model)
+        self.grad_cam = Grad_cam(model=model, model_name= self.cnn_model.model_name)
 
         try:
             self.best_threshold_df = pd.read_excel(path_to_model + '/best_threshold.xlsx', index_col=0)

@@ -34,34 +34,11 @@ def plot_loss_curves(results: dict[str, list[float]]):
     return plt
 
 def plot_confmat(class_names, test_results):
-    # over_threshold = df_test_results[df_test_results['scores'] >= threshold]
-    # under_threshold = df_test_results[df_test_results['scores'] < threshold]
-
-    # y_true = over_threshold['targets']
-    # y_pred = over_threshold['preds']
-    # len_known = len(under_threshold)
-    
-    # precision = precision_score(y_true, y_pred, average='macro')
-    # recall = recall_score(y_true, y_pred, average='macro')
-    # f1 = f1_score(y_true, y_pred, average='macro')
-
-    # accurancy = round(len(over_threshold) / len(df_test_results), 4)
-    
-    # table = confusion_matrix(y_true=y_true, y_pred=y_pred)
-
     table = confusion_matrix(y_true=test_results['targets'], y_pred=test_results['preds'])
     
     plt.figure(figsize=(7.5, 5))
     sns.heatmap(table, annot=True, fmt='.0f', cmap=plt.cm.Blues)
     plt.title('Confusion Matrix')
-    
-    # plt.text(x=12.5, y=0.5, s= f'Detected: {accurancy}')
-    # plt.text(x=12.5, y=1.5, s= f'Threshold: {threshold}')
-    # plt.text(x=12.5, y=2, s= f'Unknown: {len_known}')
-    # plt.text(x=12.5, y=2.5, s= f'Metric:')
-    # plt.text(x=12.5, y=3, s= f' - Precision: {round(precision, 3)}')
-    # plt.text(x=12.5, y=3.5, s= f' - Recall: {round(recall, 3)}')
-    # plt.text(x=12.5, y=4, s= f' - F1 score: {round(f1, 3)}')
 
     plt.text(x=12.5, y=1, s= f'Class names:')
     for i, class_name in enumerate(class_names):
@@ -71,20 +48,18 @@ def plot_confmat(class_names, test_results):
     return plt
 
 def plot_save_model(model: torch.nn.Module,
-               results: dict[str, list[float]],
-               class_names: list,
-               device: str,
-               is_save: bool,
-               **kwargs):
+                    model_name: str,
+                    results: dict[str, list[float]],
+                    class_names: list,
+                    device: str,
+                    is_save: bool):
 
     df_test_results = pd.DataFrame(results['test_results'])
-    threshold = kwargs['test_para']['threshold']
     
     if is_save:
         target_dir = Path('runs/classify/')
         target_dir.mkdir(parents=True, exist_ok=True)
         
-        model_name = 'model.pth'
         graph_loss_name = 'loss_acc.jpg'
         graph_confmat_name = 'confusion_matrix.jpg'
         info_file_name = 'info.json'
@@ -105,7 +80,7 @@ def plot_save_model(model: torch.nn.Module,
         target_dir_path = Path(target_dir)
         target_dir_path.mkdir(parents=True,exist_ok=True)
         
-        model_save_path = target_dir_path / model_name
+        model_save_path = target_dir_path / (model_name + '.pth')
         graph_loss_save_path = target_dir_path / graph_loss_name
         graph_confmat_save_path = target_dir_path / graph_confmat_name
         info_save_path = target_dir_path / info_file_name
@@ -113,6 +88,7 @@ def plot_save_model(model: torch.nn.Module,
         print(f"[INFO] Saving model to: {target_dir}")
         
         info_data = {
+            'model': model_name,
             "class_names" : class_names,
             "results" : results
         }
@@ -123,7 +99,7 @@ def plot_save_model(model: torch.nn.Module,
     graph_loss = plot_loss_curves(results)
     if is_save: graph_loss.savefig(graph_loss_save_path)
         
-    graph_confmat = plot_confmat(class_names=class_names, df_test_results= df_test_results, threshold= threshold)
+    graph_confmat = plot_confmat(class_names=class_names, test_results= results['test_results'])
     if is_save: graph_confmat.savefig(graph_confmat_save_path)
     
     if is_save: torch.save(obj=model.state_dict(), f=model_save_path)

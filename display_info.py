@@ -37,11 +37,32 @@ while True:
     print('-'*40)
 
     for gpu in gpus:
+        temp = gpu.temperature
         print(f"| {gpu.name}{' '*(40 - len(gpu.name) - 3)}|")
         print(f"|  Load: {gpu.load*100:5}%{' '*24}|")
-
+        print(f"|  Temp: {temp:5}°C{' '*23}|")
         print(f"|  Vram: {gpu.memoryUsed:4.0f}MB / {gpu.memoryTotal:4.0f}MB ({(gpu.memoryUsed/gpu.memoryTotal)*100:5.1f}%){' '*6}|")
         
     print('-'*40)
     
-    
+# import psutil
+# import GPUtil
+
+# # Lấy nhiệt độ CPU
+# if hasattr(psutil, "sensors_temperatures"):
+#     temps = psutil.sensors_temperatures()
+#     if "coretemp" in temps:
+#         for entry in temps["coretemp"]:
+#             print(f"CPU {entry.label}: {entry.current}°C")
+
+# # Lấy nhiệt độ GPU
+# gpus = GPUtil.getGPUs()
+# for gpu in gpus:
+#     print(f"GPU {gpu.name}: {gpu.temperature}°C")
+
+# import psutil
+
+# if hasattr(psutil, "sensors_temperatures"):
+#     print("Có hỗ trợ cảm biến nhiệt độ")
+# else:
+#     print("Không hỗ trợ cảm biến nhiệt độ")
