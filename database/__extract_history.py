@@ -1,4 +1,5 @@
 import sqlite3
+from .__check_manager import is_manager
 
 def extract_history(userData, con):
     '''
@@ -7,23 +8,40 @@ def extract_history(userData, con):
         picDate, 
         class_name, 
         pred_pic, 
-        class_prob)
+        score)
         '''
     userName = userData.user_name
 
-    if userName == 'admin':
+    cur = con.cursor()
+
+    cur.execute(f'''
+        SELECT userID 
+        FROM USER
+        WHERE userName = '{userName}'
+        ''')
+    
+    userID = cur.fetchall()[0][0]
+
+    con.commit()
+
+    if is_manager(userName):
         cur = con.cursor()
         cur.execute(f'''
-        select userName, 
+        select userID, 
                 pic, 
                 picDate, 
                 diseaseName,
                 pred_pic,
-                class_prob
+                score
         from USER_PIC
         join PIC on USER_PIC.picID = PIC.picID
-        join DISEASE on PIC.class_name=DISEASE.class_name
-        order by picDate desc           
+        join DISEASE on PIC.diseaseID=DISEASE.diseaseID
+        where userID = {userID} or userID in (
+            SELECT e.userID AS employeeID
+            FROM USER e
+            inner JOIN USER m ON e.managerID = m.userID
+            where m.userID = {userID})
+        order by picDate desc          
         ''')
 
         history = cur.fetchall()
@@ -32,29 +50,29 @@ def extract_history(userData, con):
     else:
         cur = con.cursor()
         cur.execute(f'''
-        select userName, 
+        select userID, 
                 pic, 
                 picDate, 
                 diseaseName,
                 pred_pic,
-                class_prob
+                score
         from USER_PIC
         join PIC on USER_PIC.picID = PIC.picID
-        join DISEASE on PIC.class_name=DISEASE.class_name
-        where userName = '{userName}'
-        order by picDate desc           
+        join DISEASE on PIC.diseaseID=DISEASE.diseaseID
+        where userID = {userID}
+        order by picDate desc          
         ''')
         history = cur.fetchall()
         con.commit()
         
-    pic = [i[1] for i in history]
-    picDate = [i[2] for i in history]
-    class_name = [i[3] for i in history]
-    pred_pic = [i[4] for i in history]
-    class_prob = [i[5] for i in history]
+    pic = list(map(lambda x: x[1], history))
+    picDate = list(map(lambda x: x[2], history))
+    class_name = list(map(lambda x: x[3], history))
+    pred_pic = list(map(lambda x: x[4], history))
+    score = list(map(lambda x: x[5], history))
 
     return (pic, 
         picDate, 
         class_name, 
         pred_pic, 
-        class_prob)
+        score)

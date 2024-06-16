@@ -11,6 +11,7 @@ from .__validate_password import validate_password
 from .__extract_history import extract_history
 from .__add_picture import add_picture_to_database
 from .__extract_solution import get_solution
+from .__get_statistics import get_statistic
 
 class Query:
     '''
@@ -175,7 +176,18 @@ class Query:
                     'Ảnh phân tích': pred_pic,
                     'Độ tin cậy': class_prob,
                     'Ngày chụp' : picDate
-                           }
+                           },
+                'statistics':{
+                    'date1':{
+                        'disease1': number_of_disease1,
+                        'disease2': number_of_disease2,
+                        ...
+                            },
+                    'date2':{
+                        ...
+                            },
+                    ...
+                            }
                 }
     Else:
                 {
@@ -187,7 +199,7 @@ class Query:
         userName = userData.user_name
         userPassword = userData.password
 
-        validate_result = validate_password(userName, userPassword)
+        validate_result = validate_password(userName, userPassword, self.con)
         if validate_result['code'] == '002' or validate_result['code'] == '003':
             return {
                 'message' : validate_result['message'],
@@ -197,7 +209,9 @@ class Query:
         picDate, 
         class_name, 
         pred_pic, 
-        class_prob) = extract_history(userData, self.con)       
+        class_prob) = extract_history(userData, self.con)
+
+        statistic = get_statistic(userName, self.con)       
 
         return {
                 'message' : validate_result['message'],
@@ -208,7 +222,8 @@ class Query:
                     'Ảnh phân tích': pred_pic,
                     'Độ tin cậy': class_prob,
                     'Ngày chụp' : picDate
-                           }
+                           },
+                'statistic': statistic
                 }
     
     async def change_password(self, item):
@@ -257,6 +272,7 @@ class Query:
         }
         '''
         return get_solution(self.con)
+    
 
     async def close(self):
         self.con.commit()
