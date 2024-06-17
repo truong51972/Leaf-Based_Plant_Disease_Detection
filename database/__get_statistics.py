@@ -2,7 +2,7 @@ import sqlite3
 from copy import deepcopy
 from .__check_manager import is_manager
 
-def get_statistic(userName, con=sqlite3.connect('data.db')):
+def get_statistic(userName, con):
 
     cur = con.cursor()
 
@@ -25,7 +25,6 @@ def get_statistic(userName, con=sqlite3.connect('data.db')):
     con.commit()
 
     if is_manager(userName, con):
-        print('manager mode')
         cur.execute(f'''
             select sum(num_count) as count, diseaseName, date from
             (select count(*) as [num_count], DISEASE.diseaseName, date(PIC.picDate) as date, USER.userID
@@ -42,7 +41,6 @@ def get_statistic(userName, con=sqlite3.connect('data.db')):
             order by date
         ''')
     else:
-        print('employee mode')
         print(f'userID = {userID}')
         cur.execute(f'''select count(*) as [num_count], DISEASE.diseaseName, date(PIC.picDate), USER.userID
                         from PIC join DISEASE on PIC.diseaseID = DISEASE.diseaseID

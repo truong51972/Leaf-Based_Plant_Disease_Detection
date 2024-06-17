@@ -217,9 +217,7 @@ class Query:
         picDate, 
         class_name, 
         pred_pic, 
-        score) = extract_history(userData, self.con)
-
-        statistic = get_statistic(userName, self.con)       
+        score) = extract_history(userData, self.con)      
 
         return {
                 'message' : validate_result['message'],
@@ -230,9 +228,21 @@ class Query:
                     'Ảnh phân tích': pred_pic,
                     'Độ tin cậy': score,
                     'Ngày chụp' : picDate
-                           },
-                'statistic': statistic
+                           }
                 }
+    
+    async def get_statistic(self, userData):
+        userName = userData.user_name
+        userPassword = userData.password
+
+        validate_result = validate_password(userName, userPassword, self.con)
+        if validate_result['code'] == '002' or validate_result['code'] == '003':
+            return {
+                'message' : validate_result['message'],
+                'code': validate_result['code'],
+                    }
+        statistic = get_statistic(userName, self.con)
+        return {'statistic': statistic}
     
     async def change_password(self, item):
         '''

@@ -3,7 +3,7 @@ import sqlite3
 def add_user(managerName:str,
              newUserName:str, 
              newUserPassword:str, 
-             con=sqlite3.connect('data.db')):
+             con):
     '''
             This private function is used for adding user into database
 

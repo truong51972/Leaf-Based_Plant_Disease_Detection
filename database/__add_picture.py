@@ -20,7 +20,7 @@ def add_picture_to_database(userName:str,
                             pic:str, 
                             pred_pic:str, 
                             score:float,
-                            con=sqlite3.connect('data.db')) -> int:
+                            con) -> int:
     '''
         This private function is used for adding picture information to database and delete picture if number of pictures per user exceed 100\n
         :input:

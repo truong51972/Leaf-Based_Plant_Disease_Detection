@@ -1,6 +1,6 @@
 import sqlite3
 
-def is_manager(userName, con=sqlite3.connect('data.db')):
+def is_manager(userName, con):
     cur = con.cursor()
 
     cur.execute(f'''
