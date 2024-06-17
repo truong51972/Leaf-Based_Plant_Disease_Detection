@@ -10,7 +10,7 @@ from .__validate_password import validate_password
 from .__extract_history import extract_history
 from .__add_picture import add_picture_to_database
 from .__extract_solution import get_solution
-from .__get_statistics import get_statistic
+from .__get_statistic import get_statistic
 from .__check_manager import is_manager
 
 class Query:
@@ -184,18 +184,7 @@ class Query:
                     'Ảnh phân tích': pred_pic,
                     'Độ tin cậy': score,
                     'Ngày chụp' : picDate
-                           },
-                'statistics':{
-                    'date1':{
-                        'disease1': number_of_disease1,
-                        'disease2': number_of_disease2,
-                        ...
-                            },
-                    'date2':{
-                        ...
-                            },
-                    ...
-                            }
+                           }
                 }
     Else:
                 {
@@ -231,9 +220,20 @@ class Query:
                            }
                 }
     
-    async def get_statistic(self, userData):
-        userName = userData.user_name
-        userPassword = userData.password
+    async def get_statistic(self, item):
+        '''
+        :input:
+    item = {
+        'user_info': {
+            'user_name' : 'user name',
+            'password' : 'password'
+        },
+        'date': 'date'
+    }
+        '''
+        userName = item.user_info.user_name
+        userPassword = item.user_info.password
+        date = item.date
 
         validate_result = validate_password(userName, userPassword, self.con)
         if validate_result['code'] == '002' or validate_result['code'] == '003':
