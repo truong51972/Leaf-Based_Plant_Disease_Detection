@@ -237,7 +237,7 @@ def change_password(item: dict):
     response = __request(api_name, item)
     return response
 
-def statistics(item: dict):
+def get_statistics(item: dict):
     """
     Make a request to database server to check user login.
 
@@ -266,7 +266,7 @@ def statistics(item: dict):
         }
     }
     """
-    api_name = '/statistics'
+    api_name = '/get-statistics'
     
     response = __request(api_name, item)
     return response
