@@ -3,7 +3,7 @@ from packages.request_api import change_password
 from packages.encode_decode import encrypt_password
 from datetime import datetime, timedelta
 from web.history import get_first_upload_date
-from packages.request_api import get_history
+from packages.request_api import statistics
 import pandas as pd
 
 
@@ -69,10 +69,11 @@ def statistics_ui():
     }
 
     if st.button("Xem thống kê"):
-        response = get_history(item=item).json()
-        df_statistics = pd.DataFrame(response['statistics'])
-        st.dataframe(df_statistics)
-    else:
-        st.write("Không có số liệu thống kê cho ngày đã chọn.")
+        response = statistics(item=item).json()
+        if 'statistics' in response:
+            df_statistics = pd.DataFrame(response['statistics'])
+            st.dataframe(df_statistics)
+        else:
+            st.write("Không có số liệu thống kê cho ngày đã chọn.")
 
 
