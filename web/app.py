@@ -89,7 +89,7 @@ def app():
                             st.markdown("Khả năng: **Điểm số** không vượt qua **ngưỡng**, bạn nên kiểm tra lại.")
                             st.markdown("""
                             **Lời khuyên**:
-                            1. Xem lại mục **Hướng dẫn chụp ảnh** với icon (❓) trong phần chọn ảnh để đảm bảo bạn đã chụp đúng cách.
+                            1. Xem lại mục **Hướng dẫn chụp ảnh** với icon (?) trong phần chọn ảnh để đảm bảo bạn đã chụp đúng cách.
                             2. Thử chụp lại ảnh với chất lượng tốt hơn theo hướng dẫn.
                             3. Nếu bạn vẫn không chắc chắn, hãy gửi ảnh này cho chuyên gia để được tư vấn thêm.
                             """)
