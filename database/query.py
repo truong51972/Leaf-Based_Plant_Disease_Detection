@@ -241,8 +241,8 @@ class Query:
                 'message' : validate_result['message'],
                 'code': validate_result['code'],
                     }
-        statistic = get_statistic(userName, self.con)
-        return {'statistic': statistic}
+        statistic = get_statistic(userName,date, self.con)
+        return statistic
     
     async def change_password(self, item):
         '''
