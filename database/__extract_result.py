@@ -1,6 +1,6 @@
 import sqlite3
 
-def extract_result(picID:int, con):  
+def extract_result(picID:int, con=sqlite3.connect('data.db')):  
     '''
             This private function is used for extract result with known picID
 
@@ -34,7 +34,7 @@ def extract_result(picID:int, con):
                    solutionGardening,
                    solutionFertilization,
                    solutionSource
-            from PIC join DISEASE on PIC.class_name = DISEASE.class_name
+            from PIC join DISEASE on PIC.diseaseID = DISEASE.diseaseID
             where picID = {picID}
             """)
 

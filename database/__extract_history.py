@@ -1,7 +1,7 @@
 import sqlite3
 from .__check_manager import is_manager
 
-def extract_history(userData, con):
+def extract_history(userData, con=sqlite3.connect('data.db')):
     '''
         :return:
         (pic, 
