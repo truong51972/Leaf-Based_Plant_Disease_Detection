@@ -8,11 +8,18 @@ from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
 from pytorch_grad_cam.utils.image import show_cam_on_image
 
 class Grad_cam:
-    def __init__(self, model):
+    def __init__(self, model, model_name):
 
         self.model = model
-        
-        target_layers = [self.model.layer4[-1]]
+
+        # resnet
+        if model_name == "resnet50" or model_name == "resnet18":
+            target_layers = [self.model.layer4[-1]]
+        elif model_name == "vgg16" or model_name == "vgg19":
+            target_layers = [self.model.features[-1]]
+        elif model_name == "effi_net_v2_s" or model_name == "effi_net_v2_s":
+            target_layers = [self.model.features[-1]]
+            
         # self.cam = GradCAM(model=self.model, target_layers=target_layers)
         # self.cam = ScoreCAM(model=self.model, target_layers=target_layers)
         # self.cam = HiResCAM(model=self.model, target_layers=target_layers)
