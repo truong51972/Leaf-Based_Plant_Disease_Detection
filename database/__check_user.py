@@ -1,6 +1,6 @@
 import sqlite3
 
-def check_user(userName:str, con=sqlite3.connect('data.db')) -> bool:
+def check_user(userName:str, con) -> bool:
     '''
         This private function is used for checking user existence in database
 

@@ -183,6 +183,27 @@ def get_history(item: dict):
     response = __request(api_name, item)
     return response
 
+
+
+if __name__ == '__main__':
+    from PIL import Image
+    from encode_decode import encode_image
+
+    image = Image.open('049230435087359914.JPG')
+    encoded_image = encode_image(image)
+    print(type(encoded_image))
+    item = {
+        'user_info' : {
+            'user_name' : 'user name',
+            'password' : 'password'
+        },
+        'image_info' : {
+            'image' : encoded_image,
+            'date' : '12093'
+        }
+    }
+    print(analyze(item).json())
+
 def change_password(item: dict):
     """
     Make a request to database server to check user login.
@@ -215,6 +236,42 @@ def change_password(item: dict):
     
     response = __request(api_name, item)
     return response
+
+def get_statistics(item: dict):
+    """
+    Make a request to database server to check user login.
+
+    Args:
+        item: dict[str, str]
+
+    Returns:
+        response = {
+            'message' : 'message!',
+            'code': 'error code!',
+            'statistics': {
+                'Tên bệnh': [...]
+            }
+        }
+    Example:
+    >>> item = {
+            'user_name' : 'user name',
+            'password' : 'password'
+        }
+    >>> statistics(item = item)
+    {
+        'message' : 'message!',
+        'code': 'error code!',
+        'statistics': {
+            'Tên bệnh': [...]
+        }
+    }
+    """
+    api_name = '/get-statistics'
+    
+    response = __request(api_name, item)
+    return response
+    
+
 
 if __name__ == '__main__':
     from PIL import Image

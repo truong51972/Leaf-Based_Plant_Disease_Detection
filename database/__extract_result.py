@@ -1,6 +1,6 @@
 import sqlite3
 
-def extract_result(picID:int, con=sqlite3.connect('data.db')):  
+def extract_result(picID:int, con):  
     '''
             This private function is used for extract result with known picID
 
