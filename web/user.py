@@ -3,8 +3,9 @@ from packages.request_api import change_password
 from packages.encode_decode import encrypt_password
 from datetime import datetime, timedelta
 from web.history import get_first_upload_date
-from packages.request_api import statistics
+from packages.request_api import get_statistics
 import pandas as pd
+import pytz
 
 
 def user_info():
@@ -63,17 +64,17 @@ def statistics_ui():
             st.write(f"Ngày đầu tiên sử dụng app: {first_upload_date}")
 
     selected_date = st.date_input("Vui lòng chọn ngày để xem thống kê.", datetime.today() - timedelta(days=1))
+    selected_date_str = selected_date.strftime('%Y-%m-%d')
+    print(type(selected_date_str))
     item = {
-        'user_name': st.session_state.get('user_name'),
-        'password': st.session_state.get('encrypted_password')
+        'user_info': {
+            'user_name': st.session_state.get('user_name'),
+            'password': st.session_state.get('encrypted_password')
+        },
+        'date': selected_date_str
     }
-
     if st.button("Xem thống kê"):
-        response = statistics(item=item).json()
-        if 'statistics' in response:
-            df_statistics = pd.DataFrame(response['statistics'])
-            st.dataframe(df_statistics)
-        else:
-            st.write("Không có số liệu thống kê cho ngày đã chọn.")
-
+        response = get_statistics(item=item).json()
+        df_statistics = pd.DataFrame(response).T
+        st.dataframe(df_statistics)
 

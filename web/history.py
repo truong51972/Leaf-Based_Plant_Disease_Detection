@@ -1,10 +1,12 @@
 import streamlit as st
 from packages.request_api import get_history
+from streamlit import cache
 import pandas as pd
 
 def __url_gen(x):
     return 'data:image/jpeg;base64,' + x
 
+@st.cache
 def get_first_upload_date():
     item = {
         'user_name': st.session_state.get('user_name'),
