@@ -1,8 +1,8 @@
 import sqlite3
 from copy import deepcopy
-from .__check_manager import is_manager
+from __check_manager import is_manager
 
-def get_statistic(userName, con):
+def get_statistic(userName:str,date:str, con):
 
     cur = con.cursor()
 
@@ -37,16 +37,17 @@ def get_statistic(userName, con):
                 inner JOIN USER m ON e.managerID = m.userID
                 where m.userID = {userID})
             group by date(picDate), PIC.diseaseID, USER.userID)
+            where date = '{date}'
             group by diseaseName, date
             order by date
         ''')
     else:
         print(f'userID = {userID}')
-        cur.execute(f'''select count(*) as [num_count], DISEASE.diseaseName, date(PIC.picDate), USER.userID
+        cur.execute(f'''select count(*) as [num_count], DISEASE.diseaseName, date(PIC.picDate) as date
                         from PIC join DISEASE on PIC.diseaseID = DISEASE.diseaseID
                         join USER_PIC on PIC.picID = USER_PIC.picID
                         join USER on USER_PIC.userID = USER.userID
-                        where USER.userID = {userID}
+                        where USER.userID = {userID} and date = '{date}'
                         group by date(picDate), PIC.diseaseID, USER.userID''')
         
     data = cur.fetchall()
@@ -62,3 +63,9 @@ def get_statistic(userName, con):
         statistics[data_batch[2]].update({data_batch[1]: data_batch[0]})
 
     return statistics
+
+# def main():
+#     from datetime import datetime
+#     print(get_statistic('admin', '2024-06-14', con=sqlite3.connect('test.db')))
+# if __name__ == '__main__':
+#     main()
