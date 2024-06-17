@@ -237,7 +237,6 @@ def change_password(item: dict):
     response = __request(api_name, item)
     return response
 
-
 if __name__ == '__main__':
     from PIL import Image
     from encode_decode import encode_image
