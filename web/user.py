@@ -3,7 +3,7 @@ from packages.request_api import change_password
 from packages.encode_decode import encrypt_password
 from datetime import datetime, timedelta
 from web.history import get_first_upload_date
-from packages.request_api import statistics
+from packages.request_api import get_history
 import pandas as pd
 
 
@@ -55,23 +55,24 @@ def change_password_ui():
                     st.error("Không nhận được phản hồi từ máy chủ.")
 
 def statistics_ui():
-    st.subheader("Thống kê của bạn") 
+    st.subheader("Thống kê của bạn")
 
-    with st.container(border=True):
+    with st.container():
         first_upload_date = get_first_upload_date()
         if first_upload_date:
             st.write(f"Ngày đầu tiên sử dụng app: {first_upload_date}")
 
-    st.date_input("Vui lòng chọn ngày để xem thống kê.", datetime.today() - timedelta(days=1))
+    selected_date = st.date_input("Vui lòng chọn ngày để xem thống kê.", datetime.today() - timedelta(days=1))
     item = {
-            'user_name': st.session_state.get('user_name'),
-            'password': st.session_state.get('encrypted_password')
-        }
+        'user_name': st.session_state.get('user_name'),
+        'password': st.session_state.get('encrypted_password')
+    }
+
     if st.button("Xem thống kê"):
-        response =  statistics(item=item).json()
-        if 'statistics' in response:
-            df_statistics = pd.DataFrame(response['statistics'])
-            df_statistics = df_statistics[['Tên bệnh',]]
-            st.dataframe(df_statistics)
-        else:
-            st.warning("Không có dữ liệu thống kê để hiển thị.")
+        response = get_history(item=item).json()
+        df_statistics = pd.DataFrame(response['statistics'])
+        st.dataframe(df_statistics)
+    else:
+        st.write("Không có số liệu thống kê cho ngày đã chọn.")
+
+
