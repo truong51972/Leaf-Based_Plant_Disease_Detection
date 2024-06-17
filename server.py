@@ -48,6 +48,11 @@ class Analyze(BaseModel):
 class Change_password(BaseModel):
     user_info: User_Info
     new_password: str = None
+
+class Get_statistics(BaseModel):
+    user_info: User_Info
+    day: str = None
+
 @app.post("/check-login")
 async def check_login(item: User_Info):
     # print(dict(item))
@@ -87,6 +92,6 @@ async def change_password(item: Change_password):
     return response
 
 @app.post("/get-statistics")
-async def change_password(item: Change_password):
-    response = await models['query'].get_statistics(item)
+async def change_password(item: Get_statistics):
+    response = await models['query'].get_statistic(item)
     return response
