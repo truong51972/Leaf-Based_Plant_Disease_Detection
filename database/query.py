@@ -53,7 +53,7 @@ class Query:
         
 
         if is_manager(managerName, self.con):
-            if check_user(managerName, self.con):
+            if check_user(newUserName, self.con):
                 return {'message':'userName already existed!',
                     'code':'001'}
             else:    
@@ -282,7 +282,7 @@ class Query:
         return get_solution(self.con)
     
 
-    async def close(self):
+    def close(self):
         self.con.commit()
         self.con.close() 
 

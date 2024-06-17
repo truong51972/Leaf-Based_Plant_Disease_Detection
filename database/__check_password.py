@@ -2,7 +2,7 @@ import sqlite3
 
 def check_password(userName:str, 
                    userPassword:str, 
-                   con) -> bool:
+                   con=sqlite3.connect('data.db')) -> bool:
         '''
             This private function is used for checking user password
 

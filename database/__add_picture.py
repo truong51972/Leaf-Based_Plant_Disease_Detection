@@ -20,17 +20,20 @@ def add_picture_to_database(userName:str,
                             pic:str, 
                             pred_pic:str, 
                             score:float,
-                            con=sqlite3.connect('data.db')):
+                            con=sqlite3.connect('data.db')) -> int:
     '''
         This private function is used for adding picture information to database and delete picture if number of pictures per user exceed 100\n
         :input:
         userName : str,
-        diseaseID: str,
+        class_name: str,
         picDate: datetime (YYYY-MM-DD HH:MI:SS),
         pic: str (encrypted content of the pic),
         pred_pic: str (encrypted content of the pic),
         score: float ,
         con: sqlite3.connect(<database directory>)
+
+        :return:
+        picID: int
         '''
     diseaseID = CONVERT_DICT[class_name]
 
@@ -91,6 +94,8 @@ def add_picture_to_database(userName:str,
         WHERE picID {deleted_id}
         ''')
         con.commit()
+
+    return picID
 
 
 

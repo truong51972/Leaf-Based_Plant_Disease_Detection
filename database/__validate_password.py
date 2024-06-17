@@ -1,7 +1,8 @@
+import sqlite3
 from .__check_user import check_user
 from .__check_password import check_password
 
-def validate_password(userName, userPassword, con) -> dict:
+def validate_password(userName, userPassword, con=sqlite3.connect('data.db')) -> dict:
     '''
             This private function is used for validating user
 

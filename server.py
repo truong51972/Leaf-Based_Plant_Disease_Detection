@@ -85,3 +85,8 @@ async def analyze(item: Analyze):
 async def change_password(item: Change_password):
     response = await models['query'].change_password(item)
     return response
+
+@app.post("/get-statistics")
+async def change_password(item: Change_password):
+    response = await models['query'].get_statistics(item)
+    return response

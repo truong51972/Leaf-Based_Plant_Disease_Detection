@@ -2,7 +2,7 @@ import sqlite3
 
 def reset_password(userName:str, 
                    newPassword:str, 
-                   con):
+                   con=sqlite3.connect('data.db')):
     '''
             This private function is used for adding user into database
 

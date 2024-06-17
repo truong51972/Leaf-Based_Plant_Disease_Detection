@@ -24,13 +24,13 @@ def get_solution(con):
     solutionFertilization,
     solutionSource
     ) = (
-        tuple(i[0] for i in solution),
-        tuple(i[1] for i in solution),
-        tuple(i[2] for i in solution),
-        tuple(i[3] for i in solution),
-        tuple(i[4] for i in solution),
-        tuple(i[5] for i in solution),
-        tuple(i[6] for i in solution)
+        list(map(lambda x: x[0], solution)),
+        list(map(lambda x: x[1], solution)),
+        list(map(lambda x: x[2], solution)),
+        list(map(lambda x: x[3], solution)),
+        list(map(lambda x: x[4], solution)),
+        list(map(lambda x: x[5], solution)),
+        list(map(lambda x: x[6], solution))
                  )
     
     return {

@@ -1,7 +1,7 @@
 import sqlite3
 from .__check_manager import is_manager
 
-def extract_history(userData, con):
+def extract_history(userData, con=sqlite3.connect('data.db')):
     '''
         :return:
         (pic, 
@@ -24,7 +24,7 @@ def extract_history(userData, con):
 
     con.commit()
 
-    if is_manager(userName):
+    if is_manager(userName, con):
         cur = con.cursor()
         cur.execute(f'''
         select userID, 
