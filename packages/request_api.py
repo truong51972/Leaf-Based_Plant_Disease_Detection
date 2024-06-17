@@ -237,6 +237,42 @@ def change_password(item: dict):
     response = __request(api_name, item)
     return response
 
+def statistics(item: dict):
+    """
+    Make a request to database server to check user login.
+
+    Args:
+        item: dict[str, str]
+
+    Returns:
+        response = {
+            'message' : 'message!',
+            'code': 'error code!',
+            'statistics': {
+                'Tên bệnh': [...]
+            }
+        }
+    Example:
+    >>> item = {
+            'user_name' : 'user name',
+            'password' : 'password'
+        }
+    >>> statistics(item = item)
+    {
+        'message' : 'message!',
+        'code': 'error code!',
+        'statistics': {
+            'Tên bệnh': [...]
+        }
+    }
+    """
+    api_name = '/statistics'
+    
+    response = __request(api_name, item)
+    return response
+    
+
+
 if __name__ == '__main__':
     from PIL import Image
     from encode_decode import encode_image
