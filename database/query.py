@@ -5,12 +5,13 @@ from .__change_password import reset_password
 from .__check_user import check_user
 from .__check_password import check_password
 from .__add_user import add_user
-from .__picID_len import picID_list_len
 from .__extract_result import extract_result
 from .__validate_password import validate_password
 from .__extract_history import extract_history
 from .__add_picture import add_picture_to_database
-from .__extract_solution import _get_solution
+from .__extract_solution import get_solution
+from .__get_statistics import get_statistic
+from .__check_manager import is_manager
 
 class Query:
     '''
@@ -23,12 +24,12 @@ class Query:
     def __init__(self, database='data.db'):
         self.con = sqlite3.connect(database) 
                  
-    async def add_user(self, userData) -> dict:
+    async def add_user(self, managerData, newUserInfo) -> dict:
         '''
             This private function is used for checking user password
 
             :input:
-            userData: User()
+            userData, newUserInfo: User()
                         
             NOTE:
             class User():
@@ -42,18 +43,27 @@ class Query:
 
             PERFORMANCE CODE:
                 '000': Action proceeded successfully 
-                '001': userName has already existed in the database (UserExisted)       
+                '001': userName has already existed in the database (UserExisted)    
+                '004': User has no authority (UnauthorizedAction)   
         '''   
-        userName = userData.user_name
-        userPassword = userData.password
+        managerName = managerData.user_name
+        managerPassword = managerData.password
+        newUserName = newUserInfo.user_name
+        newUserPassword = newUserInfo.password
         
-        if check_user(userName, self.con):
-            return {'message':'userName already existed!',
+
+        if is_manager(managerName, self.con):
+            if check_user(managerName, self.con):
+                return {'message':'userName already existed!',
                     'code':'001'}
-        else:
-            add_user(userName, userPassword, self.con)
-            return {'message':'Success!',
+            else:    
+                add_user(managerName, newUserName, newUserPassword, self.con)
+                return {'message':'Success!',
                     'code':'000'}
+        else:
+            return {'message':'User has no authority!',
+                    'code' : '004'}
+            
 
     async def user_login(self, userData) -> dict:
         '''
@@ -106,7 +116,7 @@ class Query:
             'image' : 'decoded image',
             'date' : 'YYYY-MM-DD HH:MI:SS',
             'class_name': None,
-            'accuracy': None,
+            'score': None,
             'predicted_image': None
         }
     }
@@ -135,13 +145,12 @@ class Query:
                     }
 
         pred_pic = item.image_info.predicted_image
-        pred_acc = item.image_info.score
+        score = item.image_info.score
         pic = item.image_info.image
         picDate = item.image_info.date
         class_name = item.image_info.class_name
-        picID = picID_list_len(self.con)
 
-        add_picture_to_database(userName, picID, class_name, picDate, pic, pred_pic, pred_acc, self.con)
+        picID = add_picture_to_database(userName, class_name, picDate, pic, pred_pic, score, self.con)
 
         class_name, description, solution = extract_result(picID, self.con)
         return {
@@ -175,7 +184,18 @@ class Query:
                     'Ảnh phân tích': pred_pic,
                     'Độ tin cậy': score,
                     'Ngày chụp' : picDate
-                           }
+                           },
+                'statistics':{
+                    'date1':{
+                        'disease1': number_of_disease1,
+                        'disease2': number_of_disease2,
+                        ...
+                            },
+                    'date2':{
+                        ...
+                            },
+                    ...
+                            }
                 }
     Else:
                 {
@@ -197,7 +217,9 @@ class Query:
         picDate, 
         class_name, 
         pred_pic, 
-        score) = extract_history(userData, self.con)       
+        score) = extract_history(userData, self.con)
+
+        statistic = get_statistic(userName, self.con)       
 
         return {
                 'message' : validate_result['message'],
@@ -208,7 +230,8 @@ class Query:
                     'Ảnh phân tích': pred_pic,
                     'Độ tin cậy': score,
                     'Ngày chụp' : picDate
-                           }
+                           },
+                'statistic': statistic
                 }
     
     async def change_password(self, item):
@@ -256,9 +279,10 @@ class Query:
         'solutionSource':       tuple(solutionSource)
         }
         '''
-        return _get_solution(self.con)
+        return get_solution(self.con)
+    
 
-    def close(self):
+    async def close(self):
         self.con.commit()
         self.con.close() 
 

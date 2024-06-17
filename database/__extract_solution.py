@@ -1,6 +1,6 @@
 import sqlite3
 
-def _get_solution(con):
+def get_solution(con):
     cur = con.cursor()
     cur.execute(f'''
     select                   
