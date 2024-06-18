@@ -12,6 +12,7 @@ from .__add_picture import add_picture_to_database
 from .__extract_solution import get_solution
 from .__get_statistic import get_statistic
 from .__check_manager import is_manager
+from .__extract_result_without_id import extract_result_without_id
 
 class Query:
     '''
@@ -102,7 +103,7 @@ class Query:
                 return {'message':'Wrong password!',
                         'code':'002'}
     
-    async def add_pic_and_get_solution(self, item):   
+    async def add_pic_and_get_solution(self, item, is_save):   
         '''
     This function is used to add picture to database and extract solution for that picture.
     
@@ -149,10 +150,12 @@ class Query:
         pic = item.image_info.image
         picDate = item.image_info.date
         class_name = item.image_info.class_name
-
-        picID = add_picture_to_database(userName, class_name, picDate, pic, pred_pic, score, self.con)
-
-        class_name, description, solution = extract_result(picID, self.con)
+        if is_save is True:
+            picID = add_picture_to_database(userName, class_name, picDate, pic, pred_pic, score, self.con)
+            class_name, description, solution = extract_result(picID, self.con)
+        else:
+            class_name, description, solution = extract_result_without_id(class_name, self.con)
+        
         return {
                 'message' : validate_result['message'],
                 'code': validate_result['code'],
