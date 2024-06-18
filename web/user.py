@@ -117,7 +117,7 @@ def plot_pie_chart(df_statistics, container):
             values = values[non_zero_indices]
 
             fig, ax = plt.subplots(figsize=(8, 8))
-            ax.pie(values, labels=labels, colors=colors, autopct='%1.1f%%', startangle=140)
+            ax.pie(values, labels=labels, colors=colors, autopct='%1.0f%%', startangle=140)
 
             ax.set_title('Biểu đồ phân bổ thống kê',pad=1) 
             with container:
