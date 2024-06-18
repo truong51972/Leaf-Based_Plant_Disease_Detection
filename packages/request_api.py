@@ -75,10 +75,18 @@ def create_new_user(item: dict):
         
     Example:
 
-    >>> item = {
-            'user_name' : 'user name',
-            'password' : 'password'
+    >>> item = 
+        {
+            "user_info" : {
+                'user_name' : 'user name',
+                'password' : 'password'
+            },
+            "new_user_info" : {
+                'user_name' : 'user name',
+                'password' : 'password'
+            }
         }
+        
     >>> create_new_user(item = item)
     {'message' : '...','code': 'XXX'}
     """
