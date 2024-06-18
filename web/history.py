@@ -6,7 +6,7 @@ import pandas as pd
 def __url_gen(x):
     return 'data:image/jpeg;base64,' + x
 
-@st.cache
+@st.cache_data
 def get_first_upload_date():
     item = {
         'user_name': st.session_state.get('user_name'),

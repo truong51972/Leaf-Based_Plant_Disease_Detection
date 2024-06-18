@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from web.history import get_first_upload_date
 from packages.request_api import get_statistics
 import pandas as pd
-import pytz
+import matplotlib.pyplot as plt
 
 
 def user_info():
@@ -55,6 +55,78 @@ def change_password_ui():
                 else:
                     st.error("Không nhận được phản hồi từ máy chủ.")
 
+def get_statistics_data(item):
+    try:
+        response = get_statistics(item=item).json()
+        df_statistics = pd.DataFrame(response)
+        return df_statistics
+    except Exception as e:
+        st.error(f"Lỗi khi lấy dữ liệu thống kê: {str(e)}")
+        return pd.DataFrame() 
+    
+def plot_bar_chart(df_statistics, container):
+    try:
+        if not df_statistics.empty:
+ 
+            filtered_df = df_statistics[df_statistics.iloc[:, 0] != 0]
+            if not filtered_df.empty:
+
+                filtered_df.iloc[:, 0] = filtered_df.iloc[:, 0].astype(int)
+
+                labels = filtered_df.index
+                values = filtered_df.iloc[:, 0].values
+
+                colors = ['blue', 'green', 'red', 'purple', 'orange', 
+                          'brown', 'pink', 'gray', 'cyan', 'yellow']
+
+                fig, ax = plt.subplots(figsize=(15, 10))
+                bars = ax.bar(labels, values, color=colors)
+
+
+                ax.set_xlabel('Nhóm')
+                ax.set_ylabel('Số lượng')
+                ax.set_title('Biểu đồ thống kê theo nhóm', pad=20) 
+
+                for bar in bars:
+                    yval = bar.get_height()
+                    ax.text(bar.get_x() + bar.get_width()/2, yval + 0.05, round(yval, 1), ha='center', va='bottom')
+
+                fig.tight_layout()
+                with container:
+                    st.pyplot(fig)
+            else:
+                st.warning("Không có dữ liệu để hiển thị biểu đồ.")
+        else:
+            st.warning("Không có dữ liệu để hiển thị biểu đồ.")
+    except Exception as e:
+        st.error(f"Lỗi khi vẽ biểu đồ: {str(e)}")
+
+def plot_pie_chart(df_statistics, container):
+    try:
+        if not df_statistics.empty:
+            df_statistics.iloc[:, 0] = df_statistics.iloc[:, 0].astype(int)
+
+            labels = df_statistics.index
+            values = df_statistics.iloc[:, 0].values
+
+            colors = ['blue', 'green', 'red', 'purple', 'orange', 
+                      'brown', 'pink', 'gray', 'cyan', 'yellow']
+
+            non_zero_indices = values != 0
+            labels = labels[non_zero_indices]
+            values = values[non_zero_indices]
+
+            fig, ax = plt.subplots(figsize=(8, 8))
+            ax.pie(values, labels=labels, colors=colors, autopct='%1.1f%%', startangle=140)
+
+            ax.set_title('Biểu đồ phân bổ thống kê',pad=1) 
+            with container:
+                st.pyplot(fig)
+        else:
+            st.warning("Không có dữ liệu để hiển thị biểu đồ.")
+    except Exception as e:
+        st.error(f"Lỗi khi vẽ biểu đồ phân bổ: {str(e)}")
+
 def statistics_ui():
     st.subheader("Thống kê của bạn")
 
@@ -65,7 +137,6 @@ def statistics_ui():
 
     selected_date = st.date_input("Vui lòng chọn ngày để xem thống kê.", datetime.today() - timedelta(days=1))
     selected_date_str = selected_date.strftime('%Y-%m-%d')
-    print(type(selected_date_str))
     item = {
         'user_info': {
             'user_name': st.session_state.get('user_name'),
@@ -73,8 +144,20 @@ def statistics_ui():
         },
         'date': selected_date_str
     }
+
     if st.button("Xem thống kê"):
-        response = get_statistics(item=item).json()
-        df_statistics = pd.DataFrame(response).T
-        st.dataframe(df_statistics)
+        df_statistics = get_statistics_data(item)
+        if not df_statistics.empty:
+            with st.container(border=True):
+                st.write("Bảng thống kê:")
+                st.dataframe(df_statistics)
+        
+        container1 = st.container(border=True)
+        container2 = st.container(border=True)
+
+        plot_bar_chart(df_statistics,container1)
+        plot_pie_chart(df_statistics,container2)
+
+
+
 
