@@ -1,6 +1,6 @@
 import streamlit as st
 from packages.request_api import get_history
-from streamlit import cache
+from streamlit import cache_data
 import pandas as pd
 
 def __url_gen(x):

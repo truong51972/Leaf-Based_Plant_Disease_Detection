@@ -122,8 +122,6 @@ def plot_pie_chart(df_statistics, container):
             ax.set_title('Biểu đồ phân bổ thống kê',pad=1) 
             with container:
                 st.pyplot(fig)
-        else:
-            st.warning("Không có dữ liệu để hiển thị biểu đồ.")
     except Exception as e:
         st.error(f"Lỗi khi vẽ biểu đồ phân bổ: {str(e)}")
 
