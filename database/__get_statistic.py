@@ -1,6 +1,6 @@
 import sqlite3
 from copy import deepcopy
-from __check_manager import is_manager
+from .__check_manager import is_manager
 
 def get_statistic(userName:str,date:str, con):
 

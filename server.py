@@ -20,7 +20,7 @@ models = {}
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     models['query'] = Query(database_path)
-    models['AI_model'] = AI_model(path_to_model= './model/model')
+    models['AI_model'] = AI_model(path_to_model= './model/model/tomato_disease')
 
     yield
 
@@ -51,7 +51,7 @@ class Change_password(BaseModel):
 
 class Get_statistics(BaseModel):
     user_info: User_Info
-    day: str = None
+    date: str
 
 @app.post("/check-login")
 async def check_login(item: User_Info):
