@@ -42,7 +42,7 @@ class Cnn_model:
             soft_max_persent = torch.softmax(predict, dim= 1)
             predicted_class = self.class_names[torch.argmax(predict, dim= 1)]
 
-            score = (soft_max_persent[0, torch.argmax(predict, dim= 1)].item())
+            score = (soft_max_persent[0, torch.argmax(predict_logit, dim= 1)].item())
 
         return predict_logit, predicted_class, score
 
@@ -57,7 +57,8 @@ class Cnn_model:
                 "score" : float,
             }
         """
-        predict_logit, predicted_class, score = self._predict(img=img)
+        
+        _, predicted_class, score = self._predict(img=img)
 
         return_dict = {
             "predicted_class" : predicted_class,
