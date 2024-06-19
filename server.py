@@ -89,16 +89,17 @@ async def get_history(item: User_Info):
 @app.post("/analyze")
 async def analyze(item: Analyze):
     image = decode_image(item.image_info.image)
-    result = await disease_detector.predict(image)
-    # print(result['class_name'])
-    item.image_info.class_name = result['class_name']
-    item.image_info.score = result['score']
-    item.image_info.threshold = result['threshold']
-    item.image_info.predicted_image = encode_image(result['predicted_image'])
+
+    disease_result = await disease_detector.predict(img=image)
+    leaf_result = await leaf_or_not_detector.predict(img=image)
+
+    item.image_info.class_name = disease_result['class_name']
+    item.image_info.score = disease_result['score']
+    item.image_info.threshold = disease_result['threshold']
+    item.image_info.predicted_image = encode_image(disease_result['predicted_image'])
 
 
     response = await database.add_pic_and_get_solution(item= item, is_save=True)
-    # print(response['solution'])
     return response
 
 @app.post("/change-password")
