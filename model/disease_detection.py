@@ -32,10 +32,14 @@ class AI_model:
     def _predict(self, img: Image):
         pointed_img = self.sam_model.plot_points(img)
         removed_bg_img = self.sam_model.remove_bg(img)
-        
-        predict, predicted_class, probability = self.cnn_model.predict(removed_bg_img)
 
-        grayscale_cam, visualization = self.grad_cam.visualize(removed_bg_img, predict, threshold= 0.5)
+        cnn_result = self.cnn_model.predict(removed_bg_img)
+        
+        predict_logit = cnn_result["predict_logit"] 
+        predicted_class = cnn_result["predicted_class"]
+        score = cnn_result["score"] 
+
+        grayscale_cam, visualization = self.grad_cam.visualize(removed_bg_img, predict_logit, threshold= 0.5)
         
         results = {
             "image" : img,
@@ -44,11 +48,27 @@ class AI_model:
             "predicted_image" : visualization,
             'heatmap': grayscale_cam,
             "class_name" : predicted_class,
-            "score" : probability
+            "score" : score
         }
         return results
         
     async def predict(self, img: Image):
+        """
+        Args:
+            img: PIL.Image()
+     
+        Returns:
+            dict: {
+                "image" : PIL.Image(),
+                "pointed_img" PIL.Image(): 
+                "removed_bg_img": PIL.Image(),
+                "predicted_image" : PIL.Image(),
+                'heatmap': array,
+                "class_name" : int,
+                "score" : float,
+                "threshold" : float,                
+            }
+        """
         results = self._predict(img)
         
         if self.best_threshold_df is not None:
