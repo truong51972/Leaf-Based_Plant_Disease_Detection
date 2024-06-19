@@ -2,6 +2,7 @@ import torch
 from torchvision import transforms
 
 from model.model_builder import load_model
+from PIL import Image
 
 class Cnn_model:
     def __init__(self, path_to_model: str):
@@ -28,17 +29,33 @@ class Cnn_model:
         return self.model
 
     # @time_decorator
-    def predict(self, img):
+    def predict(self, img: Image):
+        """
+        Args:
+            img: PIL.Image()
+     
+        Returns:
+            dict: {
+                "predict_logit" : torch.Tensor(),
+                "predicted_class" : int,
+                "score" : float,
+            }
+        """
         img_tensor = self.img_transform_for_predict(img)
         img_tensor_in_batch = img_tensor.unsqueeze(dim= 0)
         
         self.model.eval()
         with torch.inference_mode():
             
-            predict = self.model(img_tensor_in_batch)
+            predict_logit = self.model(img_tensor_in_batch)
             soft_max_persent = torch.softmax(predict, dim= 1)
             predicted_class = self.class_names[torch.argmax(predict, dim= 1)]
 
             score = (soft_max_persent[0, torch.argmax(predict, dim= 1)].item())
 
-        return predict, predicted_class, score
+        return_dict = {
+            "predict_logit" : predict_logit,
+            "predicted_class" : predicted_class,
+            "score" : score,
+        }
+        return return_dict

@@ -39,10 +39,10 @@ def plot_confmat(class_names, test_results):
     plt.figure(figsize=(7.5, 5))
     sns.heatmap(table, annot=True, fmt='.0f', cmap=plt.cm.Blues)
     plt.title('Confusion Matrix')
-
-    plt.text(x=12.5, y=1, s= f'Class names:')
+    
+    plt.text(x= len(class_names)*1.25, y=(len(class_names)*0.1), s= f'Class names:')
     for i, class_name in enumerate(class_names):
-        plt.text(x=12.5, y=1.5+(i/2), s= f' {i}. {class_name[:15]}{"..." if len(class_name) > 15 else ""}')
+        plt.text(x=len(class_names)*1.25, y=(len(class_names)*0.1)+ (len(class_names)*0.05)*(i+1), s= f' {i}. {class_name[:15]}{"..." if len(class_name) > 15 else ""}')
 
     plt.tight_layout()
     return plt
