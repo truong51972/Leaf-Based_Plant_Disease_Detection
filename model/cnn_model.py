@@ -39,8 +39,8 @@ class Cnn_model:
         with torch.inference_mode():
             
             predict_logit = self.model(img_tensor_in_batch)
-            soft_max_persent = torch.softmax(predict, dim= 1)
-            predicted_class = self.class_names[torch.argmax(predict, dim= 1)]
+            soft_max_persent = torch.softmax(predict_logit, dim= 1)
+            predicted_class = self.class_names[torch.argmax(predict_logit, dim= 1)]
 
             score = (soft_max_persent[0, torch.argmax(predict_logit, dim= 1)].item())
 
