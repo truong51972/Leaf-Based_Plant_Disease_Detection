@@ -93,13 +93,19 @@ async def analyze(item: Analyze):
     disease_result = await disease_detector.predict(img=image)
     leaf_result = await leaf_or_not_detector.predict(img=image)
 
-    item.image_info.class_name = disease_result['class_name']
-    item.image_info.score = disease_result['score']
-    item.image_info.threshold = disease_result['threshold']
-    item.image_info.predicted_image = encode_image(disease_result['predicted_image'])
+    if leaf_result != 'leaf' and disease_result['score'] < disease_result['threshold']:
+        item.image_info.class_name = None
+        item.image_info.score = None
+        item.image_info.threshold = None
+        item.image_info.predicted_image = None
+    else:
+        item.image_info.class_name = disease_result['class_name']
+        item.image_info.score = disease_result['score']
+        item.image_info.threshold = disease_result['threshold']
+        item.image_info.predicted_image = encode_image(disease_result['predicted_image'])
 
 
-    response = await database.add_pic_and_get_solution(item= item, is_save=True)
+        response = await database.add_pic_and_get_solution(item= item, is_save=True)
     return response
 
 @app.post("/change-password")
