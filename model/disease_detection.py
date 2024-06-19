@@ -33,11 +33,7 @@ class AI_model:
         pointed_img = self.sam_model.plot_points(img)
         removed_bg_img = self.sam_model.remove_bg(img)
 
-        cnn_result = self.cnn_model._predict(removed_bg_img)
-        
-        predict_logit = cnn_result["predict_logit"] 
-        predicted_class = cnn_result["predicted_class"]
-        score = cnn_result["score"] 
+        predict_logit, predicted_class, score = self.cnn_model._predict(removed_bg_img)
 
         grayscale_cam, visualization = self.grad_cam.visualize(removed_bg_img, predict_logit, threshold= 0.5)
         

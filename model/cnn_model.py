@@ -44,12 +44,7 @@ class Cnn_model:
 
             score = (soft_max_persent[0, torch.argmax(predict, dim= 1)].item())
 
-        return_dict = {
-            "predict_logit" : predict_logit,
-            "predicted_class" : predicted_class,
-            "score" : score,
-        }
-        return return_dict
+        return predict_logit, predicted_class, score
 
     async def predict(self, img: Image):
         """
@@ -58,10 +53,14 @@ class Cnn_model:
      
         Returns:
             dict: {
-                "predict_logit" : torch.Tensor(),
                 "predicted_class" : int,
                 "score" : float,
             }
         """
-        return_dict = self._predict(img=img)
+        predict_logit, predicted_class, score = self._predict(img=img)
+
+        return_dict = {
+            "predicted_class" : predicted_class,
+            "score" : score,
+        }
         return return_dict
