@@ -4,6 +4,8 @@ from torchvision import transforms
 from model.model_builder import load_model
 from PIL import Image
 
+import asyncio
+
 class Cnn_model:
     def __init__(self, path_to_model: str):
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -29,18 +31,7 @@ class Cnn_model:
         return self.model
 
     # @time_decorator
-    def predict(self, img: Image):
-        """
-        Args:
-            img: PIL.Image()
-     
-        Returns:
-            dict: {
-                "predict_logit" : torch.Tensor(),
-                "predicted_class" : int,
-                "score" : float,
-            }
-        """
+    def _predict(self, img: Image):
         img_tensor = self.img_transform_for_predict(img)
         img_tensor_in_batch = img_tensor.unsqueeze(dim= 0)
         
@@ -58,4 +49,19 @@ class Cnn_model:
             "predicted_class" : predicted_class,
             "score" : score,
         }
+        return return_dict
+
+    async def predict(self, img: Image):
+        """
+        Args:
+            img: PIL.Image()
+     
+        Returns:
+            dict: {
+                "predict_logit" : torch.Tensor(),
+                "predicted_class" : int,
+                "score" : float,
+            }
+        """
+        return_dict = self._predict(img=img)
         return return_dict
