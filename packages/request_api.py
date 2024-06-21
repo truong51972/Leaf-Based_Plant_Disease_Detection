@@ -192,26 +192,6 @@ def get_history(item: dict):
     return response
 
 
-
-if __name__ == '__main__':
-    from PIL import Image
-    from encode_decode import encode_image
-
-    image = Image.open('049230435087359914.JPG')
-    encoded_image = encode_image(image)
-    print(type(encoded_image))
-    item = {
-        'user_info' : {
-            'user_name' : 'user name',
-            'password' : 'password'
-        },
-        'image_info' : {
-            'image' : encoded_image,
-            'date' : '12093'
-        }
-    }
-    print(analyze(item).json())
-
 def change_password(item: dict):
     """
     Make a request to database server to check user login.
@@ -247,31 +227,35 @@ def change_password(item: dict):
 
 def get_statistics(item: dict):
     """
-    Make a request to database server to check user login.
+    Make a request to database server to get statistics.
 
     Args:
         item: dict[str, str]
 
     Returns:
-        response = {
-            'message' : 'message!',
-            'code': 'error code!',
-            'statistics': {
-                'Tên bệnh': [...]
-            }
-        }
+        response = dict('ten ben' : so luong, ...)
     Example:
     >>> item = {
+        'user_info': {
             'user_name' : 'user name',
             'password' : 'password'
-        }
-    >>> statistics(item = item)
+        },
+        'date': 'YYYY-MM-DD',
+        'gardenNum': int,
+        'lineNum': int
+    }
+    >>> get_statistics(item = item)
     {
-        'message' : 'message!',
-        'code': 'error code!',
-        'statistics': {
-            'Tên bệnh': [...]
-        }
+        'Virus khảm cà chua ToMV': int = ..., 
+        'Bệnh bạc lá sớm': int = ..., 
+        'Virus TYLCV (Tomato yellow leaf curl virus)': int = ..., 
+        'Bệnh tàn rụi muộn': int = ..., 
+        'Đốm vi khuẩn': int = ..., 
+        'Nấm Corynespora': int = ..., 
+        'Nấm Septoria lycopersici': int = ..., 
+        'Cây tốt': int = ..., 
+        'Bệnh khuôn lá': int = ..., 
+        'Bệnh nhện đỏ': int = ...
     }
     """
     api_name = '/get-statistics'
@@ -279,7 +263,28 @@ def get_statistics(item: dict):
     response = __request(api_name, item)
     return response
     
+def get_all_solutions(item: dict):
+    """
+    Make a request to database server to get all solutions.
 
+    Returns:
+        response = dict(key: value)
+    Example:
+    >>> get_all_solutions()
+    {
+        'diseaseName' :         tuple(diseaseName), 
+        'diseaseCause':         tuple(diseaseCause),
+        'diseaseSymptom':       tuple(diseaseSymptom), 
+        'solutionPrevention':   tuple(solutionPrevention),
+        'solutionGardening':    tuple(solutionGardening),
+        'solutionFertilization':tuple(solutionFertilization),
+        'solutionSource':       tuple(solutionSource)
+    }
+    """ 
+    api_name = '/get-statistics'
+    
+    response = __request(api_name, item)
+    return response
 
 if __name__ == '__main__':
     from PIL import Image
