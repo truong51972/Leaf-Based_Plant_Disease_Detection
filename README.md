@@ -1,10 +1,10 @@
 # DATABASE FILE
 ## Functions of query.py
-- NOTE: Use code `from database.query import Query` before using.
+- NOTE:
+  + Use code `from database.query import Query` or `from .query import Query` before using.
+  + From Query class, you can get any function mentioned below and use them using the code `Query.<function_name>()`
 - Functions:
-
-
-+ add_user:
+  + add_user:
 ```async def add_user(self, managerData, newUserInfo) -> dict:
         '''
             This private function is used for checking user password
@@ -28,7 +28,7 @@
                 '004': User has no authority (UnauthorizedAction)   
         '''
 ```
-+ user_login:
+  + user_login:
 ```
 async def user_login(self, userData) -> dict:
         '''
@@ -67,7 +67,7 @@ async def user_login(self, userData) -> dict:
                 return {'message':'Wrong password!',
                         'code':'002'}
 ```
-+ get_employee_list:
+  + get_employee_list:
 ```
 async def get_employee_list(self, managerData):
         '''
@@ -99,7 +99,7 @@ async def get_employee_list(self, managerData):
             return {'message':'User has no authority!',
                     'code' : '004'}
 ```
-+ assign_employee_location
+  + assign_employee_location
 ```
 async def assign_employee_location(self, managerData, employeeData, location):
         '''
@@ -147,7 +147,7 @@ async def assign_employee_location(self, managerData, employeeData, location):
             return {'message':'User has no authority!',
                     'code' : '004'}
 ```
-+ add_pic_and_get_solution
+  + add_pic_and_get_solution
 ```
 async def add_pic_and_get_solution(self, item, is_save):   
         '''
@@ -218,7 +218,7 @@ async def add_pic_and_get_solution(self, item, is_save):
                            }
                 }
 ```
-+ get_history
+  + get_history
 ```
 async def get_history(self, userData):
         '''
@@ -276,7 +276,7 @@ async def get_history(self, userData):
                            }
                 }
 ```
-+ get_statistic
+  + get_statistic
 ```
 async def get_statistic(self, item):
         '''
@@ -315,7 +315,7 @@ async def get_statistic(self, item):
         statistic = get_statistic(userName,date, self.con)
         return statistic
 ```
-+ change_password
+  + change_password
 ```
     async def change_password(self, item):
         '''
@@ -348,7 +348,7 @@ async def get_statistic(self, item):
                 'code': validate_result['code'],
                     }
 ```
-+ get_solution
+  + get_solution
 ```
 async def get_solution(self):
         '''
