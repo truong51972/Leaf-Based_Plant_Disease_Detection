@@ -61,6 +61,8 @@ class Change_password(BaseModel):
 class Get_statistics(BaseModel):
     user_info: User_Info
     date: str
+    gardenNum: int
+    lineNum: int
 
 class Add_new_user(BaseModel):
     user_info: User_Info
@@ -75,9 +77,9 @@ async def check_login(item: User_Info):
     return response
 
 @app.post("/create-new-user")
-async def create_new_user(item: User_Info):
+async def create_new_user(item: Add_new_user):
     # print(dict(item))
-    response = await database.add_user(item)
+    response = await database.add_user(item.user_info, item.new_user_info)
     # print(response)
     return response
 
@@ -93,11 +95,12 @@ async def analyze(item: Analyze):
     disease_result = await disease_detector.predict(img=image)
     leaf_result = await leaf_or_not_detector.predict(img=image)
 
-    if leaf_result != 'leaf' and disease_result['score'] < disease_result['threshold']:
+    if leaf_result['predicted_class'] != 'leaf' and disease_result['score'] < disease_result['threshold']:
         item.image_info.class_name = None
         item.image_info.score = None
         item.image_info.threshold = None
         item.image_info.predicted_image = None
+        response = item
     else:
         item.image_info.class_name = disease_result['class_name']
         item.image_info.score = disease_result['score']
@@ -114,6 +117,11 @@ async def change_password(item: Change_password):
     return response
 
 @app.post("/get-statistics")
-async def change_password(item: Get_statistics):
+async def get_statistics(item: Get_statistics):
     response = await database.get_statistic(item)
+    return response
+
+@app.post("/get-all-solutions")
+async def get_all_solutions():
+    response = await database.get_solution()
     return response
