@@ -14,12 +14,12 @@ def user_info():
     if 'user_name' in st.session_state and st.session_state['user_name']:
         st.write(f"Xin chào, {st.session_state['user_name']}!")
 
-    selected_option = st.selectbox("Chọn chức năng", ["", "Xem thống kê", "Đổi mật khẩu"])
+    tab1, tab2 = st.tabs(["Thống kê", "Đổi mật khẩu"])
 
-    if selected_option == "Xem thống kê":
+    with tab1:
         statistics_ui()
 
-    elif selected_option == "Đổi mật khẩu":
+    with tab2:
         change_password_ui()
 
 def change_password_ui():
@@ -61,7 +61,7 @@ def get_statistics_data(item):
         df_statistics = pd.DataFrame(response)
         return df_statistics
     except Exception as e:
-        st.error(f"Lỗi khi lấy dữ liệu thống kê: {str(e)}")
+        st.error(f"Lỗi khi lấy dữ liệu thống kê")
         return pd.DataFrame() 
     
 def plot_bar_chart(df_statistics, container):

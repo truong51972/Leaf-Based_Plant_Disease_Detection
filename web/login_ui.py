@@ -10,6 +10,7 @@ DEV_MODE = os.getenv('DEV_MODE', 'False').lower() == 'true'
 state = {"logged_in": False}
 
 def login_ui():
+    st.title("Đăng nhập")
     with st.form("Login Form"):
         st.session_state.user_name = st.text_input("Tên đăng nhập", key='username', help='Tên đăng nhập không được chứa khoảng trắng hoặc kí tự đặc biệt!')
         password = st.text_input("Mật khẩu", type="password", key='password')
@@ -80,11 +81,17 @@ def register_ui():
 
         if new_password == confirm_password:
             encrypted_password = encrypt_password(new_password).decode()
-            user_info = {
-                'user_name': user_name,
-                'password': encrypted_password
+            item = {
+                'user_info':{
+                    'user_name': st.session_state.user_name,
+                    'password': encrypted_password
+                },
+                "new_user_info" : {
+                    'user_name' : user_name,
+                    'password' : encrypted_password
+                }
             }
-            response = create_new_user(user_info).json()
+            response = create_new_user(item=item).json()
             if response['code'] == '000':
                 st.success("Đăng ký thành công! Vui lòng đăng nhập.")
             elif response['code'] == '001':

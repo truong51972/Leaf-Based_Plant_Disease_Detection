@@ -20,7 +20,7 @@ def run():
                 st.write("Chế độ phát triển đang bật: Tự động đăng nhập.")
 
             if st.session_state['logged_in']:
-                tab1, tab2, tab3, tab4 = st.tabs(["Trang chủ", "Thông tin cá nhân", "Lịch sử", "Đăng xuất"])
+                tab1, tab2, tab3, tab4,tab5 = st.tabs(["Trang chủ", "Thông tin cá nhân", "Lịch sử", "Đăng kí", "Đăng xuất"])
                 with tab1:
                     main_app()
                 with tab2:
@@ -28,6 +28,8 @@ def run():
                 with tab3:
                     display_history()
                 with tab4:
+                    register_ui()
+                with tab5:
                     if st.button("Confirm Logout"):
                         logout()
                         st.experimental_rerun()
@@ -36,15 +38,9 @@ def run():
                     st.success("Bạn đã đăng xuất thành công!")
                     time.sleep(1.6)
                     st.session_state['logout_success'] = False
-                    st.experimental_rerun()
-                    
+                    st.experimental_rerun()                   
                 else:
-                    options = ["Đăng nhập", "Đăng kí"]
-                    choice = st.selectbox("Chọn 1 tùy chọn", options)
-                    if choice == "Đăng nhập":
-                        login_ui()
-                    elif choice == "Đăng kí":
-                        register_ui()
+                    login_ui()
 
 if __name__ == "__main__":
     run()
