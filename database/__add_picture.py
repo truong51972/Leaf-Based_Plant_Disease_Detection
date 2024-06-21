@@ -1,7 +1,6 @@
 import sqlite3
 from datetime import datetime
-
-PIC_PER_USER_LIMIT : int = 100
+from .__identify_location import identify_location
 
 CONVERT_DICT = {'Tomato_mosaic_virus':1,
 'Early_blight':2,
@@ -20,6 +19,8 @@ def add_picture_to_database(userName:str,
                             pic:str, 
                             pred_pic:str, 
                             score:float,
+                            gardenNum:int,
+                            lineNum:int,
                             con) -> int:
     '''
         This private function is used for adding picture information to database and delete picture if number of pictures per user exceed 100\n
@@ -29,7 +30,9 @@ def add_picture_to_database(userName:str,
         picDate: datetime (YYYY-MM-DD HH:MI:SS),
         pic: str (encrypted content of the pic),
         pred_pic: str (encrypted content of the pic),
-        score: float ,
+        score: float,
+        gardenNum:int,
+        lineNum:int,
         con: sqlite3.connect(<database directory>)
 
         :return:
@@ -41,9 +44,11 @@ def add_picture_to_database(userName:str,
     
     formatted_time = datetime.strptime(picDate, '%Y-%m-%d %H:%M:%S')
 
+    locationID = identify_location(gardenNum, lineNum, con)
+
     cur.execute(f"""
-        INSERT INTO PIC (diseaseID, picDate, pic, pred_pic, score)
-        VALUES ({diseaseID}, '{formatted_time}', '{pic}', '{pred_pic}', {score}) 
+        INSERT INTO PIC (diseaseID, picDate, pic, pred_pic, score, locationID)
+        VALUES ({diseaseID}, '{formatted_time}', '{pic}', '{pred_pic}', {score}, {locationID}) 
         """)
 
     con.commit()
@@ -69,31 +74,6 @@ def add_picture_to_database(userName:str,
         ''')
     
     con.commit()
-
-    cur.execute(f'''
-        SELECT * FROM USER_PIC WHERE userID = {userID}
-    ''')
-
-    if len(cur.fetchall()) > PIC_PER_USER_LIMIT:
-        cur.execute(f'''
-            SELECT picID FROM USER_PIC WHERE userID = {userID} ORDER BY picID ASC LIMIT 1
-        ''')
-    
-        deleted_id = cur.fetchall()[0][0]
-
-        con.commit()
-
-        cur.execute(f'''
-        DELETE FROM USER_PIC 
-        WHERE picID = {deleted_id}
-        ''')
-        con.commit()
-
-        cur.execute(f'''
-        DELETE FROM PIC 
-        WHERE picID {deleted_id}
-        ''')
-        con.commit()
 
     return picID
 

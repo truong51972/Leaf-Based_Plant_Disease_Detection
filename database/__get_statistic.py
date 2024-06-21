@@ -2,7 +2,31 @@ import sqlite3
 from copy import deepcopy
 from .__check_manager import is_manager
 
-def get_statistic(userName:str,date:str, con):
+def get_statistic(userName:str,
+                  date:str,
+                  gardenNum:str,
+                  lineNum:str, 
+                  con):
+    '''
+    :input:
+    userName:str,
+    date:str,
+    gardenNum:str,
+    lineNum:str, 
+    con = sqlite3.connect(<database directory>)
+
+    :output:
+    statistic = {'Virus khảm cà chua ToMV': int = ..., 
+                 'Bệnh bạc lá sớm': int = ..., 
+                 'Virus TYLCV (Tomato yellow leaf curl virus)': int = ..., 
+                 'Bệnh tàn rụi muộn': int = ..., 
+                 'Đốm vi khuẩn': int = ..., 
+                 'Nấm Corynespora': int = ..., 
+                 'Nấm Septoria lycopersici': int = ..., 
+                 'Cây tốt': int = ..., 
+                 'Bệnh khuôn lá': int = ..., 
+                 'Bệnh nhện đỏ': int = ...}
+    '''
 
     cur = con.cursor()
 
@@ -26,46 +50,34 @@ def get_statistic(userName:str,date:str, con):
 
     if is_manager(userName, con):
         cur.execute(f'''
-            select sum(num_count) as count, diseaseName, date from
-            (select count(*) as [num_count], DISEASE.diseaseName, date(PIC.picDate) as date, USER.userID
+            select count(*) as count, DISEASE.diseaseName, date(PIC.picDate) as date, gardenNum, lineNum
             from PIC join DISEASE on PIC.diseaseID = DISEASE.diseaseID
             join USER_PIC on PIC.picID = USER_PIC.picID
             join USER on USER_PIC.userID = USER.userID
+            join LOCATION on PIC.locationID = LOCATION.locationID
             where USER.userID = {userID} or USER.userID in (
                 SELECT e.userID AS employeeID
                 FROM USER e
                 inner JOIN USER m ON e.managerID = m.userID
                 where m.userID = {userID})
-            group by date(picDate), PIC.diseaseID, USER.userID)
-            where date = '{date}'
-            group by diseaseName, date
+            and date = '{date}' and gardenNum = {gardenNum} and lineNum = {lineNum}
+            group by PIC.diseaseID, PIC.locationID
             order by date
         ''')
     else:
-        print(f'userID = {userID}')
-        cur.execute(f'''select count(*) as [num_count], DISEASE.diseaseName, date(PIC.picDate) as date
+        cur.execute(f'''select count(*) as count, DISEASE.diseaseName, date(PIC.picDate) as date, gardenNum, lineNum 
                         from PIC join DISEASE on PIC.diseaseID = DISEASE.diseaseID
-                        join USER_PIC on PIC.picID = USER_PIC.picID
-                        join USER on USER_PIC.userID = USER.userID
-                        where USER.userID = {userID} and date = '{date}'
-                        group by date(picDate), PIC.diseaseID, USER.userID''')
+                        join USER_LOCATION on PIC.locationID = USER_LOCATION.locationID
+                        join USER on USER_LOCATION.userID = USER.userID
+                        join LOCATION on PIC.locationID = LOCATION.locationID
+                        where USER.userID = {userID} and gardenNum = {gardenNum} and lineNum = {lineNum} and date = '{date}'
+                        group by PIC.diseaseID, date, gardenNum, lineNum''')
         
     data = cur.fetchall()
-    list_date = list(map(lambda x: x[2], data))
-    set_date = set(list_date)
 
-    statistics = dict()
-
-    for i in set_date:
-        statistics[i] = deepcopy(disease_count)
-
+    statistic = deepcopy(disease_count)
+  
     for data_batch in data:
-        statistics[data_batch[2]].update({data_batch[1]: data_batch[0]})
+        statistic.update({data_batch[1]: data_batch[0]})
 
-    return statistics
-
-# def main():
-#     from datetime import datetime
-#     print(get_statistic('admin', '2024-06-14', con=sqlite3.connect('test.db')))
-# if __name__ == '__main__':
-#     main()
+    return statistic
