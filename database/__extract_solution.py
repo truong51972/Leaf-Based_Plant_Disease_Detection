@@ -42,7 +42,3 @@ def get_solution(con):
         'solutionFertilization':solutionFertilization,
         'solutionSource':       solutionSource
     }
-    
-if __name__ == '__main__':
-    con = sqlite3.connect('data.db')
-    print(len(get_solution(con)))

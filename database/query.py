@@ -13,6 +13,8 @@ from .__extract_solution import get_solution
 from .__get_statistic import get_statistic
 from .__check_manager import is_manager
 from .__extract_result_without_id import extract_result_without_id
+from .__assign_location import assign_location
+from .__get_employee_list import get_employee
 
 class Query:
     '''
@@ -30,7 +32,7 @@ class Query:
             This private function is used for checking user password
 
             :input:
-            userData, newUserInfo: User()
+            managerData, newUserInfo: User()
                         
             NOTE:
             class User():
@@ -64,7 +66,6 @@ class Query:
         else:
             return {'message':'User has no authority!',
                     'code' : '004'}
-            
 
     async def user_login(self, userData) -> dict:
         '''
@@ -102,7 +103,84 @@ class Query:
             else:
                 return {'message':'Wrong password!',
                         'code':'002'}
-    
+            
+    async def get_employee_list(self, managerData):
+        '''
+            This private function is used for getting list of employee based on managerData
+
+            :input:
+            managerData: User()
+                        
+            NOTE:
+            class User():
+                def __init__(self):
+                    self.user_name = ...
+                    self.password = ...
+
+            :return:
+            employee_list : list = [...]
+
+            PERFORMANCE CODE:
+                '000': Action proceeded successfully 
+                '001': userName has already existed in the database (UserExisted)    
+                '004': User has no authority (UnauthorizedAction)   
+        '''
+        managerName = managerData.user_name
+        managerPassword = managerData.password
+
+        if is_manager(managerName, self.con):
+            return get_employee(managerName, self.con)
+        else:
+            return {'message':'User has no authority!',
+                    'code' : '004'}
+
+            
+    async def assign_employee_location(self, managerData, employeeData, location):
+        '''
+            This function is used to assign employee to work location(s)
+
+            :input:
+            managerData, employeeData: User()
+            location = {
+                    'gardenNum': int = ...,
+                    'lineNum': int = ...
+                }
+                        
+            NOTE:
+            class User():
+                def __init__(self):
+                    self.user_name = ...
+                    self.password = ...
+
+            :return:
+            {'message': ...,
+                'code': ...}
+
+            PERFORMANCE CODE:
+                '000': Action proceeded successfully
+                '003': userName doesn't exist in the database (UserNotFound)
+                '101': Employee has already been assigned in the selected location (EmployeeLocationExisted)
+        '''
+        managerName = managerData.user_name
+        managerPassword = managerData.password
+        employeeName = employeeData.user_name
+        employeePassword = employeeData.password
+
+        gardenNum = location.gardenNum
+        lineNum = location.lineNum
+
+        if is_manager(managerName, self.con):
+            try:
+                assign_location(employeeName, gardenNum, lineNum, self.con)
+                return {'message':'Success!',
+                        'code':'000'}
+            except:
+                return {'message':'Employee has already been assigned in the selected location!',
+                        'code' : '101'}
+        else:
+            return {'message':'User has no authority!',
+                    'code' : '004'}
+
     async def add_pic_and_get_solution(self, item, is_save):   
         '''
     This function is used to add picture to database and extract solution for that picture.
@@ -116,9 +194,11 @@ class Query:
         'image_info' : {
             'image' : 'decoded image',
             'date' : 'YYYY-MM-DD HH:MI:SS',
-            'class_name': None,
-            'score': None,
-            'predicted_image': None
+            'class_name': str,
+            'score': float,
+            'predicted_image': str,
+            'garden_num': int,
+            'line_num': int
         }
     }
 
@@ -150,8 +230,11 @@ class Query:
         pic = item.image_info.image
         picDate = item.image_info.date
         class_name = item.image_info.class_name
+        gardenNum = item.image_info.garden_num
+        lineNum = item.image_info.line_num
+
         if is_save is True:
-            picID = add_picture_to_database(userName, class_name, picDate, pic, pred_pic, score, self.con)
+            picID = add_picture_to_database(userName, class_name, picDate, pic, pred_pic, score, gardenNum, lineNum, self.con)
             class_name, description, solution = extract_result(picID, self.con)
         else:
             class_name, description, solution = extract_result_without_id(class_name, self.con)
@@ -169,7 +252,7 @@ class Query:
     
     async def get_history(self, userData):
         '''
-        This function is used to change password of a user.
+        This function is used to get history of a user.
     
     :input:
     userData = {
@@ -209,7 +292,7 @@ class Query:
         picDate, 
         class_name, 
         pred_pic, 
-        score) = extract_history(userData, self.con)      
+        score) = extract_history(userData, self.con)     
 
         return {
                 'message' : validate_result['message'],
@@ -231,8 +314,21 @@ class Query:
             'user_name' : 'user name',
             'password' : 'password'
         },
-        'date': 'date'
+        'date': 'YYYY-MM-DD',
+        'gardenNum': int,
+        'lineNum': int
     }
+        :output:
+        statistic = {'Virus khảm cà chua ToMV': int = ..., 
+                 'Bệnh bạc lá sớm': int = ..., 
+                 'Virus TYLCV (Tomato yellow leaf curl virus)': int = ..., 
+                 'Bệnh tàn rụi muộn': int = ..., 
+                 'Đốm vi khuẩn': int = ..., 
+                 'Nấm Corynespora': int = ..., 
+                 'Nấm Septoria lycopersici': int = ..., 
+                 'Cây tốt': int = ..., 
+                 'Bệnh khuôn lá': int = ..., 
+                 'Bệnh nhện đỏ': int = ...}
         '''
         userName = item.user_info.user_name
         userPassword = item.user_info.password
