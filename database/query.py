@@ -16,6 +16,7 @@ from .__extract_result_without_id import extract_result_without_id
 from .__assign_location import assign_location
 from .__get_employee_list import get_employee
 from .__load_employee_pic_count import load_employee_pic_count
+from .__add_garden import add_garden_to_db
 
 class Query:
     '''
@@ -185,6 +186,9 @@ class Query:
         else:
             return {'message':'User has no authority!',
                     'code' : '004'}
+        
+    async def get_location_assignment_table(self, managerData, gardenName):
+        ...
 
     async def add_pic_and_get_solution(self, item, is_save):   
         '''
@@ -394,22 +398,61 @@ class Query:
 
         :return:
             dict_dataframe = {
-                'userName': list,
-                'gardenNum': list,
-                'lineNum': list,
-                'pic_count': list
+                'tasks_info':{
+                    'userName': list,
+                    'gardenNum': list,
+                    'lineNum': list,
+                    'pic_count': list
+                    },
+                'garden_info':{
+                    'garden_name': list[str],
+                    'line_count_each_garden': list[int]
+                    }
             }
         '''
         managerName = managerData.user_name
         managerPassword = managerData.password
 
         if is_manager(managerName, self.con):
-            return load_employee_pic_count(managerName, self.con)
+
+            userName, gardenName, lineNum, picCount = load_employee_pic_count(managerName, self.con)
+        else:
+            return {'message':'User has no authority!',
+                    'code' : '004'}
+        
+    async def add_garden(self, item):
+        '''
+        This function is used to add a garden with a number of lines and their manager
+        :input:
+        item = {
+        'user_info': {
+            'user_name' : 'user name',
+            'password' : 'password'
+        },
+        'garden_info' : {
+            'garden_name' : str,
+            'line_num' : int
+        }
+    }
+        '''
+        managerName = item.user_info.user_name
+        managerPassword = item.user_info.password
+        gardenName = item.garden_info.garden_name
+        lineID = list(range(1, item.garden_info.line_num+1))
+
+        if is_manager(managerName, self.con):
+            try:
+                add_garden_to_db(managerName, gardenName, lineID, self.con)
+                return {'message':'Success!',
+                        'code' : '000'}
+            except:
+                return {'message':'gardenName already exist or line_num is invalid',
+                        'code' : '102'}
         else:
             return {'message':'User has no authority!',
                     'code' : '004'}
 
-    
+
     async def get_solution(self):
         '''
         :return:
