@@ -15,6 +15,7 @@ from .__check_manager import is_manager
 from .__extract_result_without_id import extract_result_without_id
 from .__assign_location import assign_location
 from .__get_employee_list import get_employee
+from .__load_employee_pic_count import load_employee_pic_count
 
 class Query:
     '''
@@ -99,7 +100,8 @@ class Query:
         else:
             if check_password(userName, userPassword, self.con):
                 return {'message':'Success!',
-                        'code':'000'}
+                        'code':'000',
+                        'is_manager':is_manager(userName)}
             else:
                 return {'message':'Wrong password!',
                         'code':'002'}
@@ -373,6 +375,37 @@ class Query:
                 'message' : validate_result['message'],
                 'code': validate_result['code'],
                     }
+    
+    async def load_employee_pic_count(self, managerData):
+        '''
+        This function is used to load picture count per employee for each location
+
+        :input:
+            managerData: User()
+                        
+            NOTE:
+            class User():
+                def __init__(self):
+                    self.user_name = ...
+                    self.password = ...
+
+        :return:
+            dict_dataframe = {
+                'userName': list,
+                'gardenNum': list,
+                'lineNum': list,
+                'pic_count': list
+            }
+        '''
+        managerName = managerData.user_name
+        managerPassword = managerData.password
+
+        if is_manager(managerName, self.con):
+            return load_employee_pic_count(managerName, self.con)
+        else:
+            return {'message':'User has no authority!',
+                    'code' : '004'}
+
     
     async def get_solution(self):
         '''
