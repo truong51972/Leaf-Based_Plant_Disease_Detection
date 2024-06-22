@@ -2,7 +2,6 @@ import streamlit as st
 from packages.request_api import change_password
 from packages.encode_decode import encrypt_password
 from datetime import datetime, timedelta
-from web.history import get_first_upload_date
 from packages.request_api import get_statistics
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -127,12 +126,6 @@ def plot_pie_chart(df_statistics, container):
 
 def statistics_ui():
     st.subheader("Thống kê của bạn")
-
-    with st.container():
-        first_upload_date = get_first_upload_date()
-        if first_upload_date:
-            st.write(f"Ngày đầu tiên sử dụng app: {first_upload_date}")
-
     selected_date = st.date_input("Vui lòng chọn ngày để xem thống kê.", datetime.today() - timedelta(days=1))
     selected_date_str = selected_date.strftime('%Y-%m-%d')
     item = {

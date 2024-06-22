@@ -46,7 +46,10 @@ def login_ui():
                 response = check_login(user_info).json()
                 if response['code'] == '000':
                     st.success("Đăng nhập thành công!")
+                    time.sleep(1.3)
                     st.session_state['logged_in'] = True
+                    st.session_state['is_manager'] = response.get('is_manager', False)
+                    print(f"Logged in as: {st.session_state.user_name}, is_manager: {st.session_state['is_manager']}")
                     st.experimental_rerun()
                 elif response['code'] == '002':
                     st.error("Sai mật khẩu!")

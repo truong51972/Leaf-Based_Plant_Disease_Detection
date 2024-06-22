@@ -38,16 +38,6 @@ def app():
     s = "Điểm số là điểm của mô hình dự đoán. Đây là một giá trị cho biết mức độ chắc chắn của mô hình đối với kết quả phân tích hình ảnh. Điểm số cao hơn thể hiện sự tự tin cao hơn trong chẩn đoán."
     t = "Ngưỡng là điểm tổng quát đã được kiểm tra dựa trên dữ liệu thực tế. Đây là ngưỡng mà mô hình sử dụng để quyết định liệu một kết quả có đáng tin cậy hay không. Nếu điểm số vượt qua ngưỡng này, kết quả được coi là đáng tin cậy." 
 
-    with st.container():
-        st.subheader("Chọn Mảnh Vườn và Luống")
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            garden_num = st.text_input("Chọn Mảnh Vườn",value=1)
-        
-        with col2:
-            line_num = st.text_input("Chọn Luống",value=1)
-
     with st.container(border = True):
          uploaded_image = st.file_uploader("**Chọn ảnh**", type=["jpg", "jpeg", "png"], help=guard)
 
