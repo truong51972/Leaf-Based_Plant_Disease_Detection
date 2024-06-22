@@ -321,6 +321,70 @@ def get_management_info(item: dict):
     response = __request(api_name, item)
     return response
 
+def add_garden(item: dict):
+    """
+    Make a request to database server to get all task information of all workers.
+
+    Args:
+        item: dict[str, str]
+
+    Returns:
+        response = dict(key, value)
+    Example:
+    >>> item = {
+        'user_info': {
+            'user_name' : 'user name',
+            'password' : 'password'
+        },
+        'garden_info' : {
+            'plant_name' : str,
+            'garden_name' : str,
+            'num_of_line' : int
+        }
+    }
+    >>> add_garden(item = item)
+    {
+        'message' : 'message!',
+        'code': 'error code!',
+    }
+    """
+    api_name = '/add_garden'
+    
+    response = __request(api_name, item)
+    return response
+
+def get_gardens_info(item: dict):
+    """
+    Make a request to database server to get all task information of all workers.
+
+    Args:
+        item: dict[str, str]
+
+    Returns:
+        response = dict(key, value)
+    Example:
+    >>> item = {
+        'user_info': {
+            'user_name' : 'user name',
+            'password' : 'password'
+        },
+    }
+    >>> get_gardens_info(item = item)
+    {
+        'message' : 'message!',
+        'code': 'error code!',
+        'garden_info' : {
+            'Tên vườn' : [str],
+            'Tên loại cây' : [str],
+            'Số luống' : [int]
+        }
+    }
+    """
+    api_name = '/get_gardens_info'
+    
+    response = __request(api_name, item)
+    return response
+
 if __name__ == '__main__':
     from PIL import Image
     from encode_decode import encode_image
