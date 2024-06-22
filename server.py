@@ -14,7 +14,7 @@ from packages.encode_decode import decode_image, encode_image
 
 # run: uvicorn server:app --host 0.0.0.0 --port 8000 --reload
 
-database_path = './data.db'
+database_path = './database/data.db'
 models = {}
 # database = Query(database_path)
 
@@ -48,6 +48,8 @@ class Image_info(BaseModel):
     class_name: str = None
     score: float  = None
     threshold: float  = None
+    garden_num: int  = None
+    line_num: int  = None
     
 
 class Analyze(BaseModel):
@@ -69,21 +71,21 @@ class Add_new_user(BaseModel):
     new_user_info: User_Info
 
 
-@app.post("/check-login")
+@app.post("/check_login")
 async def check_login(item: User_Info):
     # print(dict(item))
     response = await database.user_login(item)
     # print(response)
     return response
 
-@app.post("/create-new-user")
+@app.post("/create_new_user")
 async def create_new_user(item: Add_new_user):
     # print(dict(item))
     response = await database.add_user(item.user_info, item.new_user_info)
     # print(response)
     return response
 
-@app.post("/get-history")
+@app.post("/get_history")
 async def get_history(item: User_Info):
     response = await database.get_history(item)
     return response
@@ -92,16 +94,18 @@ async def get_history(item: User_Info):
 async def analyze(item: Analyze):
     image = decode_image(item.image_info.image)
 
-    disease_result = await disease_detector.predict(img=image)
     leaf_result = await leaf_or_not_detector.predict(img=image)
 
-    if leaf_result['predicted_class'] != 'leaf' and disease_result['score'] < disease_result['threshold']:
+    if leaf_result['predicted_class'] != 'leaf':
+    # if leaf_result['predicted_class'] != 'leaf' and disease_result['score'] < disease_result['threshold']:
         item.image_info.class_name = None
         item.image_info.score = None
         item.image_info.threshold = None
         item.image_info.predicted_image = None
         response = item
     else:
+        disease_result = await disease_detector.predict(img=image)
+        
         item.image_info.class_name = disease_result['class_name']
         item.image_info.score = disease_result['score']
         item.image_info.threshold = disease_result['threshold']
@@ -111,17 +115,17 @@ async def analyze(item: Analyze):
         response = await database.add_pic_and_get_solution(item= item, is_save=True)
     return response
 
-@app.post("/change-password")
+@app.post("/change_password")
 async def change_password(item: Change_password):
     response = await database.change_password(item)
     return response
 
-@app.post("/get-statistics")
+@app.post("/get_statistics")
 async def get_statistics(item: Get_statistics):
     response = await database.get_statistic(item)
     return response
 
-@app.post("/get-all-solutions")
+@app.post("/get_all_solutions")
 async def get_all_solutions():
     response = await database.get_solution()
     return response
