@@ -2,7 +2,8 @@ import sqlite3
 
 def add_garden_to_db(managerName:str,
                      gardenName:str, 
-                     lineID:list[int], 
+                     lineID:list[int],
+                     plantName:str, 
                      con):
     
     cur = con.cursor()
@@ -14,12 +15,16 @@ def add_garden_to_db(managerName:str,
     
     managerID = cur.fetchall()[0][0]
 
+    print(managerID)
+
     cur.execute(f'''
-                INSERT INTO GARDEN (gardenName, managerID)
-                VALUES ('{gardenName}', {managerID})
+                INSERT INTO GARDEN (gardenName, managerID, plantName)
+                VALUES ('{gardenName}', {managerID}, '{plantName}')
                 ''')
     
     con.commit()
+
+    print('insert garden')
 
     cur.execute(f'''
         SELECT last_insert_rowid()
@@ -32,4 +37,9 @@ def add_garden_to_db(managerName:str,
                     INSERT INTO LOCATION (gardenID, lineID)
                     VALUES ({gardenID}, {line})
                     ''')
+        
+
+
         con.commit()
+
+    print('complete')

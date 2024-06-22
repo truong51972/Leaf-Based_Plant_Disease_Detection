@@ -430,6 +430,7 @@ class Query:
             'password' : 'password'
         },
         'garden_info' : {
+            'plant_name' : str
             'garden_name' : str,
             'line_num' : int
         }
@@ -438,11 +439,12 @@ class Query:
         managerName = item.user_info.user_name
         managerPassword = item.user_info.password
         gardenName = item.garden_info.garden_name
+        plantName = item.garden_info.plant_name
         lineID = list(range(1, item.garden_info.line_num+1))
 
         if is_manager(managerName, self.con):
             try:
-                add_garden_to_db(managerName, gardenName, lineID, self.con)
+                add_garden_to_db(managerName, gardenName, lineID, plantName, self.con)
                 return {'message':'Success!',
                         'code' : '000'}
             except:
