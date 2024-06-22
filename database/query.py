@@ -83,7 +83,8 @@ class Query:
 
             :return:
             {'message': ...,
-                'code': ...}
+                'code': ...,
+                'is_manager': bool}
 
             PERFORMANCE CODE:
                 '000': Action proceeded successfully 
@@ -96,7 +97,8 @@ class Query:
 
         if not check_user(userName, self.con):
             return {'message':'userName not exist!',
-                    'code':'003'} 
+                    'code':'003',
+                    'is_manager':False} 
         else:
             if check_password(userName, userPassword, self.con):
                 return {'message':'Success!',
@@ -104,7 +106,8 @@ class Query:
                         'is_manager':is_manager(userName)}
             else:
                 return {'message':'Wrong password!',
-                        'code':'002'}
+                        'code':'002',
+                        'is_manager':False}
             
     async def get_employee_list(self, managerData):
         '''
