@@ -140,7 +140,9 @@ def statistics_ui():
             'user_name': st.session_state.get('user_name'),
             'password': st.session_state.get('encrypted_password')
         },
-        'date': selected_date_str
+        'date': selected_date_str,
+        'garden_num': int,
+        'line_num': int
     }
 
     if st.button("Xem thống kê"):

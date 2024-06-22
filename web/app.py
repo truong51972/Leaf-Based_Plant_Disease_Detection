@@ -38,6 +38,16 @@ def app():
     s = "Điểm số là điểm của mô hình dự đoán. Đây là một giá trị cho biết mức độ chắc chắn của mô hình đối với kết quả phân tích hình ảnh. Điểm số cao hơn thể hiện sự tự tin cao hơn trong chẩn đoán."
     t = "Ngưỡng là điểm tổng quát đã được kiểm tra dựa trên dữ liệu thực tế. Đây là ngưỡng mà mô hình sử dụng để quyết định liệu một kết quả có đáng tin cậy hay không. Nếu điểm số vượt qua ngưỡng này, kết quả được coi là đáng tin cậy." 
 
+    with st.container():
+        st.subheader("Chọn Mảnh Vườn và Luống")
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            garden_num = st.text_input("Chọn Mảnh Vườn",value=1)
+        
+        with col2:
+            line_num = st.text_input("Chọn Luống",value=1)
+
     with st.container(border = True):
          uploaded_image = st.file_uploader("**Chọn ảnh**", type=["jpg", "jpeg", "png"], help=guard)
 
@@ -58,7 +68,9 @@ def app():
                 },
                 'image_info': {
                     'image': encoded_image,
-                    'date': current_datetime
+                    'date': current_datetime,
+                    'garden_num': garden_num,
+                    'line_num':line_num
                 }
             }
             with st.spinner("Đang phân tích hình ảnh..."):
@@ -69,7 +81,7 @@ def app():
                         st.markdown("<div class='container'>", unsafe_allow_html=True)
                         st.session_state.predicted_image = decode_image(results['image_info']['predicted_image'])
                         score = round(results['image_info']['score'],4)
-                        threshold = round(results['image_info']['threshold'],4)
+                        threshold = round(results['image_info']['threshold'],4)                   
                         st.image(st.session_state.predicted_image,use_column_width=True)
                         st.markdown("</div>", unsafe_allow_html=True)
 
@@ -114,7 +126,6 @@ def app():
                         st.markdown("---")
                         st.markdown(f"<h4>Nguồn</h4><p>{results['solution']['Giải pháp']['source']}</p>", unsafe_allow_html=True)
                         st.markdown("</div>", unsafe_allow_html=True)
-
                 except KeyError as e:
                     st.error(f"Đã xảy ra lỗi khi phân tích hình ảnh: {e}")
         else:

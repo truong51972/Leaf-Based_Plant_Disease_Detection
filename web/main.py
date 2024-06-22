@@ -4,6 +4,7 @@ from web.app import app as main_app
 import time
 from web.history import display_history
 from web.user import user_info
+from web.test import test
 import os
 
 DEV_MODE = os.getenv('DEV_MODE', 'False').lower() == 'true'
@@ -22,7 +23,7 @@ def run():
             if st.session_state['logged_in']:
                 tab1, tab2, tab3, tab4,tab5 = st.tabs(["Trang chủ", "Thông tin cá nhân", "Lịch sử", "Đăng kí", "Đăng xuất"])
                 with tab1:
-                    main_app()
+                    test()
                 with tab2:
                     user_info()
                 with tab3:

@@ -217,7 +217,7 @@ def change_password(item: dict):
     >>> change_password(item = item)
     {
         'message' : 'message!',
-        'code': 'error code!',
+        'code': 'error code!'   ,
     }
     """
     api_name = '/change-password'
@@ -270,7 +270,7 @@ def get_all_solutions(item: dict):
     Returns:
         response = dict(key: value)
     Example:
-    >>> get_all_solutions()
+    >>> get_atll_solutions()
     {
         'diseaseName' :         tuple(diseaseName), 
         'diseaseCause':         tuple(diseaseCause),
