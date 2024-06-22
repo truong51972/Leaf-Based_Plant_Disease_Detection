@@ -103,7 +103,7 @@ class Query:
             if check_password(userName, userPassword, self.con):
                 return {'message':'Success!',
                         'code':'000',
-                        'is_manager':is_manager(userName)}
+                        'is_manager':is_manager(userName, self.con)}
             else:
                 return {'message':'Wrong password!',
                         'code':'002',
