@@ -55,7 +55,7 @@ def check_login(item: dict):
     >>> check_login(item = item)
     {'message' : '...','code': 'XXX'}
     """
-    api_name = '/check-login'
+    api_name = '/check_login'
     
     response = __request(api_name, item)
     return response
@@ -91,7 +91,7 @@ def create_new_user(item: dict):
     {'message' : '...','code': 'XXX'}
     """
 
-    api_name = '/create-new-user'
+    api_name = '/create_new_user'
     
     response = __request(api_name, item)
     return response
@@ -186,7 +186,7 @@ def get_history(item: dict):
         }
     }
     """
-    api_name = '/get-history'
+    api_name = '/get_history'
     
     response = __request(api_name, item)
     return response
@@ -220,7 +220,7 @@ def change_password(item: dict):
         'code': 'error code!',
     }
     """
-    api_name = '/change-password'
+    api_name = '/change_password'
     
     response = __request(api_name, item)
     return response
@@ -258,7 +258,7 @@ def get_statistics(item: dict):
         'Bệnh nhện đỏ': int = ...
     }
     """
-    api_name = '/get-statistics'
+    api_name = '/get_statistics'
     
     response = __request(api_name, item)
     return response
@@ -281,7 +281,42 @@ def get_all_solutions(item: dict):
         'solutionSource':       tuple(solutionSource)
     }
     """ 
-    api_name = '/get-statistics'
+    api_name = '/get_all_solutions'
+    
+    response = __request(api_name, item)
+    return response
+
+def get_management_info(item: dict):
+    """
+    Make a request to database server to get all task information of all workers.
+
+    Args:
+        item: dict[str, str]
+
+    Returns:
+        response = dict(key, value)
+    Example:
+    >>> item = {
+        'user_info': {
+            'user_name' : 'user name',
+            'password' : 'password'
+        },
+    }
+    >>> get_management_info(item = item)
+    {
+        "garden_info" : {
+            "num_of_garden" : int,
+            "line_of_each_garden" : int,    
+        },
+        "tasks_info" : {
+            "Tên" : list,
+            "Vườn" : list,
+            "Hàng" : list,
+            "Số tấm" : list,
+        }
+    }
+    """
+    api_name = '/get_management_info'
     
     response = __request(api_name, item)
     return response
