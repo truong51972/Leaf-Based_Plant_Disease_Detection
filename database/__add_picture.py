@@ -19,8 +19,8 @@ def add_picture_to_database(userName:str,
                             pic:str, 
                             pred_pic:str, 
                             score:float,
-                            gardenNum:int,
-                            lineNum:int,
+                            gardenName:str,
+                            lineID:int,
                             con) -> int:
     '''
         This private function is used for adding picture information to database and delete picture if number of pictures per user exceed 100\n
@@ -44,7 +44,7 @@ def add_picture_to_database(userName:str,
     
     formatted_time = datetime.strptime(picDate, '%Y-%m-%d %H:%M:%S')
 
-    locationID = identify_location(gardenNum, lineNum, con)
+    locationID = identify_location(gardenName, lineID, con)
 
     cur.execute(f"""
         INSERT INTO PIC (diseaseID, picDate, pic, pred_pic, score, locationID)

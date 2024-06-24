@@ -13,8 +13,8 @@ def load_employee_pic_count(managerName:str,
     managerID = cur.fetchall()[0][0]
 
     cur.execute(f'''
-                SELECT userName, gardenName, lineNum, count(*) as pic_count FROM
-                (SELECT USER.userName as userName, GARDEN.gardenName as gardenName, LOCATION.lineNum as lineNum
+                SELECT userName, gardenName, lineID, count(*) as pic_count FROM
+                (SELECT USER.userName as userName, GARDEN.gardenName as gardenName, LOCATION.lineID as lineID
                 FROM USER
                 RIGHT JOIN USER_LOCATION ON USER.userID = USER_LOCATION.userID
                 JOIN USER_PIC ON USER_PIC.userID = USER.userID
@@ -26,15 +26,15 @@ def load_employee_pic_count(managerName:str,
                                     INNER JOIN USER m ON e.managerID = m.userID
                                     WHERE m.userID = {managerID})
                 GROUP BY USER.userID, USER_LOCATION.userID, USER_PIC.userID, PIC.picID)
-                GROUP BY userName, gardenName, lineNum
+                GROUP BY userName, gardenName, lineID
                 ''')
     
     data = cur.fetchall()
 
     employeeName = list(map(lambda x: x[0], data))
     gardenName = list(map(lambda x: x[1], data))
-    lineNum = list(map(lambda x: x[2], data))
+    lineID = list(map(lambda x: x[2], data))
     picCount = list(map(lambda x: x[3], data))
 
-    return (employeeName, gardenName, lineNum, picCount)
+    return (employeeName, gardenName, lineID, picCount)
     

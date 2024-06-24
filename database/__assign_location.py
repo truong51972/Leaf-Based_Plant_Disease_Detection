@@ -2,8 +2,8 @@ import sqlite3
 from .__identify_location import identify_location
 
 def assign_location(employeeName:str,
-                    gardenNum:int,
-                    lineNum:int,
+                    gardenName:int,
+                    lineID:int,
                     con):
     
     cur = con.cursor()
@@ -14,8 +14,14 @@ def assign_location(employeeName:str,
     
     ID = cur.fetchall()
     employeeID = ID[0][0]
+
+    cur.execute(f'''
+                SELECT gardenID from GARDEN where gardenName = '{gardenName}'
+                ''')
     
-    locationID = identify_location(gardenNum, lineNum, con)
+    gardenID = cur.fetchall()[0][0]
+    
+    locationID = identify_location(gardenID, lineID, con)
 
     cur.execute(f'''
                 INSERT INTO USER_LOCATION
