@@ -5,6 +5,7 @@ import time
 from web.history import display_history
 from web.user import user_info
 from web.initialization import initialization
+from web.solution import solution_list
 import os
 
 DEV_MODE = os.getenv('DEV_MODE', 'False').lower() == 'true'
@@ -30,12 +31,12 @@ def run():
                 st.write("Chế độ phát triển đang bật: Tự động đăng nhập.")
 
             if st.session_state['logged_in']:
-                tabs = ["Trang chủ", "Thông tin cá nhân", "Lịch sử"]
+                tabs = ["Trang chủ", "Thông tin cá nhân", "Lịch sử", "Tất cả giải pháp"]
                 if st.session_state['is_manager']:
                     tabs.append("Quản lý")
                 tabs.append("Đăng xuất")
 
-                tab1, tab2, tab3, *optional_tabs, tab6 = st.tabs(tabs)
+                tab1, tab2, tab3, tab4, *optional_tabs, tab7 = st.tabs(tabs)
 
                 with tab1:
                     main_app()
@@ -43,13 +44,14 @@ def run():
                     user_info()
                 with tab3:
                     display_history()
+                with tab4:
+                    solution_list()
 
-
-                if st.session_state['is_manager']:
+                if optional_tabs:
                     with optional_tabs[0]:
                         initialization()
 
-                with tab6:
+                with tab7:
                     if st.button("Confirm Logout"):
                         logout()
                         st.experimental_rerun()

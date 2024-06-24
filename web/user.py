@@ -150,7 +150,3 @@ def statistics_ui():
 
         plot_bar_chart(df_statistics,container1)
         plot_pie_chart(df_statistics,container2)
-
-
-
-
