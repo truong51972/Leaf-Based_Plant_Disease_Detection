@@ -19,6 +19,8 @@ from .__load_employee_pic_count import load_employee_pic_count
 from .__add_garden import add_garden_to_db
 from .__get_garden_info import garden_info
 
+### TASK CODE: unfinished, wait, pending
+
 class Query:
     '''
     This class is used for interacting with database using various amount of functions
@@ -30,6 +32,7 @@ class Query:
     def __init__(self, database='data.db'):
         self.con = sqlite3.connect(database) 
                  
+    ### ADD SECTION ###
     async def add_user(self, managerData, newUserInfo) -> dict:
         '''
             This private function is used for checking user password
@@ -69,7 +72,111 @@ class Query:
         else:
             return {'message':'User has no authority!',
                     'code' : '004'}
+    
+    async def add_garden(self, item):
+        '''
+        This function is used to add a garden with a number of lines and their manager
+        :input:
+        item = {
+        'user_info': {
+            'user_name' : 'user name',
+            'password' : 'password'
+        },
+        'garden_info' : {
+            'plant_name' : str
+            'garden_name' : str,
+            'num_of_line' : int
+        }
+    }
+        '''
+        managerName = item.user_info.user_name
+        managerPassword = item.user_info.password
+        gardenName = item.garden_info.garden_name
+        plantName = item.garden_info.plant_name
+        lineID = list(range(1, item.garden_info.num_of_line+1))
 
+        if is_manager(managerName, self.con):
+            try:
+                add_garden_to_db(managerName, gardenName, lineID, plantName, self.con)
+                return {'message':'Success!',
+                        'code' : '000'}
+            except:
+                return {'message':'gardenName already exist or line_num is invalid',
+                        'code' : '102'}
+        else:
+            return {'message':'User has no authority!',
+                    'code' : '004'}
+        
+    async def add_pic_and_get_solution(self, item, is_save):   
+        '''
+    This function is used to add picture to database and extract solution for that picture.
+    
+    :input:
+    item = {
+        'user_info': {
+            'user_name' : 'user name',
+            'password' : 'password'
+        },
+        'image_info' : {
+            'image' : 'decoded image',
+            'date' : 'YYYY-MM-DD HH:MI:SS',
+            'class_name': str,
+            'score': float,
+            'predicted_image': str,
+            'garden_num': int,
+            'line_num': int
+        }
+    }
+
+    :return:
+    {
+    'message' : 'message!',
+    'code': 'error code!',
+    'result': {
+        'class_name' : str or None,
+        'score': float or None,
+        'predicted_image': str or None,
+        'description' : (type = dictionary) or None,
+        'solution' : (type = dictionary) or None
+    }
+    }'''             
+
+        userName = item.user_info.user_name
+        userPassword = item.user_info.password
+
+        validate_result = validate_password(userName, userPassword, self.con)
+        if validate_result['code'] == '002' or validate_result['code'] == '003':
+            return {
+                'message' : validate_result['message'],
+                'code': validate_result['code'],
+                    }
+
+        pred_pic = item.image_info.predicted_image
+        score = item.image_info.score
+        pic = item.image_info.image
+        picDate = item.image_info.date
+        class_name = item.image_info.class_name
+        gardenName = item.image_info.garden_num
+        lineID = item.image_info.line_num
+
+        if is_save is True:
+            picID = add_picture_to_database(userName, class_name, picDate, pic, pred_pic, score, gardenName, lineID, self.con)
+            class_name, description, solution = extract_result(picID, self.con)
+        else:
+            class_name, description, solution = extract_result_without_id(class_name, self.con)
+        
+        return {
+                'message' : validate_result['message'],
+                'code': validate_result['code'],
+                'image_info' :item.image_info,
+                'solution': {
+                    'Tên bệnh' : class_name,                
+                    'Mô tả' : description,
+                    'Giải pháp' : solution
+                           }
+                }
+
+    ### QUERY and FUNCTIONAL SECTION ###
     async def user_login(self, userData) -> dict:
         '''
             This function is used for user login
@@ -146,15 +253,15 @@ class Query:
             return {'message':'Success!',
                     'code' : '000',
                     'employee_info':{
-                        'employee_id': employeeID_list,
-                        'employee_name': employeeName_list
+                        'ID': employeeID_list,
+                        'Tên nhân viên': employeeName_list
                                     }      
                     }
         else:
             return {'message':'User has no authority!',
                     'code' : '004'}
 
-            
+    # unfinished
     async def assign_employee_location(self, managerData, employeeData, location):
         '''
             This function is used to assign employee to work location(s)
@@ -200,19 +307,10 @@ class Query:
         else:
             return {'message':'User has no authority!',
                     'code' : '004'}
-        
+    # unfinished    
     async def get_location_assignment_table(self, managerData, gardenName):
         ...
-
-    async def delete_garden(self, managerData, gardenName):
-        ...
-
-    async def delete_line(self, managerData, gardenName):
-        ...
-
-    async def delete_user(self, managerData, employeeData):
-        ...
-
+    # wait
     async def get_garden_info(self, item):
         '''
         This function is used for getting garden info, including num_of_line, gardenName, plantName
@@ -249,77 +347,7 @@ class Query:
         else:
             return {'message':'User has no authority!',
                     'code' : '004'}
-
-
-    async def add_pic_and_get_solution(self, item, is_save):   
-        '''
-    This function is used to add picture to database and extract solution for that picture.
-    
-    :input:
-    item = {
-        'user_info': {
-            'user_name' : 'user name',
-            'password' : 'password'
-        },
-        'image_info' : {
-            'image' : 'decoded image',
-            'date' : 'YYYY-MM-DD HH:MI:SS',
-            'class_name': str,
-            'score': float,
-            'predicted_image': str,
-            'garden_num': int,
-            'line_num': int
-        }
-    }
-
-    :return:
-    {
-    'message' : 'message!',
-    'code': 'error code!',
-    'result': {
-        'class_name' : str or None,
-        'score': float or None,
-        'predicted_image': str or None,
-        'description' : (type = dictionary) or None,
-        'solution' : (type = dictionary) or None
-    }
-    }'''             
-
-        userName = item.user_info.user_name
-        userPassword = item.user_info.password
-
-        validate_result = validate_password(userName, userPassword, self.con)
-        if validate_result['code'] == '002' or validate_result['code'] == '003':
-            return {
-                'message' : validate_result['message'],
-                'code': validate_result['code'],
-                    }
-
-        pred_pic = item.image_info.predicted_image
-        score = item.image_info.score
-        pic = item.image_info.image
-        picDate = item.image_info.date
-        class_name = item.image_info.class_name
-        gardenName = item.image_info.garden_num
-        lineID = item.image_info.line_num
-
-        if is_save is True:
-            picID = add_picture_to_database(userName, class_name, picDate, pic, pred_pic, score, gardenName, lineID, self.con)
-            class_name, description, solution = extract_result(picID, self.con)
-        else:
-            class_name, description, solution = extract_result_without_id(class_name, self.con)
-        
-        return {
-                'message' : validate_result['message'],
-                'code': validate_result['code'],
-                'image_info' :item.image_info,
-                'solution': {
-                    'Tên bệnh' : class_name,                
-                    'Mô tả' : description,
-                    'Giải pháp' : solution
-                           }
-                }
-    
+    # pending
     async def get_history(self, userData):
         '''
         This function is used to get history of a user.
@@ -375,7 +403,7 @@ class Query:
                     'Ngày chụp' : picDate
                            }
                 }
-    
+    # pending
     async def get_statistic(self, item):
         '''
         :input:
@@ -443,7 +471,7 @@ class Query:
                 'message' : validate_result['message'],
                 'code': validate_result['code'],
                     }
-    
+    # pending
     async def load_employee_pic_count(self, managerData):
         '''
         This function is used to load picture count per employee for each location
@@ -480,41 +508,6 @@ class Query:
         else:
             return {'message':'User has no authority!',
                     'code' : '004'}
-        
-    async def add_garden(self, item):
-        '''
-        This function is used to add a garden with a number of lines and their manager
-        :input:
-        item = {
-        'user_info': {
-            'user_name' : 'user name',
-            'password' : 'password'
-        },
-        'garden_info' : {
-            'plant_name' : str
-            'garden_name' : str,
-            'num_of_line' : int
-        }
-    }
-        '''
-        managerName = item.user_info.user_name
-        managerPassword = item.user_info.password
-        gardenName = item.garden_info.garden_name
-        plantName = item.garden_info.plant_name
-        lineID = list(range(1, item.garden_info.num_of_line+1))
-
-        if is_manager(managerName, self.con):
-            try:
-                add_garden_to_db(managerName, gardenName, lineID, plantName, self.con)
-                return {'message':'Success!',
-                        'code' : '000'}
-            except:
-                return {'message':'gardenName already exist or line_num is invalid',
-                        'code' : '102'}
-        else:
-            return {'message':'User has no authority!',
-                    'code' : '004'}
-
 
     async def get_solution(self):
         '''
@@ -532,7 +525,26 @@ class Query:
         '''
         return get_solution(self.con)
     
+    ### DELETE SECTION ###
+    # All in progress
+    async def delete_garden(self, managerData, gardenName):
+        '''
+        :input:
+        managerData = {
+                'user_info': str,
+                'password': str
+            }
+        gardenName: str
 
+        :output:
+        {'message':str, 
+         'code': str}
+        '''
+
+
+    async def delete_user(self, managerData, employeeData):
+        ...
+    
     def close(self):
         self.con.commit()
         self.con.close() 

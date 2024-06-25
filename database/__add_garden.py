@@ -15,16 +15,12 @@ def add_garden_to_db(managerName:str,
     
     managerID = cur.fetchall()[0][0]
 
-    print(managerID)
-
     cur.execute(f'''
                 INSERT INTO GARDEN (gardenName, managerID, plantName)
                 VALUES ('{gardenName}', {managerID}, '{plantName}')
                 ''')
     
     con.commit()
-
-    print('insert garden')
 
     cur.execute(f'''
         SELECT last_insert_rowid()
