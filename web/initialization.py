@@ -66,8 +66,9 @@ def show_garden():
         }
     }
     if st.button("Lấy thông tin vườn", use_container_width=True):
-        response = get_gardens_info(item=item).json()       
-        df_gardens = pd.DataFrame(response)
+        response = get_gardens_info(item=item).json()
+        garden_info = response['garden_info']
+        df_gardens = pd.DataFrame(garden_info)
         st.dataframe(df_gardens)
 
     
