@@ -18,6 +18,8 @@ from .__get_employee_list import get_employee
 from .__load_employee_pic_count import load_employee_pic_count
 from .__add_garden import add_garden_to_db
 from .__get_garden_info import garden_info
+from .__del_garden import del_garden
+from .__del_employee import del_employee
 
 ### TASK CODE: unfinished, wait, pending
 
@@ -527,23 +529,82 @@ class Query:
     
     ### DELETE SECTION ###
     # All in progress
-    async def delete_garden(self, managerData, gardenName):
+    async def delete_garden(self, item):
         '''
         :input:
-        managerData = {
-                'user_info': str,
-                'password': str
-            }
-        gardenName: str
+        item = {
+            'user_info': {
+                'user_name' : 'user name',
+                'password' : 'password'
+                        },
+            'garden_name' : str
+        }
 
         :output:
         {'message':str, 
          'code': str}
         '''
 
+        managerName = item.user_info.user_name
+        managerPassword = item.user_info.password
+        gardenName = item.garden_name
 
-    async def delete_user(self, managerData, employeeData):
-        ...
+        if is_manager(managerName, self.con):
+            try:
+                del_garden(gardenName, self.con)
+                return {'message':'Success!',
+                        'code' : '000'}
+            except:
+                return {'message':'Unknown error in del_garden()!',
+                        'code' : '???'}
+        else:
+            return {'message':'User has no authority!',
+                    'code' : '004'}
+
+
+
+    async def delete_user(self, item):
+        '''
+            This function is used for delete user from database
+
+            :input:
+            item = {
+            'manager_info': {
+                'user_name' : 'user name',
+                'password' : 'password'
+                        },
+            'employee_info': {
+                'user_name' : 'user name',
+                'password' : 'password'
+                        }
+            }
+
+            :output:
+            {'message':str, 
+             'code': str}
+
+            PERFORMANCE CODE:
+                '000': Action proceeded successfully 
+                '001': userName has already existed in the database (UserExisted)    
+                '004': User has no authority (UnauthorizedAction)   
+        '''
+
+        managerName = item.manager_info.user_name
+        managerPassword = item.manager_info.password
+        employeeName = item.employee_info.user_name
+        employeePassword = item.employee_info.password
+
+        if is_manager(managerName, self.con):
+            try:
+                del_employee(employeeName, self.con)
+                return {'message':'Success!',
+                        'code' : '000'}
+            except:
+                return {'message':'Unknown error in del_employee()!',
+                        'code' : '???'}
+        else:
+            return {'message':'User has no authority!',
+                    'code' : '004'}
     
     def close(self):
         self.con.commit()
