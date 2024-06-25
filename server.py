@@ -66,9 +66,9 @@ class Get_statistics(BaseModel):
     gardenNum: int
     lineNum: int
 
-class Add_new_user(BaseModel):
-    user_info: User_Info
-    new_user_info: User_Info
+class Employee_management(BaseModel):
+    manager_info: User_Info
+    employee_info: User_Info
 
 class Garden_info(BaseModel):
     plant_name : str
@@ -85,6 +85,7 @@ class Delete_garden(BaseModel):
 
 class Get_gardens_info(BaseModel):
     user_info: User_Info
+
 
 
 @app.post("/check_login")
@@ -124,14 +125,14 @@ async def analyze(item: Analyze):
         response = await database.add_pic_and_get_solution(item= item, is_save=True)
     return response
 
-@app.post("/create_new_user")
-async def create_new_user(item: Add_new_user):
-    response = await database.add_user(item.user_info, item.new_user_info)
+@app.post("/add_employee")
+async def add_employee(item: Employee_management):
+    response = await database.add_user(item)
     return response
 
 @app.post("/delete_employee")
-async def delete_employee(item: Add_new_user):
-    response = await database.delete_user(item.user_info, item.new_user_info)
+async def delete_employee(item: Employee_management):
+    response = await database.delete_user(item)
     return response
 
 @app.post("/change_password")
@@ -156,7 +157,7 @@ async def add_garden(item: Add_garden):
 
 @app.post("/delete_garden")
 async def delete_garden(item: Delete_garden):
-    response = await database.add_garden(item)
+    response = await database.delete_garden(item)
     return response
 
 @app.post("/get_gardens_info")
