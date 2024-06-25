@@ -17,6 +17,7 @@ from .__assign_location import assign_location
 from .__get_employee_list import get_employee
 from .__load_employee_pic_count import load_employee_pic_count
 from .__add_garden import add_garden_to_db
+from .__get_garden_info import garden_info
 
 class Query:
     '''
@@ -124,7 +125,13 @@ class Query:
                     self.password = ...
 
             :return:
-            employee_list : list = [...]
+            {'message':'Success!',
+             'code' : '000',
+             'employee_info':{
+                'employee_id': list[int],
+                'employee_name': list[str]
+                            }      
+                    }
 
             PERFORMANCE CODE:
                 '000': Action proceeded successfully 
@@ -135,7 +142,14 @@ class Query:
         managerPassword = managerData.password
 
         if is_manager(managerName, self.con):
-            return get_employee(managerName, self.con)
+            employeeID_list, employeeName_list = get_employee(managerName, self.con)
+            return {'message':'Success!',
+                    'code' : '000',
+                    'employee_info':{
+                        'employee_id': employeeID_list,
+                        'employee_name': employeeName_list
+                                    }      
+                    }
         else:
             return {'message':'User has no authority!',
                     'code' : '004'}
@@ -148,8 +162,8 @@ class Query:
             :input:
             managerData, employeeData: User()
             location = {
-                    'gardenNum': int = ...,
-                    'lineNum': int = ...
+                    'garden_name': str = ...,
+                    'lineID': int = ...
                 }
                         
             NOTE:
@@ -172,12 +186,12 @@ class Query:
         employeeName = employeeData.user_name
         employeePassword = employeeData.password
 
-        gardenNum = location.gardenNum
-        lineNum = location.lineNum
+        gardenName = location.garden_name
+        lineID = location.lineID
 
         if is_manager(managerName, self.con):
             try:
-                assign_location(employeeName, gardenNum, lineNum, self.con)
+                assign_location(employeeName, gardenName, lineID, self.con)
                 return {'message':'Success!',
                         'code':'000'}
             except:
@@ -189,6 +203,53 @@ class Query:
         
     async def get_location_assignment_table(self, managerData, gardenName):
         ...
+
+    async def delete_garden(self, managerData, gardenName):
+        ...
+
+    async def delete_line(self, managerData, gardenName):
+        ...
+
+    async def delete_user(self, managerData, employeeData):
+        ...
+
+    async def get_garden_info(self, item):
+        '''
+        This function is used for getting garden info, including num_of_line, gardenName, plantName
+
+        :input:
+        item = {
+            'user_info':{
+                'user_name': str,
+                'password' : str
+            }
+
+        :output:
+            {'message': str,
+             'code': str,
+             'garden_info':{
+                    'Tên vườn' : list[str],
+                    'Giống cây': list[str],
+                    'Số luống' : list[int]
+                }
+             }
+        '''
+        managerName = item.user_info.user_name
+        managerPassword = item.user_info.password
+
+        if is_manager(managerName, self.con):
+            gardenName, plantName, line_count = garden_info(managerName, self.con)
+            return {'message':'Success!',
+                    'code' : '000',
+                    'garden_info':{
+                        'Tên vườn' : gardenName,
+                        'Giống cây': plantName,
+                        'Số luống' : line_count
+                    }}
+        else:
+            return {'message':'User has no authority!',
+                    'code' : '004'}
+
 
     async def add_pic_and_get_solution(self, item, is_save):   
         '''
@@ -239,11 +300,11 @@ class Query:
         pic = item.image_info.image
         picDate = item.image_info.date
         class_name = item.image_info.class_name
-        gardenNum = item.image_info.garden_num
-        lineNum = item.image_info.line_num
+        gardenName = item.image_info.garden_num
+        lineID = item.image_info.line_num
 
         if is_save is True:
-            picID = add_picture_to_database(userName, class_name, picDate, pic, pred_pic, score, gardenNum, lineNum, self.con)
+            picID = add_picture_to_database(userName, class_name, picDate, pic, pred_pic, score, gardenName, lineID, self.con)
             class_name, description, solution = extract_result(picID, self.con)
         else:
             class_name, description, solution = extract_result_without_id(class_name, self.con)
@@ -324,8 +385,8 @@ class Query:
             'password' : 'password'
         },
         'date': 'YYYY-MM-DD',
-        'gardenNum': int,
-        'lineNum': int
+        'gardenName': int,
+        'lineID': int
     }
         :output:
         statistic = {'Virus khảm cà chua ToMV': int = ..., 
@@ -400,8 +461,8 @@ class Query:
             dict_dataframe = {
                 'tasks_info':{
                     'userName': list,
-                    'gardenNum': list,
-                    'lineNum': list,
+                    'gardenName': list,
+                    'lineID': list,
                     'pic_count': list
                     },
                 'garden_info':{
@@ -415,7 +476,7 @@ class Query:
 
         if is_manager(managerName, self.con):
 
-            userName, gardenName, lineNum, picCount = load_employee_pic_count(managerName, self.con)
+            userName, gardenName, lineID, picCount = load_employee_pic_count(managerName, self.con)
         else:
             return {'message':'User has no authority!',
                     'code' : '004'}
