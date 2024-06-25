@@ -128,7 +128,7 @@ class Query:
             'class_name': str,
             'score': float,
             'predicted_image': str,
-            'garden_num': int,
+            'garden_name': str,
             'line_num': int
         }
     }
@@ -161,7 +161,7 @@ class Query:
         pic = item.image_info.image
         picDate = item.image_info.date
         class_name = item.image_info.class_name
-        gardenName = item.image_info.garden_num
+        gardenName = item.image_info.garden_name
         lineID = item.image_info.line_num
 
         if is_save is True:
