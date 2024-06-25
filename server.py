@@ -79,23 +79,18 @@ class Add_garden(BaseModel):
     user_info: User_Info
     garden_info: Garden_info
 
+class Delete_garden(BaseModel):
+    user_info: User_Info
+    garden_name: str
+
 class Get_gardens_info(BaseModel):
     user_info: User_Info
 
-class Get_employee_info(BaseModel):
-    user_info: User_Info   
 
 @app.post("/check_login")
 async def check_login(item: User_Info):
     # print(dict(item))
     response = await database.user_login(item)
-    # print(response)
-    return response
-
-@app.post("/create_new_user")
-async def create_new_user(item: Add_new_user):
-    # print(dict(item))
-    response = await database.add_user(item.user_info, item.new_user_info)
     # print(response)
     return response
 
@@ -129,6 +124,18 @@ async def analyze(item: Analyze):
         response = await database.add_pic_and_get_solution(item= item, is_save=True)
     return response
 
+@app.post("/create_new_user")
+async def create_new_user(item: Add_new_user):
+    # print(dict(item))
+    response = await database.add_user(item.user_info, item.new_user_info)
+    # print(response)
+    return response
+
+@app.post("/delete_employee")
+async def delete_employee(item: Add_new_user):
+    response = await database.add_user(item.user_info, item.new_user_info)
+    return response
+
 @app.post("/change_password")
 async def change_password(item: Change_password):
     response = await database.change_password(item)
@@ -149,12 +156,17 @@ async def add_garden(item: Add_garden):
     response = await database.add_garden(item)
     return response
 
+@app.post("/delete_garden")
+async def delete_garden(item: Delete_garden):
+    response = await database.add_garden(item)
+    return response
+
 @app.post("/get_gardens_info")
 async def get_gardens_info(item: Get_gardens_info):
     response = await database.get_garden_info(item)
     return response
 
 @app.post("/get_employee_info")
-async def get_employee_info(item: Get_employee_info):
-    response = await database.get_garden_info(item)
+async def get_employee_info(item: User_Info):
+    response = await database.get_employee_list(item)
     return response
