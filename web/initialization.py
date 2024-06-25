@@ -2,6 +2,7 @@ import streamlit as st
 from web.login_ui import register_ui
 from packages.request_api import get_gardens_info
 from packages.request_api import add_garden
+from packages.request_api import get_employee_info
 import pandas as pd
 
 def initialization():
@@ -13,8 +14,10 @@ def initialization():
             add_gardens()
             
     with tab2:
-        st.subheader('Thêm nhân viên')
-        register_ui()
+        with st.expander('Thêm nhân viên'):
+            register_ui()
+        with st.expander("Xem thông tin nhân viên"):
+            show_employees()
         
 def add_gardens():
     st.subheader("Thêm vườn và luống")
@@ -70,6 +73,19 @@ def show_garden():
         garden_info = response['garden_info']
         df_gardens = pd.DataFrame(garden_info)
         st.dataframe(df_gardens)
+
+def show_employees():
+    item = {
+        'user_name': st.session_state.get('user_name'),
+        'password': st.session_state.get('encrypted_password')
+    }
+    if st.button("Xem bảng thông tin nhân viên", use_container_width= True):
+        response = get_employee_info(item=item).json()
+        employee_info = response['employee_info']
+        df_employees = pd.DataFrame(employee_info)
+        st.dataframe(df_employees,hide_index=True)
+
+
 
     
         
