@@ -126,14 +126,12 @@ async def analyze(item: Analyze):
 
 @app.post("/create_new_user")
 async def create_new_user(item: Add_new_user):
-    # print(dict(item))
     response = await database.add_user(item.user_info, item.new_user_info)
-    # print(response)
     return response
 
 @app.post("/delete_employee")
 async def delete_employee(item: Add_new_user):
-    response = await database.add_user(item.user_info, item.new_user_info)
+    response = await database.delete_user(item.user_info, item.new_user_info)
     return response
 
 @app.post("/change_password")
