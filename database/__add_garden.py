@@ -37,5 +37,3 @@ def add_garden_to_db(managerName:str,
 
 
         con.commit()
-
-    print('complete')

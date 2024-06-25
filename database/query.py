@@ -73,7 +73,7 @@ class Query:
             else:    
                 add_user(managerName, employeeName, employeePassword, self.con)
                 return {'message':'Success!',
-                    'code':'000'}
+                        'code':'000'}
         else:
             return {'message':'User has no authority!',
                     'code' : '004'}
@@ -576,8 +576,7 @@ class Query:
                 'password' : 'password'
                         },
             'employee_info': {
-                'user_name' : 'user name',
-                'password' : 'password'
+                'user_name' : 'user name'
                         }
             }
 
@@ -594,7 +593,6 @@ class Query:
         managerName = item.manager_info.user_name
         managerPassword = item.manager_info.password
         employeeName = item.employee_info.user_name
-        employeePassword = item.employee_info.password
 
         if is_manager(managerName, self.con):
             try:
