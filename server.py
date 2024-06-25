@@ -79,6 +79,12 @@ class Add_garden(BaseModel):
     user_info: User_Info
     garden_info: Garden_info
 
+class Get_gardens_info(BaseModel):
+    user_info: User_Info
+
+class Get_employee_info(BaseModel):
+    user_info: User_Info   
+
 @app.post("/check_login")
 async def check_login(item: User_Info):
     # print(dict(item))
@@ -141,4 +147,14 @@ async def get_all_solutions():
 @app.post("/add_garden")
 async def add_garden(item: Add_garden):
     response = await database.add_garden(item)
+    return response
+
+@app.post("/get_gardens_info")
+async def get_gardens_info(item: Get_gardens_info):
+    response = await database.get_garden_info(item)
+    return response
+
+@app.post("/get_employee_info")
+async def get_employee_info(item: Get_employee_info):
+    response = await database.get_garden_info(item)
     return response
