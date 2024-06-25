@@ -35,18 +35,21 @@ class Query:
         self.con = sqlite3.connect(database) 
                  
     ### ADD SECTION ###
-    async def add_user(self, managerData, newUserInfo) -> dict:
+    async def add_user(self, item) -> dict:
         '''
             This private function is used for checking user password
 
             :input:
-            managerData, newUserInfo: User()
-                        
-            NOTE:
-            class User():
-                def __init__(self):
-                    self.user_name = ...
-                    self.password = ...
+            item = {
+            'manager_info': {
+                'user_name' : 'user name',
+                'password' : 'password'
+                        },
+            'employee_info': {
+                'user_name' : 'user name',
+                'password' : 'password'
+                        }
+            }
 
             :return:
             {'message': ...,
@@ -57,18 +60,18 @@ class Query:
                 '001': userName has already existed in the database (UserExisted)    
                 '004': User has no authority (UnauthorizedAction)   
         '''   
-        managerName = managerData.user_name
-        managerPassword = managerData.password
-        newUserName = newUserInfo.user_name
-        newUserPassword = newUserInfo.password
+        managerName = item.manager_info.user_name
+        managerPassword = item.manager_info.password
+        employeeName = item.employee_info.user_name
+        employeePassword = item.employee_info.password
         
 
         if is_manager(managerName, self.con):
-            if check_user(newUserName, self.con):
+            if check_user(employeeName, self.con):
                 return {'message':'userName already existed!',
                     'code':'001'}
             else:    
-                add_user(managerName, newUserName, newUserPassword, self.con)
+                add_user(managerName, employeeName, employeePassword, self.con)
                 return {'message':'Success!',
                     'code':'000'}
         else:
@@ -312,7 +315,6 @@ class Query:
     # unfinished    
     async def get_location_assignment_table(self, managerData, gardenName):
         ...
-    # wait
     async def get_garden_info(self, item):
         '''
         This function is used for getting garden info, including num_of_line, gardenName, plantName
@@ -528,7 +530,7 @@ class Query:
         return get_solution(self.con)
     
     ### DELETE SECTION ###
-    # All in progress
+    # All wait
     async def delete_garden(self, item):
         '''
         :input:
