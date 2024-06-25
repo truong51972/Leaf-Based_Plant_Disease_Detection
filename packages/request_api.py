@@ -60,7 +60,7 @@ def check_login(item: dict):
     response = __request(api_name, item)
     return response
 
-def create_new_user(item: dict):
+def add_employee(item: dict):
     """
     Make a request to database server to create new user.
 
@@ -87,11 +87,11 @@ def create_new_user(item: dict):
             }
         }
         
-    >>> create_new_user(item = item)
+    >>> add_employee(item = item)
     {'message' : '...','code': 'XXX'}
     """
 
-    api_name = '/create_new_user'
+    api_name = '/add_employee'
     
     response = __request(api_name, item)
     return response
@@ -411,6 +411,65 @@ def get_employee_info(item:dict):
     }
     """
     api_name = '/get_employee_info'
+    response = __request(api_name, item)
+    return response
+
+def delete_garden(item:dict):
+    """
+    Make a request to database server to delete garden infomation.
+
+    Args:
+        item: dict[str, str]
+
+    Returns:
+        response = dict(key, value)
+    Example:
+    >>> item = {
+        'user_info': {
+            'user_name' : 'user name',
+            'password' : 'password'
+        },
+        'garden_name': str
+    }
+    >>> delete_garden(item=item)
+    {
+        'message' : 'message!',
+        'code': 'error code!',
+        }
+    }
+    """
+    api_name = '/delete_garden'
+    response = __request(api_name, item)
+    return response
+
+def delete_employee(item:dict):
+    """
+    Make a request to database server to delete employee infomation.
+
+    Args:
+        item: dict[str, str]
+
+    Returns:
+        response = dict(key, value)
+    Example:
+    >>> item = {
+        'user_info': {
+            'user_name' : 'user name',
+            'password' : 'password'
+        },
+        'employee_info': {
+            'user_name' : 'user name',
+            'password' : 'password'
+            }
+    }
+    >>> delete_employee(item=item)
+    {
+        'message' : 'message!',
+        'code': 'error code!',
+        }
+    }
+    """
+    api_name = '/delete_employee'
     response = __request(api_name, item)
     return response
 

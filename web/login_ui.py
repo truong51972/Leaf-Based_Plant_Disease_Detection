@@ -1,7 +1,7 @@
 import streamlit as st
 import time
 import os
-from packages.request_api import check_login, create_new_user
+from packages.request_api import check_login, add_employee
 from packages.encode_decode import encrypt_password
 from packages.preprocess_text import is_valid
 
@@ -94,7 +94,7 @@ def register_ui():
                     'password' : encrypted_password
                 }
             }
-            response = create_new_user(item=item).json()
+            response = add_employee(item=item).json()
             if response['code'] == '000':
                 st.success("Đăng ký thành công! Vui lòng đăng nhập.")
             elif response['code'] == '001':

@@ -59,8 +59,6 @@ def app():
                 'image_info': {
                     'image': encoded_image,
                     'date': current_datetime,
-                    'garden_num': garden_num,
-                    'line_num':line_num
                 }
             }
             with st.spinner("Đang phân tích hình ảnh..."):
