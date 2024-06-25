@@ -576,7 +576,8 @@ class Query:
                 'password' : 'password'
                         },
             'employee_info': {
-                'user_name' : 'user name'
+                'user_name' : 'user name',
+                'password' : 'password'
                         }
             }
 
@@ -593,6 +594,7 @@ class Query:
         managerName = item.manager_info.user_name
         managerPassword = item.manager_info.password
         employeeName = item.employee_info.user_name
+        employeePassword = item.employee_info.password
 
         if is_manager(managerName, self.con):
             try:
