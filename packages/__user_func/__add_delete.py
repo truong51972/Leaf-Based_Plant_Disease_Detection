@@ -1,4 +1,4 @@
-def add_employee(item: dict):
+def add_employee(item: dict, request: object):
     """
     Make a request to database server to create new user.
 
@@ -31,10 +31,10 @@ def add_employee(item: dict):
 
     api_name = '/add_employee'
     
-    response = _request(api_name, item)
+    response = request(api_name, item)
     return response
 
-def delete_employee(item:dict):
+def delete_employee(item:dict, request: object):
     """
     Make a request to database server to delete employee infomation.
 
@@ -61,5 +61,5 @@ def delete_employee(item:dict):
     }
     """
     api_name = '/delete_employee'
-    response = _request(api_name, item)
+    response = request(api_name, item)
     return response

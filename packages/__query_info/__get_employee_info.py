@@ -1,4 +1,4 @@
-def get_employee_info(item:dict):
+def get_employee_info(item:dict, request: object):
     """
     Make a request to database server to get employer infomation.
 
@@ -25,5 +25,5 @@ def get_employee_info(item:dict):
     }
     """
     api_name = '/get_employee_info'
-    response = _request(api_name, item)
+    response = request(api_name, item)
     return response

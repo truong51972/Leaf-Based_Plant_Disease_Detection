@@ -1,4 +1,4 @@
-def delete_garden(item:dict):
+def delete_garden(item:dict, request: object):
     """
     Make a request to database server to delete garden infomation.
 
@@ -23,10 +23,10 @@ def delete_garden(item:dict):
     }
     """
     api_name = '/delete_garden'
-    response = _request(api_name, item)
+    response = request(api_name, item)
     return response
 
-def add_garden(item: dict):
+def add_garden(item: dict, request: object):
     """
     Make a request to database server to get all task information of all workers.
 
@@ -55,5 +55,5 @@ def add_garden(item: dict):
     """
     api_name = '/add_garden'
     
-    response = _request(api_name, item)
+    response = request(api_name, item)
     return response

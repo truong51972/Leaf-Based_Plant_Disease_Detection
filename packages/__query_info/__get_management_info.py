@@ -1,4 +1,4 @@
-def get_management_info(item: dict):
+def get_management_info(item: dict, request: object):
     """
     Make a request to database server to get all task information of all workers.
 
@@ -30,5 +30,5 @@ def get_management_info(item: dict):
     """
     api_name = '/get_management_info'
     
-    response = _request(api_name, item)
+    response = request(api_name, item)
     return response
