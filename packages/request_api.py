@@ -1,10 +1,25 @@
-import requests
-import dns.resolver
+from .__request import _request
 
+from .__garden_func.__add_delete import add_garden, delete_garden
+
+from .__query_info.__get_all_solutions import get_all_solutions
+from .__query_info.__get_employee_info import get_employee_info
+from .__query_info.__get_gardens_info import get_gardens_info
+from .__query_info.__get_management_info import get_management_info
+from .__query_info.__get_history import get_history
+from .__query_info.__get_statistics import get_statistics
+
+from .__user_func.__add_delete import add_employee, delete_employee
+from .__user_func.__change_password import change_password
+from .__user_func.__check_login import check_login
+from .__user_func.__task_employee import task_employee
+
+from .__analyze import analyze
 """
     Contain all request functions for Website.
 """
 
+<<<<<<< HEAD
 my_ddns = 'truong51972.ddns.net'
 port = 8000
 
@@ -503,6 +518,8 @@ def task_employee(item = dict):
     response = __request(api_name, item)
     return response
 
+=======
+>>>>>>> packages
 if __name__ == '__main__':
     from PIL import Image
     from encode_decode import encode_image
