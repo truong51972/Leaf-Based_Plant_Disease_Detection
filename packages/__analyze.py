@@ -1,4 +1,4 @@
-def analyze(item: dict):
+def analyze(item: dict, request: object):
     """
     Make a request to database server to analyze.
 
@@ -46,5 +46,5 @@ def analyze(item: dict):
     
     api_name = '/analyze'
     
-    response = _request(api_name, item)
+    response = request(api_name, item)
     return response

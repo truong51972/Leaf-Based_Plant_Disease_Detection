@@ -1,4 +1,4 @@
-def get_statistics(item: dict):
+def get_statistics(item: dict, request: object):
     """
     Make a request to database server to get statistics.
 
@@ -33,6 +33,6 @@ def get_statistics(item: dict):
     """
     api_name = '/get_statistics'
     
-    response = _request(api_name, item)
+    response = request(api_name, item)
     return response
     

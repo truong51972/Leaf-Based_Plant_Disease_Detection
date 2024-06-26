@@ -15,6 +15,7 @@ from .__user_func.__check_login import check_login
 from .__user_func.__task_employee import task_employee
 
 from .__analyze import analyze
+
 """
     Contain all request functions for Website.
 """

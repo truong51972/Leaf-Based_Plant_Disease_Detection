@@ -1,4 +1,4 @@
-def get_gardens_info(item: dict):
+def get_gardens_info(item: dict, request: object):
     """
     Make a request to database server to get all task information of all workers.
 
@@ -26,5 +26,5 @@ def get_gardens_info(item: dict):
     }
     """
     api_name = '/get_gardens_info'
-    response = _request(api_name, item)
+    response = request(api_name, item)
     return response

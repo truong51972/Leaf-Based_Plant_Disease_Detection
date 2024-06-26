@@ -1,4 +1,4 @@
-def check_login(item: dict):
+def check_login(item: dict, request: object):
     """
     Make a request to database server to check user login.
 
@@ -22,5 +22,5 @@ def check_login(item: dict):
     """
     api_name = '/check_login'
     
-    response = _request(api_name, item)
+    response = request(api_name, item)
     return response

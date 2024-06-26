@@ -1,4 +1,4 @@
-def change_password(item: dict):
+def change_password(item: dict, request: object):
     """
     Make a request to database server to check user login.
 
@@ -28,5 +28,5 @@ def change_password(item: dict):
     """
     api_name = '/change_password'
     
-    response = _request(api_name, item)
+    response = request(api_name, item)
     return response

@@ -1,4 +1,4 @@
-def get_all_solutions(item: dict):
+def get_all_solutions(item: dict, request: object):
     """
     Make a request to database server to get all solutions.
 
@@ -18,5 +18,5 @@ def get_all_solutions(item: dict):
     """ 
     api_name = '/get_all_solutions'
     
-    response = _request(api_name, item)
+    response = request(api_name, item)
     return response
