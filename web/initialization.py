@@ -1,11 +1,11 @@
 import streamlit as st
 from web.login_ui import register_ui, delete_employees
-from packages.request_api import get_gardens_info, add_garden, get_employee_info, delete_garden
+from packages.request_api import get_gardens_info, add_garden, get_employee_info, delete_garden,task_employee
 import pandas as pd
 
 
 def initialization():
-    tab1, tab2 = st.tabs(['Vườn','Nhân viên'])
+    tab1, tab2, tab3 = st.tabs(['Vườn','Nhân viên','Phân công'])
     with tab1:
         with st.expander("Thông tin các vườn"):
             show_gardens()
@@ -21,6 +21,9 @@ def initialization():
             register_ui()
         with st.expander("Xóa nhân viên"):
             delete_employees()
+    
+    with tab3:
+        assign_task()
             
         
 def add_gardens():
@@ -116,6 +119,37 @@ def show_employees():
         employee_info = response['employee_info']
         df_employees = pd.DataFrame(employee_info)
         st.dataframe(df_employees,hide_index=True)
+
+def assign_task():
+    st.subheader("Phân công")
+    garden_name = st.text_input("Nhập tên vườn")
+    item = {
+        'user_info': {
+            'user_name' : st.session_state.get('user_name'),
+            'password' : st.session_state.get('encrypted_password')
+        },
+        'garden_name': garden_name
+    }
+    if st.button("Tạo bảng phân công"):
+        if not garden_name:
+            st.error("Vui lòng nhập tên vườn")
+            return
+        response = task_employee(item=item).json()
+        print(response)
+        df_task = pd.DataFrame(response['table'])
+    
+        st.data_editor(
+            df_task,
+            column_config={
+                "favorite": st.column_config.CheckboxColumn(
+            "Your favorite?",
+            help="Select your **favorite** widgets",
+            default=False,
+                )
+            },
+            hide_index=True,
+        )   
+        
 
 
 
