@@ -1,11 +1,8 @@
 import streamlit as st
-from web.login_ui import register_ui
-from packages.request_api import get_gardens_info
-from packages.request_api import add_garden
-from packages.request_api import get_employee_info
-from packages.request_api import delete_employee
-from packages.request_api import delete_garden
+from web.login_ui import register_ui, delete_employees
+from packages.request_api import get_gardens_info, add_garden, get_employee_info, delete_garden
 import pandas as pd
+
 
 def initialization():
     tab1, tab2 = st.tabs(['Vườn','Nhân viên'])
@@ -18,10 +15,13 @@ def initialization():
             delete_gardens()
             
     with tab2:
-        with st.expander('Thêm nhân viên'):
-            register_ui()
         with st.expander("Xem thông tin nhân viên"):
             show_employees()
+        with st.expander('Thêm nhân viên'):
+            register_ui()
+        with st.expander("Xóa nhân viên"):
+            delete_employees()
+            
         
 def add_gardens():
     st.subheader("Thêm vườn và luống")
@@ -76,7 +76,7 @@ def show_gardens():
         response = get_gardens_info(item=item).json()
         garden_info = response['garden_info']
         df_gardens = pd.DataFrame(garden_info)
-        st.dataframe(df_gardens)
+        st.dataframe(df_gardens,hide_index=True)
 
 def delete_gardens():
     st.subheader("Xóa vườn")
@@ -117,35 +117,6 @@ def show_employees():
         df_employees = pd.DataFrame(employee_info)
         st.dataframe(df_employees,hide_index=True)
 
-def delete_employees():
-    st.subheader("Xóa nhân viên")
-    employee_name = st.text_input("Tên nhân viên cần xóa")
-
-    if st.button("Xác nhận xóa"):
-
-        if not employee_name:
-            st.error("Vui lòng nhập tên nhân viên cần xóa!")
-            return
-       
-        item = {
-        'user_info': {
-            'user_name' : 'user name',
-            'password' : 'password'
-        },
-        'employee_info': {
-            'user_name' : 'user name',
-            'password' : 'password'
-            }
-    }
-        response = delete_employee(item=item).json()
-        if response['code'] == '000':
-            st.success("Xóa nhân viên thành công!")
-        elif response['code'] == '001':
-            st.error("xóa nhân viên thất bại!")
-        elif response['code'] == '404':
-            st.error("Không tìm thấy server")
-        else:
-            st.error("Lỗi không xác định!")
 
 
 

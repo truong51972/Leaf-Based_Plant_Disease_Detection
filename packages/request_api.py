@@ -77,11 +77,11 @@ def add_employee(item: dict):
 
     >>> item = 
         {
-            "user_info" : {
+            "manager_info" : {
                 'user_name' : 'user name',
                 'password' : 'password'
             },
-            "new_user_info" : {
+            "employee_info" : {
                 'user_name' : 'user name',
                 'password' : 'password'
             }
@@ -453,13 +453,12 @@ def delete_employee(item:dict):
         response = dict(key, value)
     Example:
     >>> item = {
-        'user_info': {
+        'manager_info': {
             'user_name' : 'user name',
             'password' : 'password'
         },
         'employee_info': {
             'user_name' : 'user name',
-            'password' : 'password'
             }
     }
     >>> delete_employee(item=item)

@@ -31,15 +31,16 @@ def run():
                 st.write("Chế độ phát triển đang bật: Tự động đăng nhập.")
 
             if st.session_state['logged_in']:
-                tabs = ["Trang chủ", "Thông tin cá nhân", "Lịch sử", "Tất cả giải pháp"]
                 if st.session_state['is_manager']:
-                    tabs.append("Quản lý")
-                tabs.append("Đăng xuất")
+                    tabs = ["Thông tin cá nhân", "Lịch sử", "Tất cả giải pháp", "Quản lý", "Đăng xuất"]
+                    tab2, tab3, tab4, tab5, tab6 = st.tabs(tabs)
+                else:
+                    tabs = ["Trang chủ", "Thông tin cá nhân", "Lịch sử", "Tất cả giải pháp", "Đăng xuất"]
+                    tab1, tab2, tab3, tab4, tab6 = st.tabs(tabs)
 
-                tab1, tab2, tab3, tab4, *optional_tabs, tab7 = st.tabs(tabs)
-
-                with tab1:
-                    main_app()
+                if not st.session_state['is_manager']:
+                    with tab1:
+                        main_app()
                 with tab2:
                     user_info()
                 with tab3:
@@ -47,11 +48,11 @@ def run():
                 with tab4:
                     solution_list()
 
-                if optional_tabs:
-                    with optional_tabs[0]:
+                if st.session_state['is_manager']:
+                    with tab5:
                         initialization()
 
-                with tab7:
+                with tab6:
                     if st.button("Confirm Logout"):
                         logout()
                         st.experimental_rerun()

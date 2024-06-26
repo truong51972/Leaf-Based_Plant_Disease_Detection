@@ -1,9 +1,9 @@
 import streamlit as st
 import time
 import os
-from packages.request_api import check_login, add_employee
+from packages.request_api import check_login, add_employee, delete_employee
 from packages.encode_decode import encrypt_password
-from packages.preprocess_text import is_valid
+from packages.preprocess_text import is_valid   
 
 DEV_MODE = os.getenv('DEV_MODE', 'False').lower() == 'true'
 
@@ -68,14 +68,14 @@ def register_ui():
         submit_button = st.form_submit_button("Đăng ký")
 
     if submit_button:
-        user_name = new_username.strip()
+        st.session_state.new_user_name = new_username.strip()
         error_message = ""
         
-        if not user_name:
+        if not st.session_state.new_user_name:
             error_message += "Tên đăng nhập không được để trống!\n"
         if not new_password.strip():
             error_message += "Mật khẩu không được để trống!\n"
-        elif not is_valid(user_name):
+        elif not is_valid(st.session_state.new_user_name):
             error_message += "Tên đăng kí không được chứa kí tự đặc biệt!\n"
 
         if error_message:
@@ -83,15 +83,15 @@ def register_ui():
             return
 
         if new_password == confirm_password:
-            encrypted_password = encrypt_password(new_password).decode()
+            st.session_state.new_encrypted_password = encrypt_password(new_password).decode()
             item = {
-                'user_info':{
+                'manager_info':{
                     'user_name': st.session_state.user_name,
-                    'password': encrypted_password
+                    'password': st.session_state.encrypted_password
                 },
-                "new_user_info" : {
-                    'user_name' : user_name,
-                    'password' : encrypted_password
+                "employee_info" : {
+                    'user_name' : st.session_state.new_user_name,
+                    'password' : st.session_state.new_encrypted_password
                 }
             }
             response = add_employee(item=item).json()
@@ -103,6 +103,36 @@ def register_ui():
                 st.error("Không tìm thấy server")
         else:
             st.error("Mật khẩu không khớp")
+
+def delete_employees():
+    st.subheader("Xóa nhân viên")
+    user_name = st.text_input("Tên nhân viên cần xóa", key='delete_username', help='Tên đăng nhập của nhân viên cần xóa')
+
+    if st.button("Xác nhận xóa nhân viên"):
+        if not user_name.strip():
+            st.error("Vui lòng nhập tên nhân viên cần xóa!")
+            return
+
+        item = {
+            'manager_info': {
+                'user_name': st.session_state.get('user_name'),
+                'password': st.session_state.get('encrypted_password')
+            },
+            'employee_info': {
+                'user_name': user_name.strip(),
+                'password': st.session_state.get('new_encrypted_password', '')
+            }
+        }
+
+        response = delete_employee(item=item).json()
+        if response['code'] == '000':
+            st.success("Xóa nhân viên thành công!")
+        elif response['code'] == '001':
+            st.error("Xóa nhân viên thất bại!")
+        elif response['code'] == '404':
+            st.error("Không tìm thấy server")
+        else:
+            st.error("Tên nhân viên không tồn tại")
 
 def logout():
     st.session_state['logged_in'] = False
