@@ -60,7 +60,7 @@ def check_login(item: dict):
     response = __request(api_name, item)
     return response
 
-def create_new_user(item: dict):
+def add_employee(item: dict):
     """
     Make a request to database server to create new user.
 
@@ -77,21 +77,21 @@ def create_new_user(item: dict):
 
     >>> item = 
         {
-            "user_info" : {
+            "manager_info" : {
                 'user_name' : 'user name',
                 'password' : 'password'
             },
-            "new_user_info" : {
+            "employee_info" : {
                 'user_name' : 'user name',
                 'password' : 'password'
             }
         }
         
-    >>> create_new_user(item = item)
+    >>> add_employee(item = item)
     {'message' : '...','code': 'XXX'}
     """
 
-    api_name = '/create_new_user'
+    api_name = '/add_employee'
     
     response = __request(api_name, item)
     return response
@@ -217,7 +217,7 @@ def change_password(item: dict):
     >>> change_password(item = item)
     {
         'message' : 'message!',
-        'code': 'error code!',
+        'code': 'error code!'   ,
     }
     """
     api_name = '/change_password'
@@ -270,7 +270,7 @@ def get_all_solutions(item: dict):
     Returns:
         response = dict(key: value)
     Example:
-    >>> get_all_solutions()
+    >>> get_atll_solutions()
     {
         'diseaseName' :         tuple(diseaseName), 
         'diseaseCause':         tuple(diseaseCause),
@@ -381,7 +381,125 @@ def get_gardens_info(item: dict):
     }
     """
     api_name = '/get_gardens_info'
-    
+    response = __request(api_name, item)
+    return response
+
+def get_employee_info(item:dict):
+    """
+    Make a request to database server to get employer infomation.
+
+    Args:
+        item: dict[str, str]
+
+    Returns:
+        response = dict(key, value)
+    Example:
+    >>> item = {
+        'user_info': {
+            'user_name' : 'user name',
+            'password' : 'password'
+        },
+    }
+    >>> get_employee_info(item=item)
+    {
+        'message' : 'message!',
+        'code': 'error code!',
+        'employee_info' :{
+            'ID: [int],
+            'Tên nhân viên': [str] 
+        }
+    }
+    """
+    api_name = '/get_employee_info'
+    response = __request(api_name, item)
+    return response
+
+def delete_garden(item:dict):
+    """
+    Make a request to database server to delete garden infomation.
+
+    Args:
+        item: dict[str, str]
+
+    Returns:
+        response = dict(key, value)
+    Example:
+    >>> item = {
+        'user_info': {
+            'user_name' : 'user name',
+            'password' : 'password'
+        },
+        'garden_name': str
+    }
+    >>> delete_garden(item=item)
+    {
+        'message' : 'message!',
+        'code': 'error code!',
+        }
+    }
+    """
+    api_name = '/delete_garden'
+    response = __request(api_name, item)
+    return response
+
+def delete_employee(item:dict):
+    """
+    Make a request to database server to delete employee infomation.
+
+    Args:
+        item: dict[str, str]
+
+    Returns:
+        response = dict(key, value)
+    Example:
+    >>> item = {
+        'manager_info': {
+            'user_name' : 'user name',
+            'password' : 'password'
+        },
+        'employee_info': {
+            'user_name' : 'user name',
+            }
+    }
+    >>> delete_employee(item=item)
+    {
+        'message' : 'message!',
+        'code': 'error code!',
+        }
+    }
+    """
+    api_name = '/delete_employee'
+    response = __request(api_name, item)
+    return response
+
+def task_employee(item = dict):
+    """
+    Make a request to database server to give task for employee.
+
+    Args:
+        item: dict[str, str]
+
+    Returns:
+        response = dict(key, value)
+    Example:
+    >>> item = {
+        'user_info': {
+            'user_name' : 'user name',
+            'password' : 'password'
+        },
+        'garden_name': str
+    }
+    >>> task_employee(item=item)
+    {
+        'message' : 'message!',
+        'code': 'error code!',
+        'table':{
+        "Tên nhân viên: [str]
+        "Hàng:[str]}
+        }
+    }
+    """
+    api_name = '/task_employee'
     response = __request(api_name, item)
     return response
 
