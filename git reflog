@@ -1,0 +1,186 @@
+[33mcommit 846d0ed43254ad116eee989c1e226bab5ba7448b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mpackages[m[33m, [m[1;31morigin/packages[m[33m)[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Sat Jun 22 16:27:54 2024 +0700
+
+    add get_gardens_info and add_garden funcs
+
+[33mcommit a87540feec49e5c068f2884cf2d2eac677d44c0b[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Sat Jun 22 12:59:04 2024 +0700
+
+    small update
+
+[33mcommit 4f0e0b579c32b97ca6f4808cd25c2978b0c9a5da[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Fri Jun 21 17:59:33 2024 +0700
+
+    add get_all_solutions func, and modify docstring of get_statistics
+
+[33mcommit 89fdf5ec653648d95b350ecbec7d97b3c06fbefe[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Tue Jun 18 20:24:35 2024 +0700
+
+    delete folder
+
+[33mcommit 6b87ff7f374c0c120631e59b8c11720fc68d19bd[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Tue Jun 18 20:13:22 2024 +0700
+
+    modify docstring of create new user"
+
+[33mcommit d8b3578623ad1f5a36d5de4259687c707ae3cfaf[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Mon Jun 17 22:03:24 2024 +0700
+
+    add modified get statistic
+
+[33mcommit 51eba77268f2cdfc3d92e527255fdb0e59f061b5[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Fri Jun 14 15:07:04 2024 +0700
+
+    add statistics
+
+[33mcommit 88e2186500f3b5def86975780dcf1d0feb84ced1[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Wed May 29 12:51:25 2024 +0700
+
+    add change_password func
+
+[33mcommit 65a5db119840bbcdb52c808ec39adc8ae745fb47[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Sun May 19 14:06:08 2024 +0700
+
+    add get_history api
+
+[33mcommit c14c52aa787ecb89deb3b2aca2e4781f3f1bc169[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Sat May 18 12:42:06 2024 +0700
+
+    small fix
+
+[33mcommit 8f289c8aef0158fc5eb010ca46cc1ceb570ff344[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Sat May 18 10:34:16 2024 +0700
+
+    modify encode-decode
+
+[33mcommit 2cbb390a1b0bc5c0aa34652a31d593fffa87bd53[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Fri May 17 15:13:59 2024 +0700
+
+    write docstring for analyze api
+
+[33mcommit d627602117d1901b26a2a85c8ee7073bd8f1577b[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Fri May 17 15:04:08 2024 +0700
+
+    modify encode, decode image
+
+[33mcommit 3d631d276fdb8ab88ab8bbc149d454d4fdac23b7[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Tue May 14 22:14:57 2024 +0700
+
+    convert dict > class
+
+[33mcommit 7ddf8291d72555f4bb7f488b117cec7300ccfa7c[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Tue May 14 20:45:17 2024 +0700
+
+    create new package function
+
+[33mcommit 3452e831add2c990566234156232501177877b43[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Tue May 14 18:43:18 2024 +0700
+
+    rename predict > analyze
+
+[33mcommit baa2bb2f3063532e6c3fe23a6e9388172086624a[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Tue May 14 17:53:53 2024 +0700
+
+    small fix in predict api
+
+[33mcommit ebdebcb90b7e33652398cf23259d4c97a85c785a[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Tue May 14 17:47:39 2024 +0700
+
+    fix display info when request
+
+[33mcommit 21fe0b790b2a7618ba930c88185c0294f1323c80[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Tue May 14 17:29:09 2024 +0700
+
+    remove ddns file, add inside request_api.py.
+    Refactor request_api.py and add "predict" api
+
+[33mcommit 3621922a187222d955ca0be5e46e921832cb82b1[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Sat May 11 21:20:23 2024 +0700
+
+    rename file
+
+[33mcommit 0dd61b4f73447c72010905b9ec97cb4cc42d0838[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Sat May 11 20:52:27 2024 +0700
+
+    create preprocess_text.py
+
+[33mcommit d748f0bc36a3cb6d23ac6c219ac204c873004b14[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Sat May 11 12:37:11 2024 +0700
+
+    create func: create_new_user
+
+[33mcommit dd884e054a34ab124d15d8b919363a4b965eab0d[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Sat May 11 11:36:26 2024 +0700
+
+    small fix
+
+[33mcommit 712c4a4236f0efec255a0f4e4ec9046a5803b5a4[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Sat May 11 11:03:53 2024 +0700
+
+    remove somethings and add packages
+
+[33mcommit cc4407c37494d514350b3f3dd61c282d9cad0e5a[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Sat May 11 11:02:23 2024 +0700
+
+    remove package
+
+[33mcommit 9c6d7085257dda1640d61fe0c883c782fccf32d7[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Fri May 10 23:31:24 2024 +0700
+
+    create server, modify packages/request_api.py
+
+[33mcommit b58058ef87c8c9e1e841f125156e6a9bda34f4d5[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Fri May 10 18:21:47 2024 +0700
+
+    remove somethings
+
+[33mcommit d6fb0a79783a978d7da9fa94e6c05677856153ff[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Fri May 10 13:35:30 2024 +0700
+
+    create some packages for FE
+
+[33mcommit 7aa2e132a8bc71e665b943aa8c8f89c1b2eebf75[m[33m ([m[1;32mmain[m[33m)[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Thu May 9 11:22:14 2024 +0700
+
+    img to text, text to img
+
+[33mcommit dbb805d3d628e35cbf7f74dc1deda358f8a6896d[m
+Author: NguyenThien <ngonguyenthien25082003@gmail.com>
+Date:   Thu May 9 10:38:29 2024 +0700
+
+    first commit
+
+[33mcommit 1b50b5d463da0953bedec44cb7a61729318315f4[m
+Author: truong51972 <tranquoctruong20@gmail.com>
+Date:   Thu May 9 10:25:55 2024 +0700
+
+    first commit
