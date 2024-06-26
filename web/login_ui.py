@@ -1,7 +1,7 @@
 import streamlit as st
 import time
 import os
-from packages.request_api import check_login, add_employee, delete_employee
+from packages.request_api import check_login, add_employee, delete_employee, _request
 from packages.encode_decode import encrypt_password
 from packages.preprocess_text import is_valid   
 
@@ -9,7 +9,7 @@ DEV_MODE = os.getenv('DEV_MODE', 'False').lower() == 'true'
 
 state = {"logged_in": False}
 
-def login_ui():
+def login_ui(request = _request):
     st.title("Đăng nhập")
     with st.form("Login Form"):
         st.session_state.user_name = st.text_input("Tên đăng nhập", key='username', help='Tên đăng nhập không được chứa khoảng trắng hoặc kí tự đặc biệt!')
