@@ -1,5 +1,6 @@
 import sqlite3
 import asyncio
+import pandas as pd
 from datetime import datetime
 from .__change_password import reset_password
 from .__check_user import check_user
@@ -13,13 +14,13 @@ from .__extract_solution import get_solution
 from .__get_statistic import get_statistic
 from .__check_manager import is_manager
 from .__extract_result_without_id import extract_result_without_id
-from .__assign_location import assign_location
 from .__get_employee_list import get_employee
 from .__load_employee_pic_count import load_employee_pic_count
 from .__add_garden import add_garden_to_db
 from .__get_garden_info import garden_info
 from .__del_garden import del_garden
 from .__del_employee import del_employee
+from .__table import create_table, insert_assignment_table
 
 ### TASK CODE: unfinished, wait, pending
 
@@ -267,22 +268,24 @@ class Query:
                     'code' : '004'}
 
     # unfinished
-    async def assign_employee_location(self, managerData, employeeData, location):
+    async def assign_employee_location(self, item):
         '''
             This function is used to assign employee to work location(s)
 
             :input:
-            managerData, employeeData: User()
-            location = {
-                    'garden_name': str = ...,
-                    'lineID': int = ...
-                }
-                        
-            NOTE:
-            class User():
-                def __init__(self):
-                    self.user_name = ...
-                    self.password = ...
+            item = {
+            'user_info': {
+                'user_name' : 'user name',
+                'password' : 'password'
+                        },
+            'table': {
+                "Tên Nhân Viên": ['employeeName1, employeeName2', ...],
+                "Hàng 1": [bool, bool, ...],
+                "Hàng 2": [bool, bool, ...],
+                ...
+                },
+            'garden_name' : str
+        }
 
             :return:
             {'message': ...,
@@ -293,17 +296,15 @@ class Query:
                 '003': userName doesn't exist in the database (UserNotFound)
                 '101': Employee has already been assigned in the selected location (EmployeeLocationExisted)
         '''
-        managerName = managerData.user_name
-        managerPassword = managerData.password
-        employeeName = employeeData.user_name
-        employeePassword = employeeData.password
+        managerName = item.user_info.user_name
+        managerPassword = item.user_info.password
+        gardenName = item.garden_name
 
-        gardenName = location.garden_name
-        lineID = location.lineID
+        table = pd.DataFrame(item.table)
 
         if is_manager(managerName, self.con):
             try:
-                assign_location(employeeName, gardenName, lineID, self.con)
+                insert_assignment_table(gardenName, table)
                 return {'message':'Success!',
                         'code':'000'}
             except:
@@ -313,8 +314,45 @@ class Query:
             return {'message':'User has no authority!',
                     'code' : '004'}
     # unfinished    
-    async def get_location_assignment_table(self, managerData, gardenName):
-        ...
+    async def get_location_assignment_table(self, item):
+        '''
+        :input:
+        item = {
+            'user_info': {
+                'user_name' : 'user name',
+                'password' : 'password'
+                        },
+            'garden_name' : str
+        }
+        :output:
+        dict = {
+            'message': str,
+            'code': str,
+            'table': {
+                "Tên Nhân Viên": ['employeeName1, employeeName2', ...],
+                "Hàng 1": [bool, bool, ...],
+                "Hàng 2": [bool, bool, ...],
+                ...
+                }
+        }
+        '''
+        managerName = item.user_info.user_name
+        managerPassword = item.user_info.password
+        gardenName = item.garden_name
+
+        if is_manager(managerName, self.con):
+            try:
+                table = create_table(gardenName, managerName, self.con)
+                return {'message':'Success!',
+                        'code' : '000',
+                        'table': table}
+            except:
+                return {'message':'Unknown error in del_garden()!',
+                        'code' : '???'}
+        else:
+            return {'message':'User has no authority!',
+                    'code' : '004'}
+
     async def get_garden_info(self, item):
         '''
         This function is used for getting garden info, including num_of_line, gardenName, plantName
@@ -530,7 +568,6 @@ class Query:
         return get_solution(self.con)
     
     ### DELETE SECTION ###
-    # All wait
     async def delete_garden(self, item):
         '''
         :input:
@@ -562,8 +599,6 @@ class Query:
         else:
             return {'message':'User has no authority!',
                     'code' : '004'}
-
-
 
     async def delete_user(self, item):
         '''
