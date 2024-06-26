@@ -123,14 +123,14 @@ def show_employees():
 def assign_task():
     st.subheader("Phân công")
     garden_name = st.text_input("Nhập tên vườn")
-    item = {
+    if st.button("Tạo bảng phân công"):
+        item = {
         'user_info': {
             'user_name' : st.session_state.get('user_name'),
             'password' : st.session_state.get('encrypted_password')
         },
         'garden_name': garden_name
     }
-    if st.button("Tạo bảng phân công"):
         if not garden_name:
             st.error("Vui lòng nhập tên vườn")
             return
