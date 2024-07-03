@@ -86,13 +86,18 @@ class Delete_garden(BaseModel):
 class Get_gardens_info(BaseModel):
     user_info: User_Info
 
+class Get_employee_job(BaseModel):
+    user_info: User_Info
+    garden_name: str
 
+class Assign_employee_job(BaseModel):
+    user_info: User_Info
+    table : dict
+    garden_name: str
 
 @app.post("/check_login")
 async def check_login(item: User_Info):
-    # print(dict(item))
     response = await database.user_login(item)
-    # print(response)
     return response
 
 @app.post("/get_history")
@@ -168,4 +173,14 @@ async def get_gardens_info(item: Get_gardens_info):
 @app.post("/get_employee_info")
 async def get_employee_info(item: User_Info):
     response = await database.get_employee_list(item)
+    return response
+
+@app.post("/get_location_assignment_table")
+async def get_location_assignment_table(item: Get_employee_job):
+    response = await database.get_location_assignment_table(item)
+    return response
+
+@app.post("/assign_employee_location")
+async def assign_employee_location(item: Assign_employee_job):
+    response = await database.assign_employee_location(item)
     return response
