@@ -1,7 +1,8 @@
 import streamlit as st
-from web.login_ui import register_ui, delete_employees
-from packages.request_api import get_gardens_info, add_garden, get_employee_info, delete_garden,assign_task_employee
 from packages.__request import _request
+from web.login_ui import register_ui, delete_employees
+from packages.request_api import get_gardens_info, add_garden, get_employee_info, delete_garden
+from web.assign import assign_employees_task
 import pandas as pd
 
 
@@ -24,7 +25,7 @@ def initialization():
             delete_employees()
     
     with tab3:
-        assign_task()
+        assign_employees_task()
             
         
 def add_gardens():
@@ -121,22 +122,8 @@ def show_employees():
         df_employees = pd.DataFrame(employee_info)
         st.dataframe(df_employees,hide_index=True)
 
-def assign_task():
-    st.subheader("Phân công")
-    garden_name = st.text_input("Nhập tên vườn")
-    item = {
-        'user_info': {
-            'user_name' : st.session_state.get('user_name'),
-            'password' : st.session_state.get('encrypted_password')
-        },
-        ' ': {
-        },
-        'garden_name': garden_name        
-    }
-    if st.button("Bảng phân công", use_container_width=True):
-        response = assign_task_employee(item=item, request=_request)
-        df_task = pd.DataFrame(response['table'])
-        df
+
+
             
 
 
