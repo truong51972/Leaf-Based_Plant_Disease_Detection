@@ -267,7 +267,7 @@ class Query:
             return {'message':'User has no authority!',
                     'code' : '004'}
 
-    # unfinished
+    # wait
     async def assign_employee_location(self, item):
         '''
             This function is used to assign employee to work location(s)
@@ -304,7 +304,7 @@ class Query:
 
         if is_manager(managerName, self.con):
             try:
-                insert_assignment_table(gardenName, table)
+                insert_assignment_table(gardenName, table, self.con)
                 return {'message':'Success!',
                         'code':'000'}
             except:
@@ -313,7 +313,7 @@ class Query:
         else:
             return {'message':'User has no authority!',
                     'code' : '004'}
-    # unfinished    
+    # wait    
     async def get_location_assignment_table(self, item):
         '''
         :input:
@@ -534,10 +534,6 @@ class Query:
                     'gardenName': list,
                     'lineID': list,
                     'pic_count': list
-                    },
-                'garden_info':{
-                    'garden_name': list[str],
-                    'line_count_each_garden': list[int]
                     }
             }
         '''
@@ -545,8 +541,19 @@ class Query:
         managerPassword = managerData.password
 
         if is_manager(managerName, self.con):
-
-            userName, gardenName, lineID, picCount = load_employee_pic_count(managerName, self.con)
+            try:
+                userName, gardenName, lineID, picCount = load_employee_pic_count(managerName, self.con)
+                return {
+                'tasks_info':{
+                    'userName': userName,
+                    'gardenName': gardenName,
+                    'lineID': lineID,
+                    'pic_count': picCount
+                    }
+            }
+            except:
+                return {'message':'Unknown error in del_garden()!',
+                        'code' : '???'}
         else:
             return {'message':'User has no authority!',
                     'code' : '004'}
