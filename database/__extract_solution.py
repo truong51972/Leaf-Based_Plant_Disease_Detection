@@ -34,11 +34,11 @@ def get_solution(con):
                  )
     
     return {
-        'diseaseName' :         diseaseName, 
-        'diseaseCause':         diseaseCause,
-        'diseaseSymptom':       diseaseSymptom, 
-        'solutionPrevention':   solutionPrevention,
-        'solutionGardening':    solutionGardening,
-        'solutionFertilization':solutionFertilization,
-        'solutionSource':       solutionSource
+        'Tên Bệnh' :         diseaseName, 
+        'Nguyên Nhân':         diseaseCause,
+        'Triệu Chứng':       diseaseSymptom, 
+        'Phòng Ngừa':   solutionPrevention,
+        'Làm Vườn':    solutionGardening,
+        'Phân Bón':solutionFertilization,
+        'Nguồn':       solutionSource
     }

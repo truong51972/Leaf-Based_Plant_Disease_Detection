@@ -5,15 +5,16 @@ import pandas as pd
 def __del_location(gardenName:str, 
                    con):
     cur = con.cursor()
-
+    print('start')
     cur.execute(f'''
                 delete from USER_LOCATION
                 where USER_LOCATION.locationID in (
                     select LOCATION.locationID
                     from LOCATION join GARDEN on LOCATION.gardenID = GARDEN.gardenID
-                    where GARDEN.gardenName = {gardenName}
+                    where GARDEN.gardenName = '{gardenName}'
                 )
                 ''')
+    print('end')
     
     con.commit()
 
@@ -107,22 +108,28 @@ def insert_assignment_table(gardenName:str,
                 final.append((employeeID, final_lineID))
         return final
     
+    print('start')
     cur = con.cursor()
-    
     cur.execute(f'''
                 SELECT gardenID 
                 FROM GARDEN
                 WHERE gardenName = '{gardenName}'
                 ''')
     gardenID = cur.fetchall()[0][0]
+    print(gardenID)
 
     result = list(map(combine_names, filter(lambda x: x[1], table.stack().items())))
+    print(result)
     
     final = convert_result(result, gardenID)
+    print(final)
 
-    __del_location(con)
+    print('deleting location')
+    __del_location(gardenName, con)
+    print('delete complete')
 
     for i in final:
+        print('looping insert location')
         cur.execute(f'''
                     INSERT INTO USER_LOCATION 
                     VALUES ({i[0]}, {i[1]})      
