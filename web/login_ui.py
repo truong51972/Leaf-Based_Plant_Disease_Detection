@@ -1,15 +1,16 @@
 import streamlit as st
 import time
 import os
-from packages.request_api import check_login, add_employee, delete_employee, _request
+from packages.request_api import check_login, add_employee, delete_employee
+from packages.__request import _request
 from packages.encode_decode import encrypt_password
-from packages.preprocess_text import is_valid   
+from packages.preprocess_text import is_valid
 
 DEV_MODE = os.getenv('DEV_MODE', 'False').lower() == 'true'
 
 state = {"logged_in": False}
 
-def login_ui(request = _request):
+def login_ui():
     st.title("Đăng nhập")
     with st.form("Login Form"):
         st.session_state.user_name = st.text_input("Tên đăng nhập", key='username', help='Tên đăng nhập không được chứa khoảng trắng hoặc kí tự đặc biệt!')
@@ -43,7 +44,7 @@ def login_ui(request = _request):
                     'password': st.session_state.encrypted_password
                 }
 
-                response = check_login(user_info).json()
+                response = check_login(user_info,request=_request).json()
                 if response['code'] == '000':
                     st.success("Đăng nhập thành công!")
                     time.sleep(1.3)
@@ -94,7 +95,7 @@ def register_ui():
                     'password' : st.session_state.new_encrypted_password
                 }
             }
-            response = add_employee(item=item).json()
+            response = add_employee(item=item, request=_request).json()
             if response['code'] == '000':
                 st.success("Đăng ký thành công! Vui lòng đăng nhập.")
             elif response['code'] == '001':
@@ -124,7 +125,7 @@ def delete_employees():
             }
         }
 
-        response = delete_employee(item=item).json()
+        response = delete_employee(item=item,request=_request).json()
         if response['code'] == '000':
             st.success("Xóa nhân viên thành công!")
         elif response['code'] == '001':

@@ -1,4 +1,4 @@
-def task_employee(item: dict, request: object):
+def assign_task_employee(item: dict, request: object):
     """
     Make a request to database server to give task for employee.
 
@@ -15,7 +15,7 @@ def task_employee(item: dict, request: object):
         },
         'garden_name': str
     }
-    >>> task_employee(item=item)
+    >>> assign_task_employee(item=item)
     {
         'message' : 'message!',
         'code': 'error code!',
@@ -25,6 +25,6 @@ def task_employee(item: dict, request: object):
         }
     }
     """
-    api_name = '/task_employee'
+    api_name = '/assign_task_employee'
     response = request(api_name, item)
     return response

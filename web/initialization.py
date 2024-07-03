@@ -1,6 +1,7 @@
 import streamlit as st
 from web.login_ui import register_ui, delete_employees
-from packages.request_api import get_gardens_info, add_garden, get_employee_info, delete_garden,task_employee
+from packages.request_api import get_gardens_info, add_garden, get_employee_info, delete_garden,assign_task_employee
+from packages.__request import _request
 import pandas as pd
 
 
@@ -56,7 +57,7 @@ def add_gardens():
             }
         }
         
-        response = add_garden(item=item).json()
+        response = add_garden(item=item, request= _request).json()
         
         if response['code'] == '000':
             st.success("Thêm vườn thành công!")
@@ -76,7 +77,7 @@ def show_gardens():
         }
     }
     if st.button("Lấy thông tin vườn", use_container_width=True):
-        response = get_gardens_info(item=item).json()
+        response = get_gardens_info(item=item, request= _request).json()
         garden_info = response['garden_info']
         df_gardens = pd.DataFrame(garden_info)
         st.dataframe(df_gardens,hide_index=True)
@@ -98,7 +99,7 @@ def delete_gardens():
             },
             'garden_name': gardenName
         }
-        response = delete_garden(item=item).json()
+        response = delete_garden(item=item, request= _request).json()
         if response['code'] == '000':
             st.success("Xóa vườn thành công!")
         elif response['code'] == '001':
@@ -115,7 +116,7 @@ def show_employees():
         'password': st.session_state.get('encrypted_password')
     }
     if st.button("Xem bảng thông tin nhân viên", use_container_width= True):
-        response = get_employee_info(item=item).json()
+        response = get_employee_info(item=item,request=_request).json()
         employee_info = response['employee_info']
         df_employees = pd.DataFrame(employee_info)
         st.dataframe(df_employees,hide_index=True)
@@ -123,33 +124,20 @@ def show_employees():
 def assign_task():
     st.subheader("Phân công")
     garden_name = st.text_input("Nhập tên vườn")
-    if st.button("Tạo bảng phân công"):
-        item = {
+    item = {
         'user_info': {
             'user_name' : st.session_state.get('user_name'),
             'password' : st.session_state.get('encrypted_password')
         },
-        'garden_name': garden_name
+        ' ': {
+        },
+        'garden_name': garden_name        
     }
-        if not garden_name:
-            st.error("Vui lòng nhập tên vườn")
-            return
-        response = task_employee(item=item).json()
-        print(response)
+    if st.button("Bảng phân công", use_container_width=True):
+        response = assign_task_employee(item=item, request=_request)
         df_task = pd.DataFrame(response['table'])
-    
-        st.data_editor(
-            df_task,
-            column_config={
-                "favorite": st.column_config.CheckboxColumn(
-            "Your favorite?",
-            help="Select your **favorite** widgets",
-            default=False,
-                )
-            },
-            hide_index=True,
-        )   
-        
+        df
+            
 
 
 

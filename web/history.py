@@ -1,5 +1,6 @@
 import streamlit as st
 from packages.request_api import get_history
+from packages.__request import _request
 import pandas as pd
 
 def __url_gen(x):
@@ -12,7 +13,7 @@ def display_history():
         }
     
     if st.button("Xem thông tin"):
-        response =  get_history(item=item).json()
+        response =  get_history(item=item,request=_request).json()
         
         df_history = pd.DataFrame(response['history'])
 

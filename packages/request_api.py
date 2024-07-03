@@ -1,4 +1,4 @@
-from packages.__request import _request
+from .__request import _request
 
 from .__garden_func.__add_delete import add_garden, delete_garden
 
@@ -12,10 +12,9 @@ from .__query_info.__get_statistics import get_statistics
 from .__user_func.__add_delete import add_employee, delete_employee
 from .__user_func.__change_password import change_password
 from .__user_func.__check_login import check_login
-from .__user_func.__task_employee import task_employee
+from .__user_func.__task_employee import assign_task_employee
 
 from .__analyze import analyze
-
 """
     Contain all request functions for Website.
 """

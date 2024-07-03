@@ -3,6 +3,7 @@ from PIL import Image, ExifTags
 from datetime import datetime
 from packages.encode_decode import encode_image, decode_image
 from packages.request_api import analyze, get_gardens_info
+from packages.__request import _request
 import pytz
 
 guard = """
@@ -135,7 +136,7 @@ def app():
                 
                 with st.spinner("Đang phân tích hình ảnh..."):
                     try:
-                        results = analyze(item=item).json()
+                        results = analyze(item=item, request=_request).json()
                         display_results(results)
                     except KeyError as e:
                         st.error(f"Đã xảy ra lỗi khi phân tích hình ảnh: {e}")

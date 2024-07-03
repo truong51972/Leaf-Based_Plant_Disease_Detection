@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from packages.request_api import get_all_solutions
+from packages.__request import _request
 
 def solution_list():
     st.title("Các giải pháp cho các bệnh cây trồng")
@@ -14,7 +15,7 @@ def solution_list():
 
     if st.button("Xem tất cả giải pháp"):
         try:
-            response = get_all_solutions(item=item).json()
+            response = get_all_solutions(item=item,request=_request).json()
 
             if not response:
                 st.warning("Không có dữ liệu giải pháp.")

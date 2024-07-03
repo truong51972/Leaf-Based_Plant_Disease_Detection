@@ -3,6 +3,7 @@ from packages.request_api import change_password
 from packages.encode_decode import encrypt_password
 from datetime import datetime, timedelta
 from packages.request_api import get_statistics
+from packages.__request import _request
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -44,7 +45,7 @@ def change_password_ui():
                     'new_password': encrypted_new_password
                 }
 
-                response = change_password(item=item).json()
+                response = change_password(item=item, request= _request).json()
 
                 if response:
                     if response['code'] == '000':
@@ -56,7 +57,7 @@ def change_password_ui():
 
 def get_statistics_data(item):
     try:
-        response = get_statistics(item=item).json()
+        response = get_statistics(item=item, request=_request).json()
         df_statistics = pd.DataFrame(response)
         return df_statistics
     except Exception as e:
