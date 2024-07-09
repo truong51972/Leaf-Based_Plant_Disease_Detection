@@ -178,11 +178,9 @@ async def get_employee_info(item: User_Info):
 @app.post("/get_location_assignment_table")
 async def get_location_assignment_table(item: Get_employee_job):
     response = await database.get_location_assignment_table(item)
-    print(response)
     return response
 
 @app.post("/assign_employee_location")
 async def assign_employee_location(item: Assign_employee_job):
-    print(item)
     response = await database.assign_employee_location(item)
     return response
