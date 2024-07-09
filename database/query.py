@@ -17,7 +17,7 @@ from .__extract_result_without_id import extract_result_without_id
 from .__get_employee_list import get_employee
 from .__load_employee_pic_count import load_employee_pic_count
 from .__add_garden import add_garden_to_db
-from .__get_garden_info import garden_info
+from .__get_garden_info import garden_info, garden_info_employee
 from .__del_garden import del_garden
 from .__del_employee import del_employee
 from .__table import create_table, insert_assignment_table
@@ -373,12 +373,14 @@ class Query:
                     'Số luống' : list[int]
                 }
              }
-        '''
-        managerName = item.user_info.user_name
-        managerPassword = item.user_info.password
+            or
 
-        if is_manager(managerName, self.con):
-            gardenName, plantName, line_count = garden_info(managerName, self.con)
+        '''
+        userName = item.user_info.user_name
+        userPassword = item.user_info.password
+
+        if is_manager(userName, self.con):
+            gardenName, plantName, line_count = garden_info(userName, self.con)
             return {'message':'Success!',
                     'code' : '000',
                     'garden_info':{
@@ -387,8 +389,10 @@ class Query:
                         'Số luống' : line_count
                     }}
         else:
-            return {'message':'User has no authority!',
-                    'code' : '004'}
+            gardenInfo = garden_info_employee(userName, self.con)
+            return {'message':'Success!',
+                    'code' : '000',
+                    'garden_info': gardenInfo}
     # pending
     async def get_history(self, userData):
         '''
