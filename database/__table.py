@@ -5,7 +5,6 @@ import pandas as pd
 def __del_location(gardenName:str, 
                    con):
     cur = con.cursor()
-    print('start')
     cur.execute(f'''
                 delete from USER_LOCATION
                 where USER_LOCATION.locationID in (
@@ -14,7 +13,6 @@ def __del_location(gardenName:str,
                     where GARDEN.gardenName = '{gardenName}'
                 )
                 ''')
-    print('end')
     
     con.commit()
 
@@ -60,23 +58,40 @@ def create_table(gardenName:str,
     lineID_list = list(map(lambda x: 'Hàng ' + str(x[0]), cur.fetchall()))
 
     cur.execute(f'''
-                SELECT e.userName AS employeeName
+                SELECT e.userName AS employeeName, e.userID as employeeID
                 FROM USER e
                 inner JOIN USER m ON e.managerID = m.userID
                 where m.userID = {managerID}
                 ''')
     
     employeeName_list = list(map(lambda x: x[0], cur.fetchall()))
-
-    bool_list = [False]*len(employeeName_list)
+    employeeID_list = list(map(lambda x: x[1], cur.fetchall()))
 
     table = {
         'Tên Nhân Viên': employeeName_list
     }
 
+    cur.execute(f'''
+                SELECT userName, lineID
+                FROM USER_LOCATION
+                JOIN LOCATION on USER_LOCATION.locationID = LOCATION.locationID
+                JOIN USER on USER_LOCATION.userID = USER.userID
+                WHERE gardenID = {gardenID}
+                ''')
+    
+    assigned_line = cur.fetchall() # test_emp1	3   test_emp2	1   test_emp2	4    emp	2
+
     for i in lineID_list:
+        # i = 'hang 1', ...
+        bool_list = [False]*len(employeeName_list)
         table.update({i : deepcopy(bool_list)})
 
+    for i in assigned_line:
+        userName, lineID = i[0], i[1]
+        lineName = 'Hàng ' + str(lineID)
+        index = employeeName_list.index(userName)
+        table[lineName][index] = True
+    
     return table
 
 def insert_assignment_table(gardenName:str,
@@ -107,8 +122,7 @@ def insert_assignment_table(gardenName:str,
                 final_lineID = cur.fetchall()[0][0]
                 final.append((employeeID, final_lineID))
         return final
-    
-    print('start')
+
     cur = con.cursor()
     cur.execute(f'''
                 SELECT gardenID 
@@ -116,20 +130,14 @@ def insert_assignment_table(gardenName:str,
                 WHERE gardenName = '{gardenName}'
                 ''')
     gardenID = cur.fetchall()[0][0]
-    print(gardenID)
 
     result = list(map(combine_names, filter(lambda x: x[1], table.stack().items())))
-    print(result)
     
     final = convert_result(result, gardenID)
-    print(final)
 
-    print('deleting location')
     __del_location(gardenName, con)
-    print('delete complete')
 
     for i in final:
-        print('looping insert location')
         cur.execute(f'''
                     INSERT INTO USER_LOCATION 
                     VALUES ({i[0]}, {i[1]})      
