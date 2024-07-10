@@ -14,7 +14,7 @@ def extract_result_without_id(class_name:str,
                     solutionGardening,
                     solutionFertilization,
                     solutionSource 
-                from DISEASE where class_name = {class_name}
+                from DISEASE where class_name = '{class_name}'
                 ''')
     
     data_list = cur.fetchall()[0]
