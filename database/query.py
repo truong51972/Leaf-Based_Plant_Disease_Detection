@@ -126,9 +126,11 @@ class Query:
         'image_info' : {
             'image' : 'decoded image',
             'date' : 'YYYY-MM-DD HH:MI:SS',
+            'predicted_image': str,
             'class_name': str,
             'score': float,
-            'predicted_image': str,
+            'threshold': float,
+            'plant_name': str,
             'garden_name': str,
             'line_num': int
         }
@@ -164,6 +166,8 @@ class Query:
         class_name = item.image_info.class_name
         gardenName = item.image_info.garden_name
         lineID = item.image_info.line_num
+        threshold = item.image_info.threshold
+        plantName = item.image_info.plant_name
 
         if is_save is True:
             picID = add_picture_to_database(userName, class_name, picDate, pic, pred_pic, score, gardenName, lineID, self.con)

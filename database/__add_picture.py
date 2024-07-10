@@ -11,7 +11,15 @@ CONVERT_DICT = {'Tomato_mosaic_virus':1,
 'Septoria_leaf_spot':7,
 'healthy':8,
 'Leaf_Mold':9,
-'Spider_mites_Two-spotted_spider_mite':10}
+'Spider_mites_Two-spotted_spider_mite':10,
+"Early_Blight":12,
+"Fungi":14,
+"Healthy":13,
+"Late_Blight":11,
+"Pest":15,
+"Potato_Cyst_Nematode":16,
+"Potato_Virus":17
+}
 
 def add_picture_to_database(userName:str,  
                             class_name:str, 
@@ -31,7 +39,7 @@ def add_picture_to_database(userName:str,
         pic: str (encrypted content of the pic),
         pred_pic: str (encrypted content of the pic),
         score: float,
-        gardenNum:int,
+        gardenName:str,
         lineNum:int,
         con: sqlite3.connect(<database directory>)
 

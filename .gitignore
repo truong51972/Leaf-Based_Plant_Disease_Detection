@@ -3,3 +3,5 @@ database/test.py
 database/__picID_len.py
 database/test.db
 test.py
+database/test2.db
+database/data.ipynb
