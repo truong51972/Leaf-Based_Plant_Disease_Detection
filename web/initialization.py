@@ -62,7 +62,7 @@ def add_gardens():
         
         if response['code'] == '000':
             st.success("Thêm vườn thành công!")
-        elif response['code'] == '001':
+        elif response['code'] == '102':
             st.error("Thêm vườn thất bại - tên vườn đã tồn tại!")
         elif response['code'] == '404':
             st.error("Không tìm thấy server")

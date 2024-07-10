@@ -17,7 +17,7 @@ guard = """
         7. **Tránh che khuất hoặc làm mờ lá**: Đảm bảo không che khuất những điểm bị bệnh.
         """
 
-def correct_orientation_and_resize(image, max_size=(224, 224)):
+def correct_orientation_and_resize(image):
     for orientation in ExifTags.TAGS.keys():
         if ExifTags.TAGS[orientation] == 'Orientation':
             break
@@ -30,7 +30,7 @@ def correct_orientation_and_resize(image, max_size=(224, 224)):
         elif exif[orientation] == 8:
             image = image.rotate(90, expand=True)
     
-    image = image.resize(max_size, Image.Resampling.LANCZOS)
+    image = image.resize((224, 224), Image.BILINEAR)
     return image
 
 def display_results(results):
@@ -88,28 +88,25 @@ def fetch_gardens():
             'password': st.session_state.get('encrypted_password')
         }
     }
-    response = get_gardens_info(item=item).json()
-    gardens = response['garden_info']
-    return gardens
+    response = get_gardens_info(item=item, request=_request).json()
+    garden_info = response.get('garden_info', {})
+    return garden_info
 
 def app():
     st.title("Khám bệnh lá online!")
     gardens = fetch_gardens()
     
-    if not gardens or not gardens.get("Tên vườn"):
-        st.warning("Không có thông tin về vườn. Vui lòng thêm vườn trong phần quản lý.")
-        return
     try:
-        garden_names = gardens["Tên vườn"]
+        garden_names = list(gardens.keys())
         selected_garden = st.selectbox("Chọn vườn", garden_names)
         
-        garden_index = garden_names.index(selected_garden)
-        num_of_lines = gardens["Số luống"][garden_index]
+        garden_details = gardens[selected_garden]
+        num_of_lines = len(garden_details['Luống'])
         
-        lines = [i + 1 for i in range(num_of_lines)]
+        lines = list(range(1, num_of_lines + 1))
         selected_line = st.selectbox("Chọn luống", lines)
         
-        uploaded_image = st.file_uploader("**Chọn ảnh**", type=["jpg", "jpeg", "png"], help= guard)
+        uploaded_image = st.file_uploader("**Chọn ảnh**", type=["jpg", "jpeg", "png"], help=guard)
         
         if uploaded_image is not None:
             image = Image.open(uploaded_image)
@@ -130,7 +127,7 @@ def app():
                         'image': encoded_image,
                         'date': current_datetime,
                         'garden_name': selected_garden,
-                        'line_num':selected_line
+                        'line_num': selected_line
                     }
                 }
                 
