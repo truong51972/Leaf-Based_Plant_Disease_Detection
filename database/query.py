@@ -458,34 +458,44 @@ class Query:
             'user_name' : 'user name',
             'password' : 'password'
         },
-        'date': 'YYYY-MM-DD',
-        'gardenName': int,
-        'lineID': int
+        'start_date': 'YYYY-MM-DD',
+        'end_date': 'YYYY-MM-DD',
+        'garden_name': str
     }
         :output:
-        statistic = {'Virus khảm cà chua ToMV': int = ..., 
-                 'Bệnh bạc lá sớm': int = ..., 
-                 'Virus TYLCV (Tomato yellow leaf curl virus)': int = ..., 
-                 'Bệnh tàn rụi muộn': int = ..., 
-                 'Đốm vi khuẩn': int = ..., 
-                 'Nấm Corynespora': int = ..., 
-                 'Nấm Septoria lycopersici': int = ..., 
-                 'Cây tốt': int = ..., 
-                 'Bệnh khuôn lá': int = ..., 
-                 'Bệnh nhện đỏ': int = ...}
+        {
+        'code': str,
+        'message': str,
+        'statistic' : {
+                     'Hàng 1': {'Virus khảm cà chua ToMV': int = ..., 
+                                'Bệnh bạc lá sớm': int = ..., 
+                                'Virus TYLCV (Tomato yellow leaf curl virus)': int = ..., 
+                                'Bệnh tàn rụi muộn': int = ..., 
+                                'Đốm vi khuẩn': int = ..., 
+                                'Nấm Corynespora': int = ..., 
+                                'Nấm Septoria lycopersici': int = ..., 
+                                'Cây tốt': int = ..., 
+                                'Bệnh khuôn lá': int = ..., 
+                                'Bệnh nhện đỏ': int = ...},
+                    'Hàng 2': ...,
+                    ...
+                    }}
         '''
         userName = item.user_info.user_name
         userPassword = item.user_info.password
-        date = item.date
+        startDate = item.start_date + ' 00:00:00'
+        endDate = item.end_date + ' 23:59:59'
+        gardenName = item.garden_name
 
-        validate_result = validate_password(userName, userPassword, self.con)
-        if validate_result['code'] == '002' or validate_result['code'] == '003':
-            return {
-                'message' : validate_result['message'],
-                'code': validate_result['code'],
-                    }
-        statistic = get_statistic(userName,date, self.con)
-        return statistic
+        if is_manager(userName, self.con):
+            statistic = get_statistic(startDate, endDate, gardenName, self.con)
+            return {'message':'Success!',
+                    'code' : '000',
+                    'statistic': statistic}
+        else:
+            return {'message':'User has no authority!',
+                    'code' : '004'}
+
     
     async def change_password(self, item):
         '''
