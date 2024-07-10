@@ -48,7 +48,8 @@ class Image_info(BaseModel):
     class_name: str = None
     score: float  = None
     threshold: float  = None
-    garden_num: int  = None
+    plant_name: str = None
+    garden_name: str  = None
     line_num: int  = None
     
 
@@ -108,7 +109,7 @@ async def get_history(item: User_Info):
 @app.post("/analyze")
 async def analyze(item: Analyze):
     image = decode_image(item.image_info.image)
-
+    print(item)
     leaf_result = await leaf_or_not_detector.predict(img=image)
 
     if leaf_result['predicted_class'] != 'leaf':
