@@ -1,16 +1,18 @@
 import sqlite3
 from .__check_manager import is_manager
 
-def extract_history(userData, con):
+def extract_history(userName, con):
     '''
         :return:
         (pic, 
         picDate, 
         class_name, 
         pred_pic, 
-        score)
+        score,
+        lineID,
+        gardenName,
+        plantName)
         '''
-    userName = userData.user_name
 
     cur = con.cursor()
 
@@ -51,14 +53,19 @@ def extract_history(userData, con):
         cur = con.cursor()
         cur.execute(f'''
         select userID, 
-                pic, 
-                picDate, 
-                diseaseName,
-                pred_pic,
-                score
+               PIC.pic, 
+               PIC.picDate, 
+               DISEASE.diseaseName,
+               PIC.pred_pic,
+               PIC.score,
+               LOCATION.lineID,
+               GARDEN.gardenName,
+               GARDEN.plantName         
         from USER_PIC
         join PIC on USER_PIC.picID = PIC.picID
         join DISEASE on PIC.diseaseID=DISEASE.diseaseID
+        join LOCATION on LOCATION.locationID = PIC.locationID
+        join GARDEN on LOCATION.gardenID = GARDEN.gardenID
         where userID = {userID}
         order by picDate desc          
         ''')
@@ -70,9 +77,15 @@ def extract_history(userData, con):
     class_name = list(map(lambda x: x[3], history))
     pred_pic = list(map(lambda x: x[4], history))
     score = list(map(lambda x: x[5], history))
+    lineID = list(map(lambda x: x[6], history))
+    gardenName = list(map(lambda x: x[7], history))
+    plantName = list(map(lambda x: x[8], history))
 
     return (pic, 
         picDate, 
         class_name, 
         pred_pic, 
-        score)
+        score,
+        lineID,
+        gardenName,
+        plantName)
