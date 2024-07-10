@@ -77,11 +77,10 @@ def show_gardens():
             'password': st.session_state.get('encrypted_password')
         }
     }
-    if st.button("Lấy thông tin vườn", use_container_width=True):
-        response = get_gardens_info(item=item, request= _request).json()
-        garden_info = response['garden_info']
-        df_gardens = pd.DataFrame(garden_info)
-        st.dataframe(df_gardens,hide_index=True)
+    response = get_gardens_info(item=item, request= _request).json()
+    garden_info = response['garden_info']
+    df_gardens = pd.DataFrame(garden_info)
+    st.dataframe(df_gardens,hide_index=True)
 
 def delete_gardens():
     st.subheader("Xóa vườn")

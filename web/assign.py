@@ -13,7 +13,6 @@ def fetch_gardens_admin():
     response = get_gardens_info(item=item, request=_request).json()
     garden_info = response.get('garden_info', {})
     garden_names = garden_info.get('Tên vườn', [])
-    print(garden_info)
     return garden_names
 
 def assign_employees_task():
