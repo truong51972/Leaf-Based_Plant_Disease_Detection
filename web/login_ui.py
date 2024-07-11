@@ -97,14 +97,16 @@ def register_ui():
             }
             response = add_employee(item=item, request=_request).json()
             if response['code'] == '000':
-                st.success("Đăng ký thành công! Vui lòng đăng nhập.")
+                st.success("Đăng kí nhân viên thành công!")
+                st.session_state.table_df = None
+                st.experimental_rerun()
             elif response['code'] == '001':
                 st.error("Tên đăng nhập đã tồn tại!")
             elif response['code'] == '404':
                 st.error("Không tìm thấy server")
         else:
             st.error("Mật khẩu không khớp")
-
+            
 def delete_employees():
     st.subheader("Xóa nhân viên")
     user_name = st.text_input("Tên nhân viên cần xóa", key='delete_username', help='Tên đăng nhập của nhân viên cần xóa')

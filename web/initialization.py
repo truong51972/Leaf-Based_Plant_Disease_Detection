@@ -21,6 +21,7 @@ def initialization():
             show_employees()
         with st.expander('Thêm nhân viên'):
             register_ui()
+            st.experimental_rerun
         with st.expander("Xóa nhân viên"):
             delete_employees()
     
@@ -62,6 +63,7 @@ def add_gardens():
         
         if response['code'] == '000':
             st.success("Thêm vườn thành công!")
+            st.experimental_rerun()
         elif response['code'] == '102':
             st.error("Thêm vườn thất bại - tên vườn đã tồn tại!")
         elif response['code'] == '404':

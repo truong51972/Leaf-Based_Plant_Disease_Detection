@@ -1,5 +1,5 @@
 import streamlit as st
-from web.login_ui import login_ui, logout
+from web.login_ui import login_ui, logout   
 from web.app import app as main_app
 import time
 from web.history import display_history
@@ -23,7 +23,6 @@ def run():
             if 'user_name' not in st.session_state:
                 st.session_state['user_name'] = ""
                 
-            
             if DEV_MODE:
                 st.session_state['logged_in'] = True
                 st.session_state['is_manager'] = True
@@ -56,6 +55,8 @@ def run():
                 with tab6:
                     if st.button("Confirm Logout"):
                         logout()
+                        st.session_state['logged_in'] = False
+                        st.session_state['logout_success'] = True
                         st.experimental_rerun()
             else:
                 if 'logout_success' in st.session_state and st.session_state['logout_success']:
