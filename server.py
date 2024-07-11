@@ -1,6 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from pydantic import BaseModel
+from typing import Union
 from database.query import Query
 import asyncio
 
@@ -14,8 +15,8 @@ from packages.encode_decode import decode_image, encode_image
 
 # run: uvicorn server:app --host 0.0.0.0 --port 8000 --reload
 
-database_path = './data.db'
-# database_path = './database/data.db'
+# database_path = './data.db'
+database_path = './database/data.db'
 models = {}
 # database = Query(database_path)
 
@@ -55,8 +56,8 @@ class Image_info(BaseModel):
     line_num: int  
     predicted_image: str = None
     class_name: str = None
-    score: float  = None
-    threshold: float  = None
+    score: Union[float, int]  = None
+    threshold: Union[float, int]  = None
     
 
 class Analyze(BaseModel):
@@ -130,12 +131,12 @@ async def analyze(item: Analyze):
         elif  item.image_info.plant_name == 'Khoai tây':
             disease_result = await potato_disease_model.predict(img=image)
         
-        print(disease_result['class_name'])
         item.image_info.class_name = disease_result['class_name']
         item.image_info.score = disease_result['score']
         item.image_info.threshold = disease_result['threshold']
         item.image_info.predicted_image = encode_image(disease_result['predicted_image'])
 
+        print(item)
         response = await database.add_pic_and_get_solution(item= item, is_save=True)
         # print(response.result.class_name)
     return response
