@@ -10,14 +10,6 @@ import os
 
 DEV_MODE = os.getenv('DEV_MODE', 'False').lower() == 'true'
 
-def session_expired():
-    if 'last_activity_time' in st.session_state:
-        last_activity_timestamp = st.session_state.last_activity_time
-        current_timestamp = time.time()
-        session_duration = current_timestamp - last_activity_timestamp
-        return session_duration > 600
-    return True
-
 def run():
     _, center, _ = st.columns([1, 8, 1])
     with center:
@@ -37,9 +29,6 @@ def run():
                 st.session_state['is_manager'] = True
                 st.session_state['user_name'] = "Manager"
                 st.write("Chế độ phát triển đang bật: Tự động đăng nhập.")
-
-            if st.session_state['logged_in']:
-                st.session_state.last_activity_time = time.time()
 
             if st.session_state['logged_in']:
                 if st.session_state['is_manager']:
@@ -76,10 +65,6 @@ def run():
                     st.experimental_rerun()
                 else:
                     login_ui()
-            
-            if session_expired():
-                logout()
-                st.experimental_rerun()
 
 if __name__ == "__main__":
     run()
