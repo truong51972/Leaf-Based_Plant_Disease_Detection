@@ -7,8 +7,8 @@ from PIL import Image
 import asyncio
 
 class Cnn_model:
-    def __init__(self, path_to_model: str):
-        self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    def __init__(self, path_to_model: str, device= 'cpu'):
+        self.device = device
 
         self.model, info_data = load_model(pretrain_model_path= path_to_model)
         self.class_names = info_data['class_names']
