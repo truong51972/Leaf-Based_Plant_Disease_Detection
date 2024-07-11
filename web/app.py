@@ -104,7 +104,7 @@ def app():
             garden_details = gardens[selected_garden]
             plant_name = garden_details['Giống cây']
 
-            lines = garden_details['Luống']
+            lines = [int(line.split()[-1]) for line in garden_details['Luống'] if line.split()[-1].isdigit()]
             selected_line = st.selectbox("Chọn luống", lines)
 
             st.write(f'Giống cây: {plant_name}')

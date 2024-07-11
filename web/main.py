@@ -32,8 +32,8 @@ def run():
 
             if st.session_state['logged_in']:
                 if st.session_state['is_manager']:
-                    tabs = ["Thông tin cá nhân", "Lịch sử", "Tất cả giải pháp", "Quản lý", "Đăng xuất"]
-                    tab2, tab3, tab4, tab5, tab6 = st.tabs(tabs)
+                    tabs = ["Thông tin cá nhân", "Tất cả giải pháp", "Quản lý", "Đăng xuất"]
+                    tab2, tab4, tab5, tab6 = st.tabs(tabs)
                 else:
                     tabs = ["Trang chủ", "Thông tin cá nhân", "Lịch sử", "Tất cả giải pháp", "Đăng xuất"]
                     tab1, tab2, tab3, tab4, tab6 = st.tabs(tabs)
@@ -43,8 +43,9 @@ def run():
                         main_app()
                 with tab2:
                     user_info()
-                with tab3:
-                    display_history()
+                if not st.session_state['is_manager']:
+                    with tab3:
+                        display_history()
                 with tab4:
                     solution_list()
 
