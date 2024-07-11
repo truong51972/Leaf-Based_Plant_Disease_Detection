@@ -97,48 +97,52 @@ def app():
     gardens = fetch_gardens()
     
     try:
-        garden_names = list(gardens.keys())
-        selected_garden = st.selectbox("Chọn vườn", garden_names)
-        
-        garden_details = gardens[selected_garden]
-        num_of_lines = len(garden_details['Luống'])
-        
-        lines = list(range(1, num_of_lines + 1))
-        selected_line = st.selectbox("Chọn luống", lines)
-        
-        uploaded_image = st.file_uploader("**Chọn ảnh**", type=["jpg", "jpeg", "png"], help=guard)
-        
-        if uploaded_image is not None:
-            image = Image.open(uploaded_image)
-            st.session_state.corrected_image = correct_orientation_and_resize(image)
-            st.image(st.session_state.corrected_image, use_column_width=True)
-        
-        if st.button("Gửi", use_container_width=True):
+        with st.container(border=True):
+            garden_names = list(gardens.keys())
+            selected_garden = st.selectbox("Chọn vườn", garden_names)
+            
+            garden_details = gardens[selected_garden]
+            plant_name = garden_details['Giống cây']
+
+            lines = garden_details['Luống']
+            selected_line = st.selectbox("Chọn luống", lines)
+
+            st.write(f'Giống cây: {plant_name}')
+            
+        with st.container(border=True):    
+            uploaded_image = st.file_uploader("**Chọn ảnh**", type=["jpg", "jpeg", "png"], help=guard)
+    
             if uploaded_image is not None:
-                encoded_image = encode_image(st.session_state.corrected_image)
-                timezone = pytz.timezone('Asia/Ho_Chi_Minh')
-                current_datetime = datetime.now(timezone).strftime("%Y-%m-%d %H:%M:%S")
-                item = {
-                    'user_info': {
-                        'user_name': st.session_state.get('user_name'),
-                        'password': st.session_state.get('encrypted_password')
-                    },
-                    'image_info': {
-                        'image': encoded_image,
-                        'date': current_datetime,
-                        'garden_name': selected_garden,
-                        'line_num': selected_line
+                image = Image.open(uploaded_image)
+                st.session_state.corrected_image = correct_orientation_and_resize(image)
+                st.image(st.session_state.corrected_image, use_column_width=True)    
+            if st.button("Gửi", use_container_width=True):
+                if uploaded_image is not None:
+                    encoded_image = encode_image(st.session_state.corrected_image)
+                    timezone = pytz.timezone('Asia/Ho_Chi_Minh')
+                    current_datetime = datetime.now(timezone).strftime("%Y-%m-%d %H:%M:%S")
+                    item = {
+                        'user_info': {
+                            'user_name': st.session_state.get('user_name'),
+                            'password': st.session_state.get('encrypted_password')
+                        },
+                        'image_info': {
+                            'image': encoded_image,
+                            'date': current_datetime,
+                            'plant_name': plant_name,
+                            'garden_name': selected_garden,
+                            'line_num': selected_line
+                        }
                     }
-                }
-                
-                with st.spinner("Đang phân tích hình ảnh..."):
-                    try:
-                        results = analyze(item=item, request=_request).json()
-                        display_results(results)
-                    except KeyError as e:
-                        st.error(f"Đã xảy ra lỗi khi phân tích hình ảnh: {e}")
-            else:
-                st.warning("Vui lòng tải lên một hình ảnh để tiến hành chẩn đoán.")
+                    
+                    with st.spinner("Đang phân tích hình ảnh..."):
+                        try:
+                            results = analyze(item=item, request=_request).json()
+                            display_results(results)
+                        except KeyError as e:
+                            st.error(f"Đã xảy ra lỗi khi phân tích hình ảnh: {e}")
+                else:
+                    st.warning("Vui lòng tải lên một hình ảnh để tiến hành chẩn đoán.")
     except Exception as e:
         st.error(f"Đã xảy ra lỗi: {e}")
 

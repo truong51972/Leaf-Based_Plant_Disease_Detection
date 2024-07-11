@@ -35,15 +35,15 @@ def assign_employees_task():
         'garden_name': garden_name        
     }
     
-    if st.button("Bảng phân công", key="display_table_button", use_container_width=True):
-        if garden_name != st.session_state.current_garden_name:
-            st.session_state.table_df = None
-            st.session_state.current_garden_name = garden_name
 
-        if st.session_state.table_df is None:
-            result = get_location_assignment_table(item=item, request=_request).json()
-            table = result['table']
-            st.session_state.table_df = pd.DataFrame(table)
+    if garden_name != st.session_state.current_garden_name:
+        st.session_state.table_df = None
+        st.session_state.current_garden_name = garden_name
+
+    if st.session_state.table_df is None:
+        result = get_location_assignment_table(item=item, request=_request).json()
+        table = result['table']
+        st.session_state.table_df = pd.DataFrame(table)
 
     if st.session_state.table_df is not None:
         table_df = st.session_state.table_df.copy()
