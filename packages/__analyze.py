@@ -28,8 +28,11 @@ def analyze(item: dict, request: object):
                 'password' : 'password'
             },
             'image_info' : {
-                'image' : encoded_image,
-                'date' : '12093'
+                'image' : str,
+                'date' : '12093',
+                plant_name: str,
+                garden_name: str,
+                line_num: int,
             }
         }
     >>> analyze(item = item)
