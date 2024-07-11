@@ -2,10 +2,10 @@ import streamlit as st
 from packages.request_api import change_password
 from packages.encode_decode import encrypt_password
 from datetime import datetime, timedelta
-from packages.request_api import get_statistics
+from packages.request_api import get_statistics, get_gardens_info
 from packages.__request import _request
 import pandas as pd
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt # type: ignore
 
 
 def user_info():
@@ -55,99 +55,49 @@ def change_password_ui():
                 else:
                     st.error("Không nhận được phản hồi từ máy chủ.")
 
-def get_statistics_data(item):
-    try:
-        response = get_statistics(item=item, request=_request).json()
-        df_statistics = pd.DataFrame(response)
-        return df_statistics
-    except Exception as e:
-        st.error(f"Lỗi khi lấy dữ liệu thống kê")
-        return pd.DataFrame() 
-    
-def plot_bar_chart(df_statistics, container):
-    try:
-        if not df_statistics.empty:
- 
-            filtered_df = df_statistics[df_statistics.iloc[:, 0] != 0]
-            if not filtered_df.empty:
+def fetch_gardens_statistics():
+    item = {
+        'user_info': {
+            'user_name': st.session_state.get('user_name'),
+            'password': st.session_state.get('encrypted_password')
+        }
+    }
+    response = get_gardens_info(item=item, request=_request).json()
+    garden_info = response.get('garden_info', {})
+    garden_names = garden_info.get('Tên vườn', [])
+    return garden_names
 
-                filtered_df.iloc[:, 0] = filtered_df.iloc[:, 0].astype(int)
-
-                labels = filtered_df.index
-                values = filtered_df.iloc[:, 0].values
-
-                colors = ['blue', 'green', 'red', 'purple', 'orange', 
-                          'brown', 'pink', 'gray', 'cyan', 'yellow']
-
-                fig, ax = plt.subplots(figsize=(15, 10))
-                bars = ax.bar(labels, values, color=colors)
-
-
-                ax.set_xlabel('Nhóm')
-                ax.set_ylabel('Số lượng')
-                ax.set_title('Biểu đồ thống kê theo nhóm', pad=20) 
-
-                for bar in bars:
-                    yval = bar.get_height()
-                    ax.text(bar.get_x() + bar.get_width()/2, yval + 0.05, round(yval, 1), ha='center', va='bottom')
-
-                fig.tight_layout()
-                with container:
-                    st.pyplot(fig)
-            else:
-                st.warning("Không có dữ liệu để hiển thị biểu đồ.")
-        else:
-            st.warning("Không có dữ liệu để hiển thị biểu đồ.")
-    except Exception as e:
-        st.error(f"Lỗi khi vẽ biểu đồ: {str(e)}")
-
-def plot_pie_chart(df_statistics, container):
-    try:
-        if not df_statistics.empty:
-            df_statistics.iloc[:, 0] = df_statistics.iloc[:, 0].astype(int)
-
-            labels = df_statistics.index
-            values = df_statistics.iloc[:, 0].values
-
-            colors = ['blue', 'green', 'red', 'purple', 'orange', 
-                      'brown', 'pink', 'gray', 'cyan', 'yellow']
-
-            non_zero_indices = values != 0
-            labels = labels[non_zero_indices]
-            values = values[non_zero_indices]
-
-            fig, ax = plt.subplots(figsize=(8, 8))
-            ax.pie(values, labels=labels, colors=colors, autopct='%1.0f%%', startangle=140)
-
-            ax.set_title('Biểu đồ phân bổ thống kê',pad=1) 
-            with container:
-                st.pyplot(fig)
-    except Exception as e:
-        st.error(f"Lỗi khi vẽ biểu đồ phân bổ: {str(e)}")
-
-def statistics_ui():
+def statistics_ui():    
     st.subheader("Thống kê của bạn")
+
+    garden_names = fetch_gardens_statistics()
+    garden_name = st.selectbox("Chọn tên vườn", garden_names, key="garden_selectbox")
+    
     selected_date = st.date_input("Vui lòng chọn ngày để xem thống kê.", datetime.today() - timedelta(days=1))
+    end_date = st.date_input("Vui lòng chọn ngày kết thúc để xem thống kê.", datetime.today(), key="end_date")
     selected_date_str = selected_date.strftime('%Y-%m-%d')
+    end_date_str = end_date.strftime('%Y-%m-%d')
+
     item = {
         'user_info': {
             'user_name': st.session_state.get('user_name'),
             'password': st.session_state.get('encrypted_password')
         },
-        'date': selected_date_str,
-        'garden_num': int,
-        'line_num': int
+        'start_date': selected_date_str,
+        'end_date': end_date_str,
+        'garden_name': garden_name,
     }
 
-    if st.button("Xem thống kê"):
-        df_statistics = get_statistics_data(item)
-        if not df_statistics.empty:
-            with st.container(border=True):
-                st.write("Bảng thống kê:")
+    if st.button("Xem thống kê", use_container_width=True, key="view_statistics_button"):
+        response = get_statistics(item=item, request=_request)
+        if response.status_code == 200:
+            st.write("Full response object:", response) 
+            try:
+                data = response.json()
+                st.write("Response JSON:", data) 
+                df_statistics = pd.DataFrame(data)
                 st.dataframe(df_statistics)
-        
-        container1 = st.container(border=True)
-        container2 = st.container(border=True)
-
-        plot_bar_chart(df_statistics,container1)
-        plot_pie_chart(df_statistics,container2)
+            except ValueError as e:
+                st.error(f"Error creating DataFrame: {e}")
+        else:
+            st.error("Failed to fetch statistics.")
