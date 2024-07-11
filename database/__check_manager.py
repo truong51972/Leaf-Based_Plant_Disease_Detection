@@ -4,7 +4,9 @@ def is_manager(userName, con):
     cur = con.cursor()
 
     cur.execute(f'''
-            SELECT managerID FROM USER WHERE userName = '{userName}'
+            SELECT managerID 
+            FROM USER WHERE 
+            userName = '{userName}'
         ''')
     
     status = cur.fetchall()[0][0]

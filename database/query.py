@@ -440,7 +440,10 @@ class Query:
         picDate, 
         class_name, 
         pred_pic, 
-        score) = extract_history(userData, self.con)     
+        score,
+        lineID,
+        gardenName,
+        plantName) = extract_history(userName, self.con)     
 
         return {
                 'message' : validate_result['message'],
@@ -450,7 +453,10 @@ class Query:
                     'Tên bệnh' : class_name,
                     'Ảnh phân tích': pred_pic,
                     'Độ tin cậy': score,
-                    'Ngày chụp' : picDate
+                    'Ngày chụp' : picDate,
+                    'Hàng': lineID,
+                    'Tên vườn': gardenName,
+                    'Giống cây': plantName
                            }
                 }
     # pending
