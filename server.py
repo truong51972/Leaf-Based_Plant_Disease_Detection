@@ -14,22 +14,28 @@ from packages.encode_decode import decode_image, encode_image
 
 # run: uvicorn server:app --host 0.0.0.0 --port 8000 --reload
 
-database_path = './database/data.db'
+database_path = './data.db'
+# database_path = './database/data.db'
 models = {}
 # database = Query(database_path)
 
-disease_detector = None
+tomato_disease_model = None
+potato_disease_model = None
 database = None
 leaf_or_not_detector = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global disease_detector
+    global tomato_disease_model
+    global potato_disease_model
+
     global database
     global leaf_or_not_detector
     
     database = Query(database_path)
-    disease_detector = AI_model(path_to_model= './model/models/tomato_disease')
+    tomato_disease_model = AI_model(path_to_model= './model/models/tomato_model')
+    potato_disease_model = AI_model(path_to_model= './model/models/potato_model')
+
     leaf_or_not_detector = Cnn_model(path_to_model='./model/models/leaf_or_not')
     yield
 
@@ -109,7 +115,6 @@ async def get_history(item: User_Info):
 @app.post("/analyze")
 async def analyze(item: Analyze):
     image = decode_image(item.image_info.image)
-    print(item)
     leaf_result = await leaf_or_not_detector.predict(img=image)
 
     if leaf_result['predicted_class'] != 'leaf':
@@ -120,7 +125,10 @@ async def analyze(item: Analyze):
         item.image_info.predicted_image = None
         response = item
     else:
-        disease_result = await disease_detector.predict(img=image)
+        if item.image_info.plant_name == 'Cà chua':
+            disease_result = await tomato_disease_model.predict(img=image)
+        elif  item.image_info.plant_name == 'Khoai tây':
+            disease_result = await potato_disease_model.predict(img=image)
         
         item.image_info.class_name = disease_result['class_name']
         item.image_info.score = disease_result['score']
