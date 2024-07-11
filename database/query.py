@@ -10,7 +10,7 @@ from .__extract_result import extract_result
 from .__validate_password import validate_password
 from .__extract_history import extract_history
 from .__add_picture import add_picture_to_database
-from .__extract_solution import get_solution
+from .__extract_solution import get_solution_potato, get_solution_tomato
 from .__get_statistic import get_statistic
 from .__check_manager import is_manager
 from .__extract_result_without_id import extract_result_without_id
@@ -271,7 +271,6 @@ class Query:
             return {'message':'User has no authority!',
                     'code' : '004'}
 
-    # wait
     async def assign_employee_location(self, item):
         '''
             This function is used to assign employee to work location(s)
@@ -317,7 +316,7 @@ class Query:
         else:
             return {'message':'User has no authority!',
                     'code' : '004'}
-    # wait    
+          
     async def get_location_assignment_table(self, item):
         '''
         :input:
@@ -397,7 +396,7 @@ class Query:
             return {'message':'Success!',
                     'code' : '000',
                     'garden_info': gardenInfo}
-    # pending
+
     async def get_history(self, userData):
         '''
         This function is used to get history of a user.
@@ -592,16 +591,29 @@ class Query:
         :return:
         Dataframe / Dictionary of tuples:
         {
-        'diseaseName' :         tuple(diseaseName), 
-        'diseaseCause':         tuple(diseaseCause),
-        'diseaseSymptom':       tuple(diseaseSymptom), 
-        'solutionPrevention':   tuple(solutionPrevention),
-        'solutionGardening':    tuple(solutionGardening),
-        'solutionFertilization':tuple(solutionFertilization),
-        'solutionSource':       tuple(solutionSource)
-        }
+        'Cà chua': {
+            'diseaseName' :         tuple(diseaseName), 
+            'diseaseCause':         tuple(diseaseCause),
+            'diseaseSymptom':       tuple(diseaseSymptom), 
+            'solutionPrevention':   tuple(solutionPrevention),
+            'solutionGardening':    tuple(solutionGardening),
+            'solutionFertilization':tuple(solutionFertilization),
+            'solutionSource':       tuple(solutionSource)
+        },
+        'Khoai tây': {
+            'diseaseName' :         tuple(diseaseName), 
+            'diseaseCause':         tuple(diseaseCause),
+            'diseaseSymptom':       tuple(diseaseSymptom), 
+            'solutionPrevention':   tuple(solutionPrevention),
+            'solutionGardening':    tuple(solutionGardening),
+            'solutionFertilization':tuple(solutionFertilization),
+            'solutionSource':       tuple(solutionSource)
+        }}
         '''
-        return get_solution(self.con)
+        return {
+                'Cà chua': get_solution_tomato(self.con),
+                'Khoai tây': get_solution_potato(self.con)
+                }
     
     ### DELETE SECTION ###
     async def delete_garden(self, item):
