@@ -114,7 +114,6 @@ async def get_history(item: User_Info):
 
 @app.post("/analyze")
 async def analyze(item: Analyze):
-    print(item)
     image = decode_image(item.image_info.image)
     leaf_result = await leaf_or_not_detector.predict(img=image)
 
@@ -131,13 +130,14 @@ async def analyze(item: Analyze):
         elif  item.image_info.plant_name == 'Khoai tây':
             disease_result = await potato_disease_model.predict(img=image)
         
+        print(disease_result['class_name'])
         item.image_info.class_name = disease_result['class_name']
         item.image_info.score = disease_result['score']
         item.image_info.threshold = disease_result['threshold']
         item.image_info.predicted_image = encode_image(disease_result['predicted_image'])
 
-
         response = await database.add_pic_and_get_solution(item= item, is_save=True)
+        # print(response.result.class_name)
     return response
 
 @app.post("/add_employee")
