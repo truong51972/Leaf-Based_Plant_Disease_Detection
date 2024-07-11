@@ -65,7 +65,7 @@ class AI_model:
                 "threshold" : float,                
             }
         """
-        img = img.resize((224, 224))
+        # img = img.resize((224, 224))
         
         results = self._predict(img)
         
