@@ -6,29 +6,36 @@ def get_statistics(item: dict, request: object):
         item: dict[str, str]
 
     Returns:
-        response = dict('ten ben' : so luong, ...)
+        response = dict(key: value)
     Example:
     >>> item = {
         'user_info': {
             'user_name' : 'user name',
             'password' : 'password'
         },
-        'date': 'YYYY-MM-DD',
-        'gardenNum': int,
-        'lineNum': int
+        'start_date': 'YYYY-MM-DD',
+        'end_date': 'YYYY-MM-DD',
+        'garden_name': str
     }
     >>> get_statistics(item = item)
     {
-        'Virus khảm cà chua ToMV': int = ..., 
-        'Bệnh bạc lá sớm': int = ..., 
-        'Virus TYLCV (Tomato yellow leaf curl virus)': int = ..., 
-        'Bệnh tàn rụi muộn': int = ..., 
-        'Đốm vi khuẩn': int = ..., 
-        'Nấm Corynespora': int = ..., 
-        'Nấm Septoria lycopersici': int = ..., 
-        'Cây tốt': int = ..., 
-        'Bệnh khuôn lá': int = ..., 
-        'Bệnh nhện đỏ': int = ...
+        'overall_data' : dict(key, value),
+        'per_line' : {
+            'Hàng 1' : {
+                'Khoẻ' : int,
+                'Bệnh' : int,
+                'Chi tiết' : {
+                    dict('Tên bệnh' : số lượng)
+                }
+            },
+            'Hàng 2' : {
+                'Khoẻ' : int,
+                'Bệnh' : int,
+                'Chi tiết' : {
+                    dict('Tên bệnh' : số lượng)
+                }
+            }
+        }
     }
     """
     api_name = '/get_statistics'
