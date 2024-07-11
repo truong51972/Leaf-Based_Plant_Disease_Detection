@@ -16,10 +16,10 @@ import asyncio
 class AI_model:
     def __init__(self, path_to_model: str):
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
-
-        self.sam_model = Sam_model()
+        print(f"Device: {self.device}")
+        self.sam_model = Sam_model(device= self.device)
         
-        self.cnn_model = Cnn_model(path_to_model=path_to_model)
+        self.cnn_model = Cnn_model(path_to_model=path_to_model, device= self.device)
 
         model = self.cnn_model.get_model()
         self.grad_cam = Grad_cam(model=model, model_name= self.cnn_model.model_name)
@@ -65,6 +65,8 @@ class AI_model:
                 "threshold" : float,                
             }
         """
+        img = img.resize((224, 224))
+        
         results = self._predict(img)
         
         if self.best_threshold_df is not None:
