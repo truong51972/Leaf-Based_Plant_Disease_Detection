@@ -50,13 +50,13 @@ class User_Info(BaseModel):
 class Image_info(BaseModel):
     image: str
     date: str
+    plant_name: str 
+    garden_name: str  
+    line_num: int  
     predicted_image: str = None
     class_name: str = None
     score: float  = None
     threshold: float  = None
-    plant_name: str = None
-    garden_name: str  = None
-    line_num: int  = None
     
 
 class Analyze(BaseModel):
@@ -69,9 +69,9 @@ class Change_password(BaseModel):
 
 class Get_statistics(BaseModel):
     user_info: User_Info
-    date: str
-    gardenNum: int
-    lineNum: int
+    start_date: str
+    end_date: str
+    garden_name: str
 
 class Employee_management(BaseModel):
     manager_info: User_Info
@@ -114,6 +114,7 @@ async def get_history(item: User_Info):
 
 @app.post("/analyze")
 async def analyze(item: Analyze):
+    print(item)
     image = decode_image(item.image_info.image)
     leaf_result = await leaf_or_not_detector.predict(img=image)
 
