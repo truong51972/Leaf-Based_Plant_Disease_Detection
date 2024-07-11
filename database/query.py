@@ -477,19 +477,24 @@ class Query:
         'code': str,
         'message': str,
         'statistic' : {
-                     'Hàng 1': {'Virus khảm cà chua ToMV': int = ..., 
-                                'Bệnh bạc lá sớm': int = ..., 
-                                'Virus TYLCV (Tomato yellow leaf curl virus)': int = ..., 
-                                'Bệnh tàn rụi muộn': int = ..., 
-                                'Đốm vi khuẩn': int = ..., 
-                                'Nấm Corynespora': int = ..., 
-                                'Nấm Septoria lycopersici': int = ..., 
-                                'Cây tốt': int = ..., 
-                                'Bệnh khuôn lá': int = ..., 
-                                'Bệnh nhện đỏ': int = ...},
-                    'Hàng 2': ...,
-                    ...
-                    }}
+                        'overall_data' : dict(key, value),
+                        'per_line' : {
+                            'Hàng 1' : {
+                                'Khoẻ' : int,
+                                'Bệnh' : int,
+                                'Chi tiết' : {
+                                    dict('Tên bệnh' : số lượng)
+                                }
+                            },
+                            'Hàng 2' : {
+                                'Khoẻ' : int,
+                                'Bệnh' : int,
+                                'Chi tiết' : {
+                                    dict('Tên bệnh' : số lượng)
+                                }               
+                            }
+                        }
+                    }
         '''
         userName = item.user_info.user_name
         userPassword = item.user_info.password
