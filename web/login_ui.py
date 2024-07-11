@@ -98,6 +98,7 @@ def register_ui():
             response = add_employee(item=item, request=_request).json()
             if response['code'] == '000':
                 st.success("Đăng ký thành công! Vui lòng đăng nhập.")
+                st.experimental_rerun()
             elif response['code'] == '001':
                 st.error("Tên đăng nhập đã tồn tại!")
             elif response['code'] == '404':

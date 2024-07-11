@@ -89,15 +89,7 @@ def statistics_ui():
     }
 
     if st.button("Xem thống kê", use_container_width=True, key="view_statistics_button"):
-        response = get_statistics(item=item, request=_request)
-        if response.status_code == 200:
-            st.write("Full response object:", response) 
-            try:
-                data = response.json()
-                st.write("Response JSON:", data) 
-                df_statistics = pd.DataFrame(data)
-                st.dataframe(df_statistics)
-            except ValueError as e:
-                st.error(f"Error creating DataFrame: {e}")
-        else:
-            st.error("Failed to fetch statistics.")
+        response = get_statistics(item=item, request=_request).json()
+        df_statistics = pd.DataFrame(response['statistic'])
+        df_statistics= df_statistics.T
+        st.dataframe(df_statistics)

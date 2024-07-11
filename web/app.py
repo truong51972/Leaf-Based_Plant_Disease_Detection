@@ -110,41 +110,48 @@ def app():
             st.write(f'Giống cây: {plant_name}')
             
         with st.container(border=True):    
-            uploaded_image = st.file_uploader("**Chọn ảnh**", type=["jpg", "jpeg", "png"], help=guard)
+            uploaded_image = st.file_uploader("Chọn ảnh", type=["jpg", "jpeg", "png"], help=guard)
     
             if uploaded_image is not None:
                 image = Image.open(uploaded_image)
                 st.session_state.corrected_image = correct_orientation_and_resize(image)
                 st.image(st.session_state.corrected_image, use_column_width=True)    
+            
             if st.button("Gửi", use_container_width=True):
-                if uploaded_image is not None:
-                    encoded_image = encode_image(st.session_state.corrected_image)
-                    timezone = pytz.timezone('Asia/Ho_Chi_Minh')
-                    current_datetime = datetime.now(timezone).strftime("%Y-%m-%d %H:%M:%S")
-                    item = {
-                        'user_info': {
-                            'user_name': st.session_state.get('user_name'),
-                            'password': st.session_state.get('encrypted_password')
-                        },
-                        'image_info': {
-                            'image': encoded_image,
-                            'date': current_datetime,
-                            'plant_name': plant_name,
-                            'garden_name': selected_garden,
-                            'line_num': selected_line
-                        }
-                    }
-                    
-                    with st.spinner("Đang phân tích hình ảnh..."):
-                        try:
-                            results = analyze(item=item, request=_request).json()
-                            display_results(results)
-                        except KeyError as e:
-                            st.error(f"Đã xảy ra lỗi khi phân tích hình ảnh: {e}")
-                else:
+                if selected_garden is None:
+                    st.warning("Vui lòng chọn một vườn để tiếp tục.")
+                    return
+                
+                if uploaded_image is None:
                     st.warning("Vui lòng tải lên một hình ảnh để tiến hành chẩn đoán.")
+                    return
+                
+                encoded_image = encode_image(st.session_state.corrected_image)
+                timezone = pytz.timezone('Asia/Ho_Chi_Minh')
+                current_datetime = datetime.now(timezone).strftime("%Y-%m-%d %H:%M:%S")
+                item = {
+                    'user_info': {
+                        'user_name': st.session_state.get('user_name'),
+                        'password': st.session_state.get('encrypted_password')
+                    },
+                    'image_info': {
+                        'image': encoded_image,
+                        'date': current_datetime,
+                        'plant_name': plant_name,
+                        'garden_name': selected_garden,
+                        'line_num': selected_line
+                    }
+                }
+                
+                with st.spinner("Đang phân tích hình ảnh..."):
+                    try:
+                        results = analyze(item=item, request=_request).json()
+                        display_results(results)
+                    except KeyError as e:
+                        st.error(f"Đã xảy ra lỗi khi phân tích hình ảnh: {e}")
+    
     except Exception as e:
-        st.error(f"Đã xảy ra lỗi: {e}")
+        st.warning(f"Nhân viên hiện chưa được phân công!")
 
 if __name__ == "__main__":
     app()
