@@ -7,19 +7,20 @@ from packages.__request import _request
 
 def user_info():
     st.title("Thông tin cá nhân")
-
     if 'user_name' in st.session_state and st.session_state['user_name']:
         st.write(f"Xin chào, {st.session_state['user_name']}!")
 
-    tab1, tab2 = st.tabs(["Thống kê", "Đổi mật khẩu"])
-
-    with tab1:
-        statistics_ui()
-
-    with tab2:
+    if st.session_state.get('is_manager', False):
+        tab1, tab2 = st.tabs(["Thống kê", "Đổi mật khẩu"])
+        with tab1:
+            statistics_ui()
+        with tab2:
+            change_password_ui()
+    else:
         change_password_ui()
 
 def change_password_ui():
+    st.subheader("Đổi mật khẩu người dùng")
     with st.form("Change Password Form"):
         current_password = st.text_input("Mật khẩu hiện tại", type="password")
         new_password = st.text_input("Mật khẩu mới", type="password")
