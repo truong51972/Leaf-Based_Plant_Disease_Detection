@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from packages.request_api import get_statistics, get_gardens_info
 from packages.__request import _request
 import pandas as pd
-import plotly.express as px
+import plotly.express as px # type: ignore
 
 def fetch_gardens_statistics():
     item = {
