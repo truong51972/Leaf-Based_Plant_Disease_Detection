@@ -30,17 +30,17 @@ def initialization():
             
         
 def add_gardens():
-    st.subheader("Thêm vườn và luống")
+    st.subheader("Thêm vườn và hàng")
     col1, col2, col3 = st.columns([0.5, 0.3, 0.2])
     
     with col1:
-        gardenName = st.text_input("Tên vườn",help='Tên vườn không được chứa khoảng trắng hoặc kí tự đặc biệt!')
+        gardenName = st.text_input("Tên vườn", help='Tên vườn không được chứa khoảng trắng hoặc kí tự đặc biệt!', key='garden_name_input')
     
     with col2:
         plantName = st.selectbox("Tên loại cây", options=['Cà chua', 'Khoai tây'])
     
     with col3:
-        lineNum = int(st.number_input("Số luống", min_value=1, max_value=100, value=1, step=1, format="%d"))
+        lineNum = int(st.number_input("Số hàng", min_value=1, max_value=100, value=1, step=1, format="%d"))
     
     if st.button("Xác nhận", use_container_width=True):
         if not gardenName:
@@ -63,7 +63,6 @@ def add_gardens():
         
         if response['code'] == '000':
             st.success("Thêm vườn thành công!")
-            st.experimental_rerun()
         elif response['code'] == '102':
             st.error("Thêm vườn thất bại - tên vườn đã tồn tại!")
         elif response['code'] == '404':

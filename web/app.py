@@ -99,13 +99,13 @@ def app():
     try:
         with st.container(border=True):
             garden_names = list(gardens.keys())
-            selected_garden = st.selectbox("Chọn vườn", garden_names)
+            selected_garden = st.selectbox("Chọn vườn", garden_names, key='garden_app')
             
             garden_details = gardens[selected_garden]
             plant_name = garden_details['Giống cây']
 
             lines = [int(line.split()[-1]) for line in garden_details['Luống'] if line.split()[-1].isdigit()]
-            selected_line = st.selectbox("Chọn luống", lines)
+            selected_line = st.selectbox("Chọn luống", lines,key='line_app')
 
             st.write(f'Giống cây: {plant_name}')
             

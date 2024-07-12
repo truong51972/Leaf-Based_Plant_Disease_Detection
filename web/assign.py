@@ -19,7 +19,7 @@ def assign_employees_task():
     st.subheader("Phân công")
     
     garden_names = fetch_gardens_admin()
-    garden_name = st.selectbox("Chọn tên vườn", garden_names)
+    garden_name = st.selectbox("Chọn tên vườn", garden_names, key='assign')
 
     if 'table_df' not in st.session_state:
         st.session_state.table_df = None

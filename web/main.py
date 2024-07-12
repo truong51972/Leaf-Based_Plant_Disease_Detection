@@ -9,7 +9,7 @@ from web.solution import solution_list
 import os
 
 DEV_MODE = os.getenv('DEV_MODE', 'False').lower() == 'true'
-
+st.set_page_config(layout="wide")
 def run():
     _, center, _ = st.columns([1, 8, 1])
     with center:

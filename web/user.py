@@ -1,11 +1,8 @@
 import streamlit as st
 from packages.request_api import change_password
 from packages.encode_decode import encrypt_password
-from datetime import datetime, timedelta
-from packages.request_api import get_statistics, get_gardens_info
+from web.statistics import statistics_ui
 from packages.__request import _request
-import pandas as pd
-import matplotlib.pyplot as plt # type: ignore
 
 
 def user_info():
@@ -54,42 +51,3 @@ def change_password_ui():
                         st.error("Đã xảy ra lỗi khi thay đổi mật khẩu. Vui lòng thử lại sau.")
                 else:
                     st.error("Không nhận được phản hồi từ máy chủ.")
-
-def fetch_gardens_statistics():
-    item = {
-        'user_info': {
-            'user_name': st.session_state.get('user_name'),
-            'password': st.session_state.get('encrypted_password')
-        }
-    }
-    response = get_gardens_info(item=item, request=_request).json()
-    garden_info = response.get('garden_info', {})
-    garden_names = garden_info.get('Tên vườn', [])
-    return garden_names
-
-def statistics_ui():    
-    st.subheader("Thống kê của bạn")
-
-    garden_names = fetch_gardens_statistics()
-    garden_name = st.selectbox("Chọn tên vườn", garden_names, key="garden_selectbox")
-    
-    selected_date = st.date_input("Vui lòng chọn ngày để xem thống kê.", datetime.today() - timedelta(days=1))
-    end_date = st.date_input("Vui lòng chọn ngày kết thúc để xem thống kê.", datetime.today(), key="end_date")
-    selected_date_str = selected_date.strftime('%Y-%m-%d')
-    end_date_str = end_date.strftime('%Y-%m-%d')
-
-    item = {
-        'user_info': {
-            'user_name': st.session_state.get('user_name'),
-            'password': st.session_state.get('encrypted_password')
-        },
-        'start_date': selected_date_str,
-        'end_date': end_date_str,
-        'garden_name': garden_name,
-    }
-
-    if st.button("Xem thống kê", use_container_width=True, key="view_statistics_button"):
-        response = get_statistics(item=item, request=_request).json()
-        df_statistics = pd.DataFrame(response['statistic'])
-        df_statistics= df_statistics.T
-        st.dataframe(df_statistics)
