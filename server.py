@@ -136,7 +136,6 @@ async def analyze(item: Analyze):
         item.image_info.threshold = disease_result['threshold']
         item.image_info.predicted_image = encode_image(disease_result['predicted_image'])
 
-        print(item)
         response = await database.add_pic_and_get_solution(item= item, is_save=True)
         # print(response.result.class_name)
     return response
