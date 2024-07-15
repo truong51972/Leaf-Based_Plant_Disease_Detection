@@ -23,8 +23,10 @@ class AI_model:
         print(f"Device: {self.device}")
         self.sam_model = Sam_model(device= self.device)
         print(f"[INFO] Load 'Sam model' successfully!")
+        
         self.cnn_models = {}
         self.grad_cam_models = {}
+        self.best_threshold_dfs = {}
         
         for model_name, path_to_model in paths_to_model.items():
             try:
@@ -33,23 +35,25 @@ class AI_model:
                 self.cnn_models[model_name] = cnn_model
                 self.grad_cam_models[model_name] = Grad_cam(model=cnn_model.get_model(), model_name= cnn_model.model_name)
                 print(f"[INFO] Load '{model_name}' from '{path_to_model}' successfully!")
+
+                try:
+                    self.best_threshold_dfs[model_name] = pd.read_excel(path_to_model + '/best_threshold.xlsx', index_col=0)
+                except:
+                    self.best_threshold_dfs[model_name] = None
+                
             except FileNotFoundError:
                 print(f'[ERROR] Model not found in {path_to_model}')
-        try:
-            self.best_threshold_df = pd.read_excel(path_to_model + '/best_threshold.xlsx', index_col=0)
-        except:
-            self.best_threshold_df = None
             
     def class_name_to_idx(self, class_name: str, model_name: str | None = None, verbose: bool = False):
         if model_name is None:
             model_name = list(self.cnn_models.keys())[0]
-            print(f"[WARNING] {self.class_name_to_idx.__name__}: Using '{model_name}' model!")
+            print(f"[WARNING] '{self.class_name_to_idx.__name__}': Using '{model_name}' model!")
             
         elif (model_name not in self.cnn_models.keys()):
-            print(f"[WARNING] {self.class_name_to_idx.__name__}: '{model_name}' is not defined!")        
+            print(f"[WARNING] '{self.class_name_to_idx.__name__}': '{model_name}' is not defined!")        
             model_name = list(self.cnn_models.keys())[0]
             
-        print(f"[INFO] {self.class_name_to_idx.__name__}: Using '{model_name}' model!")
+        print(f"[INFO] '{self.class_name_to_idx.__name__}': Using '{model_name}' model!")
         cnn_model = self.cnn_models[model_name]
             
         return cnn_model.class_name_to_idx[class_name]
@@ -103,11 +107,11 @@ class AI_model:
                                 model_name= model_name,
                                 verbose= verbose)
         
-        if self.best_threshold_df is not None:                        
+        if model_name in self.best_threshold_dfs.keys():                        
             class_idx = self.class_name_to_idx(class_name= results["class_name"],
                                                model_name= model_name,
                                                verbose=verbose)
             
-            results['threshold'] = self.best_threshold_df.loc['threshold', class_idx]
+            results['threshold'] = self.best_threshold_dfs[model_name].loc['threshold', class_idx]
         
         return results
