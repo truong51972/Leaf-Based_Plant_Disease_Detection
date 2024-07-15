@@ -30,14 +30,19 @@ def extract_history(userName, con):
         cur = con.cursor()
         cur.execute(f'''
         select userID, 
-                pic, 
-                picDate, 
-                diseaseName,
-                pred_pic,
-                score
+               PIC.pic, 
+               PIC.picDate, 
+               DISEASE.diseaseName,
+               PIC.pred_pic,
+               PIC.score,
+               LOCATION.lineID,
+               GARDEN.gardenName,
+               GARDEN.plantName         
         from USER_PIC
         join PIC on USER_PIC.picID = PIC.picID
         join DISEASE on PIC.diseaseID=DISEASE.diseaseID
+        join LOCATION on LOCATION.locationID = PIC.locationID
+        join GARDEN on LOCATION.gardenID = GARDEN.gardenID
         where userID = {userID} or userID in (
             SELECT e.userID AS employeeID
             FROM USER e
