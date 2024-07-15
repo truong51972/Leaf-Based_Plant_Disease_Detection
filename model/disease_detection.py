@@ -22,7 +22,7 @@ class AI_model:
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         print(f"Device: {self.device}")
         self.sam_model = Sam_model(device= self.device)
-
+        print(f"[INFO] Load 'Sam model' successfully!")
         self.cnn_models = {}
         self.grad_cam_models = {}
         
@@ -32,6 +32,7 @@ class AI_model:
                 
                 self.cnn_models[model_name] = cnn_model
                 self.grad_cam_models[model_name] = Grad_cam(model=cnn_model.get_model(), model_name= cnn_model.model_name)
+                print(f"[INFO] Load '{model_name}' from '{path_to_model}' successfully!")
             except FileNotFoundError:
                 print(f'[ERROR] Model not found in {path_to_model}')
         try:
@@ -40,22 +41,31 @@ class AI_model:
             self.best_threshold_df = None
             
     def class_name_to_idx(self, class_name: str, model_name: str | None = None, verbose: bool = False):
-        if model_name is not None:
-            print(f"[WARNING] '{model_name}' is not defined!")
-        cnn_model = self.cnn_models.get(model_name, list(self.cnn_models.values())[0])
+        if model_name is None:
+            model_name = list(self.cnn_models.keys())[0]
+            print(f"[WARNING] {self.class_name_to_idx.__name__}: Using '{model_name}' model!")
+            
+        elif (model_name not in self.cnn_models.keys()):
+            print(f"[WARNING] {self.class_name_to_idx.__name__}: '{model_name}' is not defined!")        
+            model_name = list(self.cnn_models.keys())[0]
+            
+        print(f"[INFO] {self.class_name_to_idx.__name__}: Using '{model_name}' model!")
+        cnn_model = self.cnn_models[model_name]
+            
         return cnn_model.class_name_to_idx[class_name]
         
     def _predict(self, img: Image, model_name: str | None = None, verbose: bool = False):
         pointed_img = self.sam_model.plot_points(img)
         removed_bg_img = self.sam_model.remove_bg(img)
 
-        if verbose and (model_name not in self.cnn_models.keys()):
-            if model_name is not None:
-                print(f"[WARNING] '{model_name}' is not defined!")
-            print(f"[WARNING] Using '{list(self.cnn_models.keys())[0]}' model!")
+        if verbose:
+            if (model_name is not None) and (model_name not in self.cnn_models.keys()):
+                print(f"[WARNING] '{self._predict.__name__}': '{model_name}' is not defined!")
+                model_name = list(self.cnn_models.keys())[0]
+            print(f"[INFO] '{self._predict.__name__}': Using '{model_name}' model!")
             
-        cnn_model = self.cnn_models.get(model_name, list(self.cnn_models.values())[0])
-        grad_cam = self.grad_cam_models.get(model_name, list(self.grad_cam_models.values())[0])
+        cnn_model = self.cnn_models[model_name]
+        grad_cam = self.grad_cam_models[model_name]
             
         predict_logit, predicted_class, score = cnn_model._predict(removed_bg_img)
 
@@ -89,10 +99,15 @@ class AI_model:
                 "threshold" : float,                
             }
         """
-        results = self._predict(img, model_name, verbose)
+        results = self._predict(img= img,
+                                model_name= model_name,
+                                verbose= verbose)
         
         if self.best_threshold_df is not None:                        
-            class_idx = self.class_name_to_idx(results["class_name"], model_name, verbose)
+            class_idx = self.class_name_to_idx(class_name= results["class_name"],
+                                               model_name= model_name,
+                                               verbose=verbose)
+            
             results['threshold'] = self.best_threshold_df.loc['threshold', class_idx]
         
         return results
