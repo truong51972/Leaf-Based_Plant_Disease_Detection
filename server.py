@@ -126,6 +126,7 @@ async def analyze(item: Analyze):
         item.image_info.predicted_image = None
         response = item
     else:
+        print('Leaf image!')
         if item.image_info.plant_name == 'Cà chua':
             disease_result = await tomato_disease_model.predict(img=image)
         elif  item.image_info.plant_name == 'Khoai tây':
