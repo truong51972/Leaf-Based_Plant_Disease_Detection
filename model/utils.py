@@ -11,24 +11,45 @@ from sklearn.metrics import confusion_matrix, f1_score, precision_score, recall_
 def plot_loss_curves(results: dict[str, list[float]]):
     train_loss = results['train_loss']
     val_loss = results['val_loss']
+    
     train_accuracy = results['train_acc']
     val_accuracy = results['val_acc']
 
+    train_precision = results['train_precision']
+    val_precision = results['val_precision']
+    
+    train_recall = results['train_recall']
+    val_recall = results['val_recall']
+    
     epochs = range(len(results['train_loss']))
 
-    plt.figure(figsize=(14, 5))
+    plt.figure(figsize=(14, 10))
 
-    plt.subplot(1, 2, 1)
+    plt.subplot(2, 2, 1)
     plt.plot(epochs, train_loss, label='train_loss')
     plt.plot(epochs, val_loss, label='val_loss')
     plt.title('Loss')
     plt.xlabel('Epochs')
     plt.legend()
 
-    plt.subplot(1, 2, 2)
+    plt.subplot(2, 2, 2)
     plt.plot(epochs, train_accuracy, label='train_accuracy')
     plt.plot(epochs, val_accuracy, label='val_accuracy')
     plt.title('Accuracy')
+    plt.xlabel('Epochs')
+    plt.legend()
+
+    plt.subplot(2, 2, 3)
+    plt.plot(epochs, train_precision, label='train_precision')
+    plt.plot(epochs, val_precision, label='val_precision')
+    plt.title('Precision')
+    plt.xlabel('Epochs')
+    plt.legend()
+
+    plt.subplot(2, 2, 4)
+    plt.plot(epochs, train_recall, label='train_recall')
+    plt.plot(epochs, val_recall, label='val_recall')
+    plt.title('Recall')
     plt.xlabel('Epochs')
     plt.legend()
     return plt
@@ -60,7 +81,7 @@ def plot_save_model(model: torch.nn.Module,
         target_dir = Path('runs/classify/')
         target_dir.mkdir(parents=True, exist_ok=True)
         
-        graph_loss_name = 'loss_acc.jpg'
+        graph_loss_name = 'loss_acc_precision_recall.jpg'
         graph_confmat_name = 'confusion_matrix.jpg'
         info_file_name = 'info.json'
         
