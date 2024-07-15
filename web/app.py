@@ -9,7 +9,7 @@ import pytz
 guard = """
         ### Hướng dẫn chụp ảnh
         1. **Cách chụp**: Chụp ảnh với tỷ lệ 1:1.
-        2.**Chọn ảnh**: Phải chọn ảnh là lá cà chua hoặc khoai tây
+        2. **Chọn ảnh**: Phải chọn ảnh là lá cà chua hoặc khoai tây.
         3. **Ánh sáng tốt**: Chụp ảnh dưới ánh sáng tự nhiên, tránh ánh sáng mạnh trực tiếp hoặc bóng râm quá nhiều.
         4. **Tiêu cự gần**: Chụp ảnh lá ở khoảng cách gần để thấy rõ chi tiết.
         5. **Nền đơn giản**: Đặt lá lên nền đơn giản để không bị nhiễu bởi các vật thể khác.
@@ -36,50 +36,61 @@ def correct_orientation_and_resize(image):
 def display_results(results):
     st.markdown("<div class='container'>", unsafe_allow_html=True)
     st.session_state.predicted_image = decode_image(results['image_info']['predicted_image'])
-    score = round(results['image_info']['score'], 4)
-    threshold = round(results['image_info']['threshold'], 4)
     
-    st.image(st.session_state.predicted_image, use_column_width=True)
-    
-    st.markdown("</div>", unsafe_allow_html=True)
-    st.markdown("<div class='container'>", unsafe_allow_html=True)
-    
-    st.markdown("<h2>Tên Bệnh</h2>", unsafe_allow_html=True)
-    st.markdown(f"<p>{results['solution']['Tên bệnh']}</p>", unsafe_allow_html=True)
-    st.markdown("---")
-    st.markdown("<h4>Giải thích</h4>", unsafe_allow_html=True)
-    st.markdown(f"Điểm số: {score}", help="Điểm số là điểm của mô hình dự đoán.")
-    st.markdown(f"Ngưỡng: {threshold}", help="Ngưỡng là điểm tổng quát đã được kiểm tra dựa trên dữ liệu thực tế.")
-    
-    if score > threshold:
-        st.markdown(f"**Sự chắc chắn**: **Điểm số** đã vượt qua **ngưỡng**, điều này cho thấy mô hình rất tự tin chẩn đoán về **{results['solution']['Tên bệnh']}** trong trường hợp này.")
+    # Check if image_info exists and contains valid data
+    if 'image_info' in results and isinstance(results['image_info'], dict):
+        score = results['image_info'].get('score')
+        threshold = results['image_info'].get('threshold')
+        
+        if score is not None and threshold is not None:
+            score = round(score, 4)
+            threshold = round(threshold, 4)
+            
+            st.image(st.session_state.predicted_image, use_column_width=True)
+            
+            st.markdown("</div>", unsafe_allow_html=True)
+            st.markdown("<div class='container'>", unsafe_allow_html=True)
+            
+            st.markdown("<h2>Tên Bệnh</h2>", unsafe_allow_html=True)
+            st.markdown(f"<p>{results['solution']['Tên bệnh']}</p>", unsafe_allow_html=True)
+            st.markdown("---")
+            st.markdown("<h4>Giải thích</h4>", unsafe_allow_html=True)
+            st.markdown(f"Điểm số: {score}", help="Điểm số là điểm của mô hình dự đoán.")
+            st.markdown(f"Ngưỡng: {threshold}", help="Ngưỡng là điểm tổng quát đã được kiểm tra dựa trên dữ liệu thực tế.")
+            
+            if score > threshold:
+                st.markdown(f"**Sự chắc chắn**: **Điểm số** đã vượt qua **ngưỡng**, điều này cho thấy mô hình rất tự tin chẩn đoán về **{results['solution']['Tên bệnh']}** trong trường hợp này.")
+            else:
+                st.markdown("Khả năng: **Điểm số** không vượt qua **ngưỡng**, bạn nên kiểm tra lại.")
+                st.markdown("""
+                **Lời khuyên**:
+                1. Xem lại mục **Hướng dẫn chụp ảnh** để đảm bảo bạn đã chụp đúng cách.
+                2. Thử chụp lại ảnh với chất lượng tốt hơn theo hướng dẫn.
+                3. Nếu bạn vẫn không chắc chắn, hãy gửi ảnh này cho chuyên gia để được tư vấn thêm.
+                """)
+            
+            st.markdown("</div>", unsafe_allow_html=True)
+            st.markdown("<div class='container'>", unsafe_allow_html=True)
+            st.markdown("<h2>Mô Tả Bệnh</h2>", unsafe_allow_html=True)
+            st.markdown(f"<h4>Nguyên nhân</h4><p>{results['solution']['Mô tả']['cause']}</p>", unsafe_allow_html=True)
+            st.markdown("---")
+            st.markdown(f"<h4>Triệu chứng</h4><p>{results['solution']['Mô tả']['symptom']}</p>", unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)
+            
+            st.markdown("<div class='container'>", unsafe_allow_html=True)
+            st.markdown("<h2>Giải Pháp</h2>", unsafe_allow_html=True)
+            st.markdown(f"<h4>Ngăn ngừa</h4><p>{results['solution']['Giải pháp']['prevention']}</p>", unsafe_allow_html=True)
+            st.markdown("---")
+            st.markdown(f"<h4>Làm vườn</h4><p>{results['solution']['Giải pháp']['gardening']}</p>", unsafe_allow_html=True)
+            st.markdown("---")
+            st.markdown(f"<h4>Phân bón</h4><p>{results['solution']['Giải pháp']['fertilization']}</p>", unsafe_allow_html=True)
+            st.markdown("---")
+            st.markdown(f"<h4>Nguồn</h4><p>{results['solution']['Giải pháp']['source']}</p>", unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)
+        else:
+            st.error("Có vẻ ảnh của bạn không hợp lệ. Vui lòng thử lại với một ảnh khác.")
     else:
-        st.markdown("Khả năng: **Điểm số** không vượt qua **ngưỡng**, bạn nên kiểm tra lại.")
-        st.markdown("""
-        **Lời khuyên**:
-        1. Xem lại mục **Hướng dẫn chụp ảnh** để đảm bảo bạn đã chụp đúng cách.
-        2. Thử chụp lại ảnh với chất lượng tốt hơn theo hướng dẫn.
-        3. Nếu bạn vẫn không chắc chắn, hãy gửi ảnh này cho chuyên gia để được tư vấn thêm.
-        """)
-    st.markdown("</div>", unsafe_allow_html=True)
-
-    st.markdown("<div class='container'>", unsafe_allow_html=True)
-    st.markdown("<h2>Mô Tả Bệnh</h2>", unsafe_allow_html=True)
-    st.markdown(f"<h4>Nguyên nhân</h4><p>{results['solution']['Mô tả']['cause']}</p>", unsafe_allow_html=True)
-    st.markdown("---")
-    st.markdown(f"<h4>Triệu chứng</h4><p>{results['solution']['Mô tả']['symptom']}</p>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-
-    st.markdown("<div class='container'>", unsafe_allow_html=True)
-    st.markdown("<h2>Giải Pháp</h2>", unsafe_allow_html=True)
-    st.markdown(f"<h4>Ngăn ngừa</h4><p>{results['solution']['Giải pháp']['prevention']}</p>", unsafe_allow_html=True)
-    st.markdown("---")
-    st.markdown(f"<h4>Làm vườn</h4><p>{results['solution']['Giải pháp']['gardening']}</p>", unsafe_allow_html=True)
-    st.markdown("---")
-    st.markdown(f"<h4>Phân bón</h4><p>{results['solution']['Giải pháp']['fertilization']}</p>", unsafe_allow_html=True)
-    st.markdown("---")
-    st.markdown(f"<h4>Nguồn</h4><p>{results['solution']['Giải pháp']['source']}</p>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
+        st.error("Có vẻ ảnh của bạn không hợp lệ. Vui lòng thử lại với một ảnh khác.")
 
 def fetch_gardens():
     item = {
@@ -97,15 +108,23 @@ def app():
     gardens = fetch_gardens()
     
     try:
+        if not gardens:
+            st.warning("Nhân viên hiện chưa được phân công. Liên hệ với quản lý để được hỗ trợ.")
+            return
+        
         with st.container(border=True):
             garden_names = list(gardens.keys())
             selected_garden = st.selectbox("Chọn vườn", garden_names, key='garden_app')
+            
+            if selected_garden not in gardens:
+                st.warning("Vườn đã chọn không tồn tại trong danh sách vườn. Vui lòng chọn lại.")
+                return
             
             garden_details = gardens[selected_garden]
             plant_name = garden_details['Giống cây']
 
             lines = [int(line.split()[-1]) for line in garden_details['Luống'] if line.split()[-1].isdigit()]
-            selected_line = st.selectbox("Chọn luống", lines,key='line_app')
+            selected_line = st.selectbox("Chọn luống", lines, key='line_app')
 
             st.write(f'Giống cây: {plant_name}')
             
@@ -114,6 +133,11 @@ def app():
     
             if uploaded_image is not None:
                 image = Image.open(uploaded_image)
+                
+                if plant_name.lower() not in ['cà chua', 'khoai tây']:
+                    st.warning("Vui lòng chọn ảnh lá cà chua hoặc khoai tây để tiếp tục.")
+                    return
+                
                 st.session_state.corrected_image = correct_orientation_and_resize(image)
                 st.image(st.session_state.corrected_image, use_column_width=True)    
             
@@ -145,13 +169,15 @@ def app():
                 
                 with st.spinner("Đang phân tích hình ảnh..."):
                     try:
-                        results = analyze(item=item, request=_request).json()
+                        results = analyze(item=item, request=_request).json()                        
                         display_results(results)
                     except KeyError as e:
                         st.error(f"Đã xảy ra lỗi khi phân tích hình ảnh: {e}")
+                    except Exception as e:
+                        st.error(f"Đã xảy ra lỗi không xác định: {e}")
     
     except Exception as e:
-        st.warning(f"Nhân viên hiện chưa được phân công!")
+        st.error(f"Đã xảy ra lỗi trong quá trình xử lý: {e}")
 
 if __name__ == "__main__":
     app()

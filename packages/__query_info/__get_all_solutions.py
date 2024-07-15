@@ -10,9 +10,9 @@ def get_all_solutions(item: dict, request: object):
         'diseaseName' :         tuple(diseaseName), 
         'diseaseCause':         tuple(diseaseCause),
         'diseaseSymptom':       tuple(diseaseSymptom), 
-        'solutionPrevention':   tuple(solutionPrevention),
-        'solutionGardening':    tuple(solutionGardening),
-        'solutionFertilization':tuple(solutionFertilization),
+        'solutionPrrdening':    tuple(solutionGardening),
+        'solutionFerevention':   tuple(solutionPrevention),
+        'solutionGatilization':tuple(solutionFertilization),
         'solutionSource':       tuple(solutionSource)
     }
     """ 

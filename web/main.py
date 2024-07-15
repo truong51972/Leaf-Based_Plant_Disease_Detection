@@ -10,6 +10,7 @@ import os
 
 DEV_MODE = os.getenv('DEV_MODE', 'False').lower() == 'true'
 st.set_page_config(layout="wide")
+
 def run():
     _, center, _ = st.columns([1, 8, 1])
     with center:
@@ -31,8 +32,8 @@ def run():
 
             if st.session_state['logged_in']:
                 if st.session_state['is_manager']:
-                    tabs = ["Thông tin cá nhân", "Tất cả giải pháp", "Quản lý", "Đăng xuất"]
-                    tab2, tab4, tab5, tab6 = st.tabs(tabs)
+                    tabs = ["Thông tin cá nhân", "Lịch sử", "Tất cả giải pháp", "Quản lý", "Đăng xuất"]
+                    tab2, tab3, tab4, tab5, tab6 = st.tabs(tabs)
                 else:
                     tabs = ["Trang chủ", "Thông tin cá nhân", "Lịch sử", "Tất cả giải pháp", "Đăng xuất"]
                     tab1, tab2, tab3, tab4, tab6 = st.tabs(tabs)
@@ -42,9 +43,8 @@ def run():
                         main_app()
                 with tab2:
                     user_info()
-                if not st.session_state['is_manager']:
-                    with tab3:
-                        display_history()
+                with tab3:
+                    display_history()  # Hiển thị lịch sử cho cả người quản lý và nhân viên
                 with tab4:
                     solution_list()
 
@@ -53,7 +53,7 @@ def run():
                         initialization()
 
                 with tab6:
-                    if st.button("Confirm Logout"):
+                    if st.button("Xác nhận Đăng xuất"):
                         logout()
                         st.session_state['logged_in'] = False
                         st.session_state['logout_success'] = True
