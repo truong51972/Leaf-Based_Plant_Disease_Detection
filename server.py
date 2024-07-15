@@ -17,25 +17,26 @@ from packages.encode_decode import decode_image, encode_image
 
 # database_path = './data.db'
 database_path = './database/data.db'
-models = {}
-# database = Query(database_path)
 
-tomato_disease_model = None
-potato_disease_model = None
+paths_to_model = {
+    "Cà chua" : './model/models/tomato_model',
+    "Khoai tây" : './model/models/potato_model'
+}
+
+disease_models = None
 database = None
 leaf_or_not_detector = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global tomato_disease_model
+    global disease_models
     global potato_disease_model
 
     global database
     global leaf_or_not_detector
     
     database = Query(database_path)
-    tomato_disease_model = AI_model(path_to_model= './model/models/tomato_model')
-    potato_disease_model = AI_model(path_to_model= './model/models/potato_model')
+    disease_models = AI_model(paths_to_model= paths_to_model)
 
     leaf_or_not_detector = Cnn_model(path_to_model='./model/models/leaf_or_not')
     yield
@@ -127,10 +128,9 @@ async def analyze(item: Analyze):
         response = item
     else:
         print('Leaf image!')
-        if item.image_info.plant_name == 'Cà chua':
-            disease_result = await tomato_disease_model.predict(img=image)
-        elif  item.image_info.plant_name == 'Khoai tây':
-            disease_result = await potato_disease_model.predict(img=image)
+        plant_name = item.image_info.plant_name
+
+        disease_result = await disease_models.predict(img=image, model_name=plant_name, verbose=True)
         
         item.image_info.class_name = disease_result['class_name']
         item.image_info.score = disease_result['score']
