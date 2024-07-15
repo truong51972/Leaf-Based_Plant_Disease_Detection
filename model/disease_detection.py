@@ -46,14 +46,14 @@ class AI_model:
             
     def class_name_to_idx(self, class_name: str, model_name: str | None = None, verbose: bool = False):
         if model_name is None:
-            model_name = list(self.cnn_models.keys())[0]
-            print(f"[WARNING] '{self.class_name_to_idx.__name__}': Using '{model_name}' model!")
+            model_name = sorted(self.cnn_models.keys())[0]
+            if verbose: print(f"[WARNING] '{self.class_name_to_idx.__name__}': Using '{model_name}' model!")
             
         elif (model_name not in self.cnn_models.keys()):
-            print(f"[WARNING] '{self.class_name_to_idx.__name__}': '{model_name}' is not defined!")        
+            if verbose: print(f"[WARNING] '{self.class_name_to_idx.__name__}': '{model_name}' is not defined!")        
             model_name = list(self.cnn_models.keys())[0]
             
-        print(f"[INFO] '{self.class_name_to_idx.__name__}': Using '{model_name}' model!")
+        if verbose: print(f"[INFO] '{self.class_name_to_idx.__name__}': Using '{model_name}' model!")
         cnn_model = self.cnn_models[model_name]
             
         return cnn_model.class_name_to_idx[class_name]
@@ -62,11 +62,12 @@ class AI_model:
         pointed_img = self.sam_model.plot_points(img)
         removed_bg_img = self.sam_model.remove_bg(img)
 
-        if verbose:
-            if (model_name is not None) and (model_name not in self.cnn_models.keys()):
-                print(f"[WARNING] '{self._predict.__name__}': '{model_name}' is not defined!")
-                model_name = list(self.cnn_models.keys())[0]
-            print(f"[INFO] '{self._predict.__name__}': Using '{model_name}' model!")
+        
+        if (model_name is not None) and (model_name not in self.cnn_models.keys()):
+            if verbose: print(f"[WARNING] '{self._predict.__name__}': '{model_name}' is not defined!")
+            model_name = sorted(self.cnn_models.keys())[0]
+            
+        if verbose: print(f"[INFO] '{self._predict.__name__}': Using '{model_name}' model!")
             
         cnn_model = self.cnn_models[model_name]
         grad_cam = self.grad_cam_models[model_name]
@@ -86,6 +87,19 @@ class AI_model:
         }
         return results
         
+    def get_best_threshold(self, class_name : str, model_name : str, verbose : bool = False):
+        
+        if (model_name not in self.cnn_models.keys()):
+            if verbose: print(f"[WARNING] '{self.get_best_threshold.__name__}': '{model_name}' is not defined!")
+            model_name = sorted(self.cnn_models.keys())[0]
+        if verbose: print(f"[INFO] '{self.get_best_threshold.__name__}': Using '{model_name}' model!")
+            
+        class_idx = self.class_name_to_idx(class_name= class_name,
+                                           model_name= model_name,
+                                           verbose=verbose)
+            
+        return self.best_threshold_dfs[model_name].loc['threshold', class_idx]
+            
     async def predict(self, img: Image, model_name: str | None = None, verbose: bool = False):
         """
         Args:
@@ -107,11 +121,8 @@ class AI_model:
                                 model_name= model_name,
                                 verbose= verbose)
         
-        if model_name in self.best_threshold_dfs.keys():                        
-            class_idx = self.class_name_to_idx(class_name= results["class_name"],
-                                               model_name= model_name,
-                                               verbose=verbose)
-            
-            results['threshold'] = self.best_threshold_dfs[model_name].loc['threshold', class_idx]
+        results['threshold'] = self.get_best_threshold(class_name= results['class_name'],
+                                                       model_name= model_name,
+                                                       verbose= verbose)
         
         return results
