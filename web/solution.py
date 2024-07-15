@@ -33,22 +33,26 @@ def solution_list():
 
             disease_names = list(disease_data['Tên Bệnh'])
             selected_disease = st.selectbox(f"Chọn bệnh của {selected_plant}:", disease_names)
+            
+            if st.button("Hiển thị thêm thông tin"):
 
-            if selected_disease:
-                disease_index = disease_names.index(selected_disease)
+                if selected_disease:
+                    disease_index = disease_names.index(selected_disease)
 
-                details = {
-                    'Nguyên Nhân': disease_data['Nguyên Nhân'][disease_index],
-                    'Triệu Chứng': disease_data['Triệu Chứng'][disease_index],
-                    'Phòng Ngừa': disease_data['Phòng Ngừa'][disease_index],
-                    'Làm Vườn': disease_data['Làm Vườn'][disease_index],
-                    'Phân Bón': disease_data['Phân Bón'][disease_index],
-                    'Nguồn': disease_data['Nguồn'][disease_index]
-                }
+                    details = {
+                        'Nguyên Nhân': disease_data['Nguyên Nhân'][disease_index],
+                        'Triệu Chứng': disease_data['Triệu Chứng'][disease_index],
+                        'Phòng Ngừa': disease_data['Phòng Ngừa'][disease_index],
+                        'Làm Vườn': disease_data['Làm Vườn'][disease_index],
+                        'Phân Bón': disease_data['Phân Bón'][disease_index],
+                        'Nguồn': disease_data['Nguồn'][disease_index]
+                    }
 
-                df_solution = pd.DataFrame(list(details.items()), columns=['Tiêu Đề', 'Thông Tin'])
+                    df_solution = pd.DataFrame(list(details.items()), columns=['Tiêu Đề', 'Thông Tin'])
 
-                st.table(df_solution.set_index('Tiêu Đề').style.set_properties(**{'text-align': 'left', 'font-size': '14px'}))
-
+                    st.table(df_solution.set_index('Tiêu Đề').style.set_properties(**{'text-align': 'left', 'font-size': '14px'}))
+            
         except Exception as e:
             st.error(f"Lỗi khi lấy dữ liệu giải pháp cho {selected_plant}: {str(e)}")
+
+

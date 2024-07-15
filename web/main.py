@@ -44,7 +44,7 @@ def run():
                 with tab2:
                     user_info()
                 with tab3:
-                    display_history()  # Hiển thị lịch sử cho cả người quản lý và nhân viên
+                    display_history()
                 with tab4:
                     solution_list()
 
@@ -53,7 +53,7 @@ def run():
                         initialization()
 
                 with tab6:
-                    if st.button("Xác nhận Đăng xuất"):
+                    if st.button("Xác nhận đăng xuất"):
                         logout()
                         st.session_state['logged_in'] = False
                         st.session_state['logout_success'] = True

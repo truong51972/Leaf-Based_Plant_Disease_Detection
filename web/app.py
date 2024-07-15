@@ -37,7 +37,7 @@ def display_results(results):
     st.markdown("<div class='container'>", unsafe_allow_html=True)
     st.session_state.predicted_image = decode_image(results['image_info']['predicted_image'])
     
-    # Check if image_info exists and contains valid data
+
     if 'image_info' in results and isinstance(results['image_info'], dict):
         score = results['image_info'].get('score')
         threshold = results['image_info'].get('threshold')
