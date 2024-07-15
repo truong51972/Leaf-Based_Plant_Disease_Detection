@@ -117,6 +117,7 @@ async def get_history(item: User_Info):
 @app.post("/analyze")
 async def analyze(item: Analyze):
     image = decode_image(item.image_info.image)
+    image = image.convert("RGB")
     leaf_result = await leaf_or_not_detector.predict(img=image)
 
     if leaf_result['predicted_class'] != 'leaf':
@@ -127,7 +128,6 @@ async def analyze(item: Analyze):
         item.image_info.predicted_image = None
         response = item
     else:
-        print('Leaf image!')
         plant_name = item.image_info.plant_name
 
         disease_result = await disease_models.predict(img=image, model_name=plant_name, verbose=True)
@@ -138,7 +138,7 @@ async def analyze(item: Analyze):
         item.image_info.predicted_image = encode_image(disease_result['predicted_image'])
 
         response = await database.add_pic_and_get_solution(item= item, is_save=True)
-        # print(response.result.class_name)
+        # print(response)
     return response
 
 @app.post("/add_employee")
