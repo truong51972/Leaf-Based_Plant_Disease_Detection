@@ -4,6 +4,7 @@ from copy import deepcopy
 def get_statistic(startDate:str,
                   endDate:str,
                   gardenName:str,
+                  is_over_threshold:bool,
                   con):
     '''
     :input:
@@ -43,7 +44,9 @@ def get_statistic(startDate:str,
                 ''')
     gardenID = cur.fetchall()[0][0]
 
-    cur.execute(f'''
+
+    if is_over_threshold:
+        cur.execute(f'''
                 SELECT * FROM
                 (SELECT LOCATION.lineID, DISEASE.diseaseName, count(*) as count
                 FROM PIC 
@@ -51,7 +54,20 @@ def get_statistic(startDate:str,
                 JOIN LOCATION on LOCATION.locationID = PIC.locationID
                 JOIN GARDEN on LOCATION.gardenID = GARDEN.gardenID
                 WHERE (PIC.picDate BETWEEN '{startDate}' AND '{endDate}') 
-                    and (GARDEN.gardenID = {gardenID})
+                    and (GARDEN.gardenID = {gardenID}) and (PIC.score > PIC.threshold)
+                GROUP BY DISEASE.diseaseID, GARDEN.gardenID, LOCATION.lineID)
+                ORDER BY lineID asc
+                ''')
+    else:
+        cur.execute(f'''
+                SELECT * FROM
+                (SELECT LOCATION.lineID, DISEASE.diseaseName, count(*) as count
+                FROM PIC 
+                JOIN DISEASE on DISEASE.diseaseID = PIC.diseaseID
+                JOIN LOCATION on LOCATION.locationID = PIC.locationID
+                JOIN GARDEN on LOCATION.gardenID = GARDEN.gardenID
+                WHERE (PIC.picDate BETWEEN '{startDate}' AND '{endDate}') 
+                    and (GARDEN.gardenID = {gardenID}) and (PIC.score < PIC.threshold)
                 GROUP BY DISEASE.diseaseID, GARDEN.gardenID, LOCATION.lineID)
                 ORDER BY lineID asc
                 ''')

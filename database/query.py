@@ -170,7 +170,7 @@ class Query:
         plantName = item.image_info.plant_name
 
         if is_save is True:
-            picID = add_picture_to_database(userName, class_name, picDate, pic, pred_pic, score, gardenName, lineID, self.con)
+            picID = add_picture_to_database(userName, class_name, picDate, pic, pred_pic, score, gardenName, lineID, threshold, self.con)
             class_name, description, solution = extract_result(picID, self.con)
         else:
             class_name, description, solution = extract_result_without_id(class_name, self.con)
@@ -469,7 +469,8 @@ class Query:
         },
         'start_date': 'YYYY-MM-DD',
         'end_date': 'YYYY-MM-DD',
-        'garden_name': str
+        'garden_name': str,
+        'is_over_threshold': bool
     }
         :output:
         {
@@ -500,9 +501,10 @@ class Query:
         startDate = item.start_date + ' 00:00:00'
         endDate = item.end_date + ' 23:59:59'
         gardenName = item.garden_name
+        is_over_threshold = item.is_over_threshold
 
         if is_manager(userName, self.con):
-            statistic = get_statistic(startDate, endDate, gardenName, self.con)
+            statistic = get_statistic(startDate, endDate, gardenName, is_over_threshold, self.con)
             return {'message':'Success!',
                     'code' : '000',
                     'statistic': statistic}

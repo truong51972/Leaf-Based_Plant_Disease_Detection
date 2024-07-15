@@ -29,6 +29,7 @@ def add_picture_to_database(userName:str,
                             score:float,
                             gardenName:str,
                             lineID:int,
+                            threshold:float,
                             con) -> int:
     '''
         This private function is used for adding picture information to database and delete picture if number of pictures per user exceed 100\n
@@ -55,8 +56,8 @@ def add_picture_to_database(userName:str,
     locationID = identify_location(gardenName, lineID, con)
 
     cur.execute(f"""
-        INSERT INTO PIC (diseaseID, picDate, pic, pred_pic, score, locationID)
-        VALUES ({diseaseID}, '{formatted_time}', '{pic}', '{pred_pic}', {score}, {locationID}) 
+        INSERT INTO PIC (diseaseID, picDate, pic, pred_pic, score, locationID, threshold)
+        VALUES ({diseaseID}, '{formatted_time}', '{pic}', '{pred_pic}', {score}, {locationID}, {threshold}) 
         """)
 
     con.commit()
