@@ -91,10 +91,8 @@ class AI_model:
         """
         results = self._predict(img, model_name, verbose)
         
-        if self.best_threshold_df is not None:           
-            cnn_model = self.cnn_models.get(model_name, list(self.cnn_models.values())[0])
-                
-            class_idx = cnn_model.class_name_to_idx[results["class_name"]]
+        if self.best_threshold_df is not None:                        
+            class_idx = self.class_name_to_idx(results["class_name"], model_name, verbose)
             results['threshold'] = self.best_threshold_df.loc['threshold', class_idx]
         
         return results
