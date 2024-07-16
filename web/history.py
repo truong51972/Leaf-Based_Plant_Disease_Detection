@@ -7,7 +7,7 @@ def __url_gen(x):
     return 'data:image/jpeg;base64,' + x
 
 def display_history():
-    select_threshold = st.selectbox("Chọn cây", options=[True, False], format_func=lambda x: 'Cây dự đoán đạt chuẩn' if x else 'Cây dự đoán không đạt chuẩn', key='threshold')
+    select_threshold = st.selectbox("Chọn cây", options=[True, False], format_func=lambda x: 'Cây dự đoán đạt chuẩn' if x else 'Cây dự đoán không đạt chuẩn', key='threshold1')
     item = {
         'user_info': {
             'user_name': st.session_state.get('user_name'),
