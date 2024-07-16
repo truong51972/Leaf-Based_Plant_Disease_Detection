@@ -74,7 +74,8 @@ class Get_statistics(BaseModel):
     start_date: str
     end_date: str
     garden_name: str
-
+    is_over_threshold: bool
+    
 class Employee_management(BaseModel):
     manager_info: User_Info
     employee_info: User_Info
