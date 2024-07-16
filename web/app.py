@@ -51,7 +51,7 @@ def display_results(results):
             st.markdown("</div>", unsafe_allow_html=True)
             st.markdown("<div class='container'>", unsafe_allow_html=True)
             
-            st.markdown("<h2>Tên Bệnh</h2>", unsafe_allow_html=True)
+            st.markdown("<h2>Kết quả dự đoán</h2>", unsafe_allow_html=True)
             st.markdown(f"<p>{results['solution']['Tên bệnh']}</p>", unsafe_allow_html=True)
             st.markdown("---")
             st.markdown("<h4>Giải thích</h4>", unsafe_allow_html=True)

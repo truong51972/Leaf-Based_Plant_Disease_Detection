@@ -42,6 +42,9 @@ def statistics_ui():
 
     selected_date_str = selected_date.strftime('%Y-%m-%d')
     end_date_str = end_date.strftime('%Y-%m-%d')
+    select_threshold = st.selectbox("Chọn cây", options=[True, False], format_func=lambda x: 'Cây dự đoán đạt chuẩn' if x else 'Cây dự đoán không đạt chuẩn', key='threshold')
+
+    
 
     item = {
         'user_info': {
@@ -51,6 +54,7 @@ def statistics_ui():
         'start_date': selected_date_str,
         'end_date': end_date_str,
         'garden_name': selected_garden_name,
+        'is_over_threshold':select_threshold
     }
 
     st.markdown("<hr style='border: 2px solid #ccc;'>", unsafe_allow_html=True)
