@@ -404,7 +404,8 @@ class Query:
     :input:
     userData = {
             'user_name' : 'user name',
-            'password' : 'password'
+            'password' : 'password',
+            'is_over_threshold':bool
     }
     :return:
     If the user validation is True:
@@ -428,6 +429,7 @@ class Query:
         
         userName = userData.user_name
         userPassword = userData.password
+        is_over_threshold = userData.is_over_threshold
 
         validate_result = validate_password(userName, userPassword, self.con)
         if validate_result['code'] == '002' or validate_result['code'] == '003':
@@ -440,9 +442,10 @@ class Query:
         class_name, 
         pred_pic, 
         score,
+        threshold,
         lineID,
         gardenName,
-        plantName) = extract_history(userName, self.con)     
+        plantName) = extract_history(userName, is_over_threshold, self.con)     
 
         return {
                 'message' : validate_result['message'],
@@ -452,6 +455,7 @@ class Query:
                     'Tên bệnh' : class_name,
                     'Ảnh phân tích': pred_pic,
                     'Độ tin cậy': score,
+                    'Ngưỡng đạt chuẩn': threshold,
                     'Ngày chụp' : picDate,
                     'Hàng': lineID,
                     'Tên vườn': gardenName,
