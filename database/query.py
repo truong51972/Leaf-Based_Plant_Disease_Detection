@@ -397,16 +397,18 @@ class Query:
                     'code' : '000',
                     'garden_info': gardenInfo}
 
-    async def get_history(self, userData):
+    async def get_history(self, item):
         '''
         This function is used to get history of a user.
     
     :input:
-    userData = {
+    item: {    
+        'user_info' : {
             'user_name' : 'user name',
-            'password' : 'password',
-            'is_over_threshold':bool
-    }
+            'password' : 'password'
+            },
+        'is_over_threshold': bool
+            }
     :return:
     If the user validation is True:
                 {
@@ -427,9 +429,9 @@ class Query:
                 }
         '''
         
-        userName = userData.user_name
-        userPassword = userData.password
-        is_over_threshold = userData.is_over_threshold
+        userName = item.user_info.user_name
+        userPassword = item.user_info.password
+        is_over_threshold = item.is_over_threshold
 
         validate_result = validate_password(userName, userPassword, self.con)
         if validate_result['code'] == '002' or validate_result['code'] == '003':
