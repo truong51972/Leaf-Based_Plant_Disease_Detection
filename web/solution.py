@@ -34,7 +34,7 @@ def solution_list():
             disease_names = list(disease_data['Tên Bệnh'])
             selected_disease = st.selectbox(f"Chọn bệnh của {selected_plant}:", disease_names)
             
-            if st.button("Hiển thị thêm thông tin"):
+            if st.button("Hiển thị thông tin"):
 
                 if selected_disease:
                     disease_index = disease_names.index(selected_disease)

@@ -85,7 +85,18 @@ def show_gardens():
 
 def delete_gardens():
     st.subheader("Xóa vườn")
-    gardenName = st.text_input("Tên vườn cần xóa")
+
+    item = {
+        'user_info': {
+            'user_name': st.session_state.get('user_name'),
+            'password': st.session_state.get('encrypted_password')
+        }
+    }
+    response = get_gardens_info(item=item, request=_request).json()
+    garden_info = response.get('garden_info', {})
+    garden_names = garden_info.get('Tên vườn', [])
+
+    gardenName = st.selectbox("Tên vườn cần xóa", garden_names,key='Delete garden')
 
     if st.button("Xác nhận xóa"):
 
