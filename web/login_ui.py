@@ -1,7 +1,7 @@
 import streamlit as st
 import time
 import os
-from packages.request_api import check_login, add_employee, delete_employee
+from packages.request_api import check_login, add_employee, delete_employee, get_employee_info
 from packages.__request import _request
 from packages.encode_decode import encrypt_password
 from packages.preprocess_text import is_valid
@@ -106,10 +106,26 @@ def register_ui():
                 st.error("Không tìm thấy server")
         else:
             st.error("Mật khẩu không khớp")
-            
+
 def delete_employees():
     st.subheader("Xóa nhân viên")
-    user_name = st.text_input("Tên nhân viên cần xóa", key='delete_username', help='Tên đăng nhập của nhân viên cần xóa')
+    item = {
+        'user_name': st.session_state.get('user_name'),
+        'password': st.session_state.get('encrypted_password')
+    }
+    response = get_employee_info(item=item,request=_request).json()
+    if response['code'] != '000':
+        st.error("Không thể tải danh sách nhân viên")
+        return
+    
+    employee_info = response['employee_info']
+    emloyees_name = employee_info.get('Tên nhân viên')
+    
+    if not emloyees_name:
+        st.error("Không có nhân viên nào để xóa")
+        return
+    
+    user_name = st.selectbox("Tên nhân viên cần xóa", emloyees_name, key='delete_username', help='Chọn tên đăng nhập của nhân viên cần xóa')
 
     if st.button("Xác nhận xóa nhân viên"):
         if not user_name.strip():
